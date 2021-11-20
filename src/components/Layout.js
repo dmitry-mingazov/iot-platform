@@ -1,5 +1,5 @@
 import * as React from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate /*useLocation*/ } from "react-router-dom";
 import { styled } from "@mui/material/styles";
 import Box from "@mui/material/Box";
 import Drawer from "@mui/material/Drawer";
@@ -66,7 +66,7 @@ const DrawerHeader = styled("div")(({ theme }) => ({
 
 export default function Layout({ children }) {
   const navigate = useNavigate();
-  const location = useLocation();
+  //const location = useLocation();
   const [open, setOpen] = React.useState(false);
   //let string = location.pathname.includes("flows") ? "Flows" : "Devices";
   const [title, setTitle] = React.useState("Devices");
