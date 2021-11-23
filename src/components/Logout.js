@@ -3,7 +3,7 @@ import { useAuth0 } from '@auth0/auth0-react';
 import { Button, MenuItem, Skeleton, Menu, Typography, } from '@mui/material';
 
 const Logout = () => {
-    const { isLoading, user } = useAuth0();
+    const { isAuthenticated, isLoading, user, logout } = useAuth0();
 
     const [anchorEl, setAnchorEl] = useState(null);
     const open = Boolean(anchorEl);
@@ -16,13 +16,19 @@ const Logout = () => {
         setAnchorEl(null);
     }
 
+    const onLogout = () => {
+        handleClose();
+        logout();
+    }
+
     return ( 
         isLoading 
         ? (<Skeleton>
             <Button />
         </Skeleton>
         )
-        : (
+        : isAuthenticated && 
+        (
             <div>
                 <Typography
                     variant="h6"
@@ -44,7 +50,7 @@ const Logout = () => {
                     onClose={handleClose}
                     open={open}
                 >
-                    <MenuItem onClick={handleClose}>Logout</MenuItem>
+                    <MenuItem onClick={onLogout}>Logout</MenuItem>
                 </Menu>
             </div>
         )
