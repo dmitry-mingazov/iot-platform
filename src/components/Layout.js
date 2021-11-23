@@ -13,9 +13,11 @@ import IconButton from "@mui/material/IconButton";
 import MenuIcon from "@mui/icons-material/Menu";
 import ListItem from "@mui/material/ListItem";
 import ListItemIcon from "@mui/material/ListItemIcon";
+import { Button } from '@mui/material';
 import ListItemText from "@mui/material/ListItemText";
 import DevicesOtherIcon from "@mui/icons-material/DevicesOther";
 import CloseIcon from "@mui/icons-material/Close";
+import Logout from "./Logout";
 
 const drawerWidth = 240;
 
@@ -93,9 +95,10 @@ export default function Layout({ children }) {
           >
             <MenuIcon />
           </IconButton>
-          <Typography variant="h6" noWrap component="div">
+          <Typography variant="h6" noWrap component="div" sx={{ flexGrow: 1 }}>
             {title}
           </Typography>
+          <Logout />
         </Toolbar>
       </AppBar>
       <Drawer
