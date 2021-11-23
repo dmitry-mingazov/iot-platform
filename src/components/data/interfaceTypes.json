@@ -1,0 +1,22 @@
+[
+  {
+    "value": "MQTT",
+    "label": "MQTT"
+  },
+  {
+    "value": "HTTP",
+    "label": "HTTP"
+  },
+  {
+    "value": "WebSocket",
+    "label": "WebSocket"
+  },
+  {
+    "value": "TCP",
+    "label": "TCP"
+  },
+  {
+    "value": "UDP",
+    "label": "UDP"
+  }
+]
