@@ -14,7 +14,6 @@ const Unauthorized = () => {
         <Container>
             <Box 
                 sx={{ display: 'flex', flexDirection: 'column' }}
-                alignItems='center'
             >
                 <Typography variant="h3">
                     Unauthorized

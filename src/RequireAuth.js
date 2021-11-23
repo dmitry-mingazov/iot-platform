@@ -1,7 +1,7 @@
 import { useAuth0 } from '@auth0/auth0-react';
 import { CircularProgress, Container } from '@mui/material';
 import { Box } from '@mui/system';
-import React, { Component } from 'react';
+import React from 'react';
 import { Navigate } from 'react-router-dom';
 
 const RequireAuth = ({ children }) => {
@@ -9,8 +9,8 @@ const RequireAuth = ({ children }) => {
 
     return isLoading 
         ? <Container 
-        alignItems="center"
-        justifyContent="center"
+        // alignItems="center"
+        // justifyContent="center"
         >
             <Box 
         alignItems="center"
