@@ -1,11 +1,13 @@
 db.createCollection("devices", {
    validator: {
       $jsonSchema: {
-         bsonType: "object",
+         bsonType: ["object"],
          required: [ "name", "devtype", "services" ],
+	 additionalProperties: false,
          properties: {
+            _id: {bsonType: "objectId"},
             name: {
-               bsonType: "string",
+               bsonType: ["string"],
                description: "Device name"
             },
             devtype: {
@@ -13,29 +15,31 @@ db.createCollection("devices", {
                description: "Type of device"
             },
 	    services: {
-               bsonType: "array",
-	       minItems: 1,
+          bsonType: ["array"],
+	       uniqueItems: true,
+	       additionalItems: false,
+	       minItems: 1,	
 	       items: {
-	       	  bsonType: "object",
+	       	  bsonType: ["object"],
                	  required: [ "endpoint", "interfaceType", "metadata" ],
                	  properties: {
                   endpoint: {
-                     bsonType: "string",
+                     bsonType: ["string"],
                      description: "Endpoint URL"
                   },
                   interfaceType: {
-                     bsonType: "string",
+                     bsonType: ["string"],
                      description: "Interface Type"
                   },
 		  metadata: {
-		     bsonType: "object",
+		     bsonType: ["object"],
 		     required: [ "metadataType", "value" ],
 		     properties: {
 			metadataType: {
-			   bsonType: "string"
+			   bsonType: ["string"]
 			},
 			value: {
-			   bsonType: "string"
+			   bsonType: ["string"]
 			}
 		     }
 		  }
@@ -45,5 +49,4 @@ db.createCollection("devices", {
          }
       }
    }
-})
-
+});
