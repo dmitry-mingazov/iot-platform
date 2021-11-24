@@ -15,6 +15,10 @@ export class DevicesService {
     return createdDevice.save({ validateBeforeSave: true });
   }
 
+  async findOne(id: string): Promise<Device> {
+    return this.deviceModel.findById(id).exec();
+  }
+
   async findAll(): Promise<Device[]> {
     return this.deviceModel.find().exec();
   }

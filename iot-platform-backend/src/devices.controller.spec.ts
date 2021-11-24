@@ -94,6 +94,14 @@ describe(DevicesController, () => {
     });
   });
 
+  describe('findOne', () => {
+    it('should return a device', async () => {
+      jest.spyOn(devicesService, 'findOne').mockResolvedValueOnce(exDev);
+
+      expect(await devicesController.findOne('this is an id')).toBe(exDev);
+    });
+  });
+
   afterAll(async () => {
     await connectiondev.close(true);
     await connectiontest.close(true);
