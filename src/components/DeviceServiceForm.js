@@ -37,20 +37,25 @@ function DeviceServiceForm(props) {
       {props.isFirst ? null : <div className={classes.divider} />}
 
       <TextField
+        inputProps={{ "aria-label": "service endpoint" }}
         className={classes.field}
         label="Endpoint"
         margin="normal"
         value={props.endpoint}
         onChange={(event) => props.onEndpointChange(event)}
+        required
+        error={props.endpointError}
         fullWidth
       ></TextField>
       <TextField
+        inputProps={{ "aria-label": "service interface" }}
         className={classes.field}
         select
         label="Interface type"
         margin="normal"
         value={props.interface}
         onChange={(event) => props.onInterfaceTypeChange(event)}
+        required
         fullWidth
       >
         {interfaceTypes.map((option) => (
@@ -60,11 +65,14 @@ function DeviceServiceForm(props) {
         ))}
       </TextField>
       <TextField
+        inputProps={{ "aria-label": "service metadata" }}
         className={classes.field}
         label="Metadata"
         margin="normal"
         value={props.metadata}
         onChange={(event) => props.onMetadataChange(event)}
+        required
+        error={props.metadataError}
         fullWidth
       ></TextField>
       {props.isFirst ? null : (

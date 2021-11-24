@@ -1,7 +1,8 @@
 import React from "react";
 import { BrowserRouter } from "react-router-dom";
-import { render, screen, fireEvent } from "@testing-library/react";
+import { render, screen, fireEvent, within } from "@testing-library/react";
 import AddDevice from "../pages/AddDevice";
+import "@testing-library/jest-dom";
 
 describe("AddDevice component", () => {
   test("renders AddDevice component", () => {
@@ -10,13 +11,26 @@ describe("AddDevice component", () => {
         <AddDevice />
       </BrowserRouter>
     );
-    expect(screen.getAllByText("Name")).toBeTruthy();
-    expect(screen.getAllByText("Device type")).toBeTruthy();
-    expect(screen.getAllByText("Endpoint")).toBeTruthy();
-    expect(screen.getAllByText("Interface type")).toBeTruthy();
-    expect(screen.getAllByText("Metadata")).toBeTruthy();
-    expect(screen.getByText("Cancel")).toBeTruthy();
-    expect(screen.getByText("Add device")).toBeTruthy();
+    expect(screen.getAllByRole("textbox", { name: "device name" }).length).toBe(
+      1
+    );
+    expect(screen.getAllByRole("button", { name: "device type" }).length).toBe(
+      1
+    );
+    expect(
+      screen.getAllByRole("textbox", { name: "service endpoint" }).length
+    ).toBe(1);
+    expect(
+      screen.getAllByRole("button", { name: "service interface" }).length
+    ).toBe(1);
+    expect(
+      screen.getAllByRole("textbox", { name: "service metadata" }).length
+    ).toBe(1);
+    expect(screen.getAllByRole("button", { name: "Add" }).length).toBe(1);
+    expect(screen.getAllByRole("button", { name: "Cancel" }).length).toBe(1);
+    expect(screen.getAllByRole("button", { name: "Add device" }).length).toBe(
+      1
+    );
   });
 
   test("add button adds another service form", () => {
@@ -26,14 +40,15 @@ describe("AddDevice component", () => {
       </BrowserRouter>
     );
     fireEvent.click(screen.getByRole("button", { name: "Add" }));
-    expect(screen.getAllByText("Endpoint").length).toBeLessThanOrEqual(4);
-    expect(screen.getAllByText("Endpoint").length).toBeGreaterThanOrEqual(4);
-    expect(screen.getAllByText("Interface type").length).toBeLessThanOrEqual(4);
-    expect(screen.getAllByText("Interface type").length).toBeGreaterThanOrEqual(
-      4
-    );
-    expect(screen.getAllByText("Metadata").length).toBeLessThanOrEqual(4);
-    expect(screen.getAllByText("Metadata").length).toBeGreaterThanOrEqual(4);
+    expect(
+      screen.getAllByRole("textbox", { name: "service endpoint" }).length
+    ).toBe(2);
+    expect(
+      screen.getAllByRole("button", { name: "service interface" }).length
+    ).toBe(2);
+    expect(
+      screen.getAllByRole("textbox", { name: "service metadata" }).length
+    ).toBe(2);
     expect(screen.getByRole("button", { name: "Remove Service" })).toBeTruthy();
   });
 
@@ -45,13 +60,151 @@ describe("AddDevice component", () => {
     );
     fireEvent.click(screen.getByRole("button", { name: "Add" }));
     fireEvent.click(screen.getByRole("button", { name: "Remove Service" }));
-    expect(screen.getAllByText("Endpoint").length).toBeLessThanOrEqual(2);
-    expect(screen.getAllByText("Endpoint").length).toBeGreaterThanOrEqual(2);
-    expect(screen.getAllByText("Interface type").length).toBeLessThanOrEqual(2);
-    expect(screen.getAllByText("Interface type").length).toBeGreaterThanOrEqual(
-      2
+    expect(
+      screen.getAllByRole("textbox", { name: "service endpoint" }).length
+    ).toBe(1);
+    expect(
+      screen.getAllByRole("button", { name: "service interface" }).length
+    ).toBe(1);
+    expect(
+      screen.getAllByRole("textbox", { name: "service metadata" }).length
+    ).toBe(1);
+  });
+
+  test("inserts data correctly inside device name textfield", () => {
+    render(
+      <BrowserRouter>
+        <AddDevice />
+      </BrowserRouter>
     );
-    expect(screen.getAllByText("Metadata").length).toBeLessThanOrEqual(2);
-    expect(screen.getAllByText("Metadata").length).toBeGreaterThanOrEqual(2);
+    fireEvent.change(screen.getByRole("textbox", { name: "device name" }), {
+      target: { value: "Test name" },
+    });
+    expect(
+      screen.getByRole("textbox", { name: "device name", value: "Test name" })
+    ).toBeInTheDocument();
+  });
+
+  test("select an option correctly inside device type dropdown", () => {
+    render(
+      <BrowserRouter>
+        <AddDevice />
+      </BrowserRouter>
+    );
+    fireEvent.mouseDown(screen.getByRole("button", { name: "device type" }));
+    const listbox = within(screen.getByRole("listbox"));
+    fireEvent.click(listbox.getByText("Sensing"));
+    expect(screen.getAllByText("Sensing")).toBeTruthy();
+  });
+
+  test("inserts data correctly inside endpoint textfield", () => {
+    render(
+      <BrowserRouter>
+        <AddDevice />
+      </BrowserRouter>
+    );
+    fireEvent.change(
+      screen.getByRole("textbox", { name: "service endpoint" }),
+      {
+        target: { value: "Test endpoint" },
+      }
+    );
+    expect(
+      screen.getByRole("textbox", {
+        name: "service endpoint",
+        value: "Test endpoint",
+      })
+    ).toBeInTheDocument();
+  });
+
+  test("select an option correctly inside interface type dropdown", () => {
+    render(
+      <BrowserRouter>
+        <AddDevice />
+      </BrowserRouter>
+    );
+    fireEvent.mouseDown(
+      screen.getByRole("button", { name: "service interface" })
+    );
+    const listbox = within(screen.getByRole("listbox"));
+    fireEvent.click(listbox.getByText("TCP"));
+    expect(screen.getAllByText("TCP")).toBeTruthy();
+  });
+
+  test("inserts data correctly inside metadata textfield", () => {
+    render(
+      <BrowserRouter>
+        <AddDevice />
+      </BrowserRouter>
+    );
+    fireEvent.change(
+      screen.getByRole("textbox", { name: "service metadata" }),
+      {
+        target: { value: "Test metadata" },
+      }
+    );
+    expect(
+      screen.getByRole("textbox", {
+        name: "service metadata",
+        value: "Test metadata",
+      })
+    ).toBeInTheDocument();
+  });
+
+  test("submit form with only device name field filled and get errors", () => {
+    render(
+      <BrowserRouter>
+        <AddDevice />
+      </BrowserRouter>
+    );
+    fireEvent.change(screen.getByRole("textbox", { name: "device name" }), {
+      target: { value: "Test name" },
+    });
+    fireEvent.click(screen.getByRole("button", { name: "Add device" }));
+    expect(screen.getByRole("textbox", { name: "device name" })).toHaveValue(
+      "Test name"
+    );
+  });
+
+  test("submit form with only endpoint field filled and get errors", () => {
+    render(
+      <BrowserRouter>
+        <AddDevice />
+      </BrowserRouter>
+    );
+    fireEvent.change(screen.getByRole("textbox", { name: "service endpoint" }), {
+      target: { value: "Test endpoint" },
+    });
+    fireEvent.click(screen.getByRole("button", { name: "Add device" }));
+    expect(screen.getByRole("textbox", { name: "service endpoint" })).toHaveValue(
+      "Test endpoint"
+    );
+  });
+
+  test("submit form correctly", () => {
+    render(
+      <BrowserRouter>
+        <AddDevice />
+      </BrowserRouter>
+    );
+    fireEvent.change(screen.getByRole("textbox", { name: "device name" }), {
+      target: { value: "Test name" },
+    });
+    fireEvent.change(
+      screen.getByRole("textbox", { name: "service endpoint" }),
+      {
+        target: { value: "Test endpoint" },
+      }
+    );
+    fireEvent.change(
+      screen.getByRole("textbox", { name: "service metadata" }),
+      {
+        target: { value: "Test metadata" },
+      }
+    );
+    fireEvent.click(screen.getByRole("button", { name: "Add device" }));
+    expect(screen.getByRole("textbox", { name: "device name" })).toHaveValue(
+      ""
+    );
   });
 });

@@ -10,6 +10,12 @@ import devices from "./data/deviceTypes.json";
 import interfaces from "./data/interfaceTypes.json";
 import AddIcon from "@mui/icons-material/Add";
 import { useNavigate } from "react-router";
+import Snackbar from "@mui/material/Snackbar";
+import MuiAlert from "@mui/material/Alert";
+
+const Alert = React.forwardRef(function Alert(props, ref) {
+  return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+});
 
 //Styles
 const useStyles = makeStyles({
@@ -45,6 +51,7 @@ function AddDeviceForm() {
   const classes = useStyles();
   const navigate = useNavigate();
   const [deviceName, setDeviceName] = useState("");
+  const [deviceNameError, setDeviceNameError] = useState(false);
   const interfaceTypes = interfaces;
   const deviceTypes = devices;
   const [lastKey, setLastKey] = useState(0);
@@ -56,8 +63,15 @@ function AddDeviceForm() {
       endpoint: "",
       interface: interfaceTypes[0].value,
       metadata: "",
+      endpointError: false,
+      metadataError: false,
     },
   ]);
+  const [snackbar, setSnackbar] = React.useState({
+    open: false,
+    severity: "",
+    message: "",
+  });
 
   //Add service into the form
   const addService = () => {
@@ -70,6 +84,8 @@ function AddDeviceForm() {
         endpoint: "",
         interface: interfaceTypes[0].value,
         metadata: "",
+        endpointError: false,
+        metadataError: false,
       })
     );
   };
@@ -109,9 +125,136 @@ function AddDeviceForm() {
     }
   };
 
+  //Reset all textfield states
+  const resetForm = () => {
+    const lastKey = 0;
+    setLastKey(lastKey);
+    const newValue = "";
+    setDeviceName(newValue);
+    setDeviceType(deviceTypes[0].value);
+    const newDeviceServices = [
+      {
+        key: lastKey,
+        isFirst: true,
+        endpoint: "",
+        interface: interfaceTypes[0].value,
+        metadata: "",
+        endpointError: false,
+        metadataError: false,
+      },
+    ];
+    setDeviceServices(newDeviceServices);
+  };
+
+  //Reset all textfield errors
+  const resetErrors = () => {
+    setDeviceNameError(false);
+    const newDeviceServices = deviceServices.slice();
+    newDeviceServices.forEach((service) => {
+      service.endpointError = false;
+      service.metadataError = false;
+    });
+    setDeviceServices(newDeviceServices);
+  };
+
+  const isDeviceNameCorrect = () => {
+    if (deviceName) {
+      return true;
+    } else {
+      setDeviceNameError(true);
+      return false;
+    }
+  };
+
+  const areServicesCorrect = () => {
+    let error = false;
+
+    const newDeviceServices = deviceServices.slice();
+    newDeviceServices.forEach((service) => {
+      if (service.endpoint === "") {
+        error = true;
+        service.endpointError = true;
+      }
+      if (service.metadata === "") {
+        error = true;
+        service.metadataError = true;
+      }
+    });
+    if (error) {
+      setDeviceServices(newDeviceServices);
+      return false;
+    } else {
+      return true;
+    }
+  };
+
+  //Display snackbar
+  const displaySnackbar = (status) => {
+    let newState;
+    if (status === true) {
+      newState = {
+        open: true,
+        severity: "success",
+        message: "Device added successfully!",
+      };
+    } else {
+      newState = {
+        open: true,
+        severity: "error",
+        message: "Something went wrong!",
+      };
+    }
+    setSnackbar(newState);
+  };
+
+  //Close snackbar
+  const closeSnackbar = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    const newState = {
+      open: false,
+      severity: "",
+      message: "",
+    };
+    setSnackbar(newState);
+  };
+
+  //On submit
+  const addDevice = (e) => {
+    e.preventDefault();
+    resetErrors();
+
+    if (isDeviceNameCorrect() & areServicesCorrect()) {
+      let jsonObject;
+      let jsonServices = [];
+      deviceServices.forEach((service) => {
+        jsonServices.push({
+          endpoint: service.endpoint,
+          interfaceType: service.interface,
+          metadata: {
+            metadataType: "Connection details",
+            value: service.metadata,
+          },
+        });
+      });
+      jsonObject = {
+        name: deviceName,
+        devtype: deviceType,
+        services: jsonServices,
+      };
+      console.log(jsonObject);
+      displaySnackbar(true);
+
+      resetForm();
+    } else {
+      console.log("Error in the form");
+    }
+  };
+
   return (
     <Box className={classes.formColumn}>
-      <form noValidate autoComplete="off">
+      <form noValidate autoComplete="off" onSubmit={addDevice}>
         <Typography
           variant="h4"
           paddingBottom="20px"
@@ -121,18 +264,27 @@ function AddDeviceForm() {
           Add Device
         </Typography>
         <TextField
+          inputProps={{ "aria-label": "device name" }}
           className={classes.field}
           label={"Name"}
+          value={deviceName}
           margin="normal"
+          onChange={(event) => {
+            setDeviceName(event.target.value);
+          }}
+          required
+          error={deviceNameError}
           fullWidth
         />
         <TextField
+          inputProps={{ "aria-label": "device type" }}
           select
           className={classes.field}
           label={"Device type"}
           value={deviceType}
           onChange={onChangeDeviceType}
           margin="normal"
+          required
           fullWidth
         >
           {deviceTypes.map((option) => (
@@ -161,6 +313,8 @@ function AddDeviceForm() {
             endpoint={s.endpoint}
             interface={s.interface}
             metadata={s.metadata}
+            endpointError={s.endpointError}
+            metadataError={s.metadataError}
             onEndpointChange={(event) =>
               onChangeService(event, s.key, "endpoint")
             }
@@ -185,9 +339,25 @@ function AddDeviceForm() {
           >
             Cancel
           </Button>
-          <Button variant="contained">Add device</Button>
+          <Button type="submit" variant="contained">
+            Add device
+          </Button>
         </Box>
       </form>
+      <Snackbar
+        anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+        open={snackbar.open}
+        autoHideDuration={5000}
+        onClose={closeSnackbar}
+      >
+        <Alert
+          onClose={closeSnackbar}
+          severity={snackbar.severity}
+          sx={{ width: "100%" }}
+        >
+          {snackbar.message}
+        </Alert>
+      </Snackbar>
     </Box>
   );
 }
