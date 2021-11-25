@@ -1,5 +1,5 @@
 import * as React from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate /*useLocation*/ } from "react-router-dom";
 import { styled } from "@mui/material/styles";
 import Box from "@mui/material/Box";
 import Drawer from "@mui/material/Drawer";
@@ -17,6 +17,9 @@ import ListItemText from "@mui/material/ListItemText";
 import DevicesOtherIcon from "@mui/icons-material/DevicesOther";
 import CloseIcon from "@mui/icons-material/Close";
 import Logout from "./Logout";
+import Snackbar from "@mui/material/Snackbar";
+import MuiAlert from "@mui/material/Alert";
+import { SnackbarContext } from "./context/SnackbarContext";
 
 const drawerWidth = 240;
 
@@ -65,12 +68,18 @@ const DrawerHeader = styled("div")(({ theme }) => ({
   justifyContent: "flex-start",
 }));
 
+const Alert = React.forwardRef(function Alert(props, ref) {
+  return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+});
+
+//Component
 export default function Layout({ children }) {
   const navigate = useNavigate();
-  const location = useLocation();
+  //const location = useLocation();
   const [open, setOpen] = React.useState(false);
   //let string = location.pathname.includes("flows") ? "Flows" : "Devices";
   const [title, setTitle] = React.useState("Devices");
+  const { snackbar, closeSnackbar } = React.useContext(SnackbarContext);
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -137,6 +146,20 @@ export default function Layout({ children }) {
       <Main open={open}>
         <DrawerHeader />
         {children}
+        <Snackbar
+          anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+          open={snackbar.open}
+          autoHideDuration={5000}
+          onClose={closeSnackbar}
+        >
+          <Alert
+            onClose={closeSnackbar}
+            severity={snackbar.severity}
+            sx={{ width: "100%" }}
+          >
+            {snackbar.message}
+          </Alert>
+        </Snackbar>
       </Main>
     </Box>
   );

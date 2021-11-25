@@ -1,0 +1,14 @@
+[
+  {
+    "value": "ActuatingDevice",
+    "label": "Actuating"
+  },
+  {
+    "value": "SensingDevice",
+    "label": "Sensing"
+  },
+  {
+    "value": "TagDevice",
+    "label": "Tag"
+  }
+]
