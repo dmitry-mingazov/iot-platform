@@ -1,9 +1,22 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Stack, Button } from "@mui/material";
 import { useNavigate } from "react-router";
+import DeviceService from "../services/DeviceService";
 
 function Devices() {
   const navigate = useNavigate();
+  const [devices, setDevices] = useState([]);
+
+  // will run only on first render
+  useEffect(() => {
+    DeviceService.getDevices().then(dvs => {
+      setDevices(dvs);
+    });
+  }, []);
+
+  useEffect(() => {
+
+  }, [devices])
 
   return (
     <div>
