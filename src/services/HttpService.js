@@ -56,6 +56,6 @@ export default class HttpService {
   }
 
   static handleError(error) {
-    console.err(error);
+    console.error(error);
   }
 }
