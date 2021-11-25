@@ -1,37 +1,61 @@
 import axios from "axios";
 
-export async function get(url) {
-  const response = await axios.get(url);
-  if (response.status === 200) {
-    return await response.data;
-  } else {
-    throw new Error("GET Api call didn't return status code 200");
+export default class HttpService {
+  static async get(url) {
+    return axios.get(url).then((response) => {
+      if (response.status < 300) {
+        return response.data;
+      } else {
+        throw new Error('GET got error');
+      }
+    }).catch(err => {
+      this.handleError(err)
+    });
   }
-}
 
-export async function post(url, jsonObject) {
-  const response = await axios.post(url, jsonObject);
-  if (response.status === 200) {
-    return await response.data;
-  } else {
-    throw new Error("POST Api call didn't return status code 200");
+  static async post(url, body) {
+    return axios.post(url, body)
+      .then(response => {
+        if (response.status < 300) {
+          return response.data;
+        } else {
+          throw new Error("POST Api call didn't return status code 200");
+        }
+      })
+      .catch(err => {
+        this.handleError(err);
+      });
   }
-}
 
-export async function put(url, jsonObject) {
-  const response = await axios.put(url, jsonObject);
-  if (response.status === 200) {
-    return await response.data;
-  } else {
-    throw new Error("PUT Api call didn't return status code 200");
+  static async put(url, body) {
+    return axios.put(url, body)
+      .then(response => {
+        if (response.status < 300) {
+          return response.data;
+        } else {
+          throw new Error("PUT Api call didn't return status code 200");
+        }
+      })
+      .catch(err => {
+        this.handleError(err);
+      });
   }
-}
 
-export async function del(url) {
-  const response = await axios.delete(url);
-  if (response.status === 200) {
-    return await response.data;
-  } else {
-    throw new Error("DELETE Api call didn't return status code 200");
+  static async del(url) {
+    return axios.delete(url)
+      .then(response => {
+        if (response.status < 300) {
+          return response.data;
+        } else {
+          throw new Error("PUT Api call didn't return status code 200");
+        }
+      })
+      .catch(err => {
+        this.handleError(err);
+      })
+  }
+
+  static handleError(error) {
+    console.err(error);
   }
 }
