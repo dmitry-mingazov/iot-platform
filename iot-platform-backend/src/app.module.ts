@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { DevicesModule } from './devices.module';
 import { ConfigModule } from '@nestjs/config';
+import { AuthModule } from './auth.module';
 
 @Module({
   imports: [
@@ -13,6 +14,7 @@ import { ConfigModule } from '@nestjs/config';
       connectionName: 'devicesTest',
     }),
     DevicesModule,
+    AuthModule,
   ],
   controllers: [],
   providers: [],
