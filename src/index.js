@@ -4,6 +4,7 @@ import App from "./App";
 import { createTheme } from "@mui/material";
 import { ThemeProvider } from "@emotion/react";
 import { Auth0Provider } from '@auth0/auth0-react';
+import { AuthStateContext } from "./components/context/AuthContext";
 
 const theme = createTheme({
   palette: {
@@ -20,11 +21,13 @@ ReactDOM.render(
     redirectUri={window.location.origin}
     audience={process.env.REACT_APP_AUTH0_AUDIENCE}
   >
-    <React.StrictMode>
-      <ThemeProvider theme={theme}>
-        <App />
-      </ThemeProvider>
-    </React.StrictMode>
+    <AuthStateContext>
+      <React.StrictMode>
+        <ThemeProvider theme={theme}>
+          <App />
+        </ThemeProvider>
+      </React.StrictMode>
+    </AuthStateContext>
   </Auth0Provider>,
   document.getElementById("root")
 );
