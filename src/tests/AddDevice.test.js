@@ -4,7 +4,6 @@ import { render, screen, fireEvent, within } from "@testing-library/react";
 import AddDevice from "../pages/AddDevice";
 import { SnackbarStateContext } from "../components/context/SnackbarContext";
 import "@testing-library/jest-dom";
-import { findRenderedComponentWithType } from "react-dom/test-utils";
 
 const renderComponent = () => {
   render(
