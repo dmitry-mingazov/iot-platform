@@ -5,5 +5,8 @@ class DeviceService {
     static async createDevice(device) {
         return HttpService.post(DeviceService.baseUrl, device);
     }
+    static async getDevices() {
+        return HttpService.get(DeviceService.baseUrl);
+    }
 }
 export default DeviceService;
