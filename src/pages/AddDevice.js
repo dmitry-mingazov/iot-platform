@@ -11,6 +11,7 @@ import interfaces from "../components/data/interfaceTypes.json";
 import AddIcon from "@mui/icons-material/Add";
 import { useNavigate } from "react-router";
 import { SnackbarContext } from "../components/context/SnackbarContext";
+import DeviceService from "../services/DeviceService";
 
 //Styles
 const useStyles = makeStyles({
@@ -223,16 +224,13 @@ function AddDevice() {
         devtype: deviceType,
         services: jsonServices,
       };
-      console.log(jsonObject);
-      displaySnackbar(false);
-      /*try {
-        await http.Post("http://localhost:3000/api/devices", jsonObject);
-        displaySnackbar(true);
-      } catch (error) {
-        displaySnackbar(false);
-        console.log(error);
-      }*/
-
+      DeviceService.createDevice(jsonObject)
+        .then(_ => {
+          displaySnackbar(false)
+        })
+        .catch(_ => {
+          displaySnackbar(true);
+        });
       resetForm();
     } else {
       console.log("Error in the form");
