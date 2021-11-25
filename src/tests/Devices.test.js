@@ -4,13 +4,17 @@ import { render, screen } from "@testing-library/react";
 import Devices from "../pages/Devices";
 import '@testing-library/jest-dom/extend-expect';
 
+const renderComponent = () => {
+  render(
+    <BrowserRouter>
+      <Devices />
+    </BrowserRouter>
+  );
+}
+
 describe("Devices component", () => {
   test("renders Devices component", () => {
-    render(
-      <BrowserRouter>
-        <Devices />
-      </BrowserRouter>
-    );
+    renderComponent();
     expect(screen.getByRole("button", {name: "Add device"})).toBeTruthy();
   });
 });
