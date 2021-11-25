@@ -63,7 +63,11 @@ function AddDevice() {
       metadataError: false,
     },
   ]);
-  const { setSnackbar } = React.useContext(SnackbarContext);
+  // const { setSnackbar } = React.useContext(SnackbarContext);
+  const { 
+    openSuccessSnackbar,
+    openErrorSnackbar 
+  } = React.useContext(SnackbarContext);
 
   //Add service into the form
   const addService = () => {
@@ -182,26 +186,6 @@ function AddDevice() {
     }
   };
 
-  //Display snackbar
-  const displaySnackbar = (error) => {
-    let newState;
-    if (error === false) {
-      newState = {
-        open: true,
-        severity: "success",
-        message: "Device added successfully!",
-      };
-    } else {
-      newState = {
-        open: true,
-        severity: "error",
-        message: "Something went wrong!",
-      };
-    }
-    setSnackbar(newState);
-  };
-
-  //On submit
   const addDevice = async (e) => {
     e.preventDefault();
     resetErrors();
@@ -226,14 +210,14 @@ function AddDevice() {
       };
       DeviceService.createDevice(jsonObject)
         .then(_ => {
-          displaySnackbar(false)
+          openSuccessSnackbar('Device added successfully');
         })
         .catch(_ => {
-          displaySnackbar(true);
+          openErrorSnackbar('Something went wrong!');
         });
       resetForm();
     } else {
-      console.log("Error in the form");
+      openErrorSnackbar('Please fill the form');
     }
   };
 

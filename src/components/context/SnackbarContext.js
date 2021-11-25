@@ -14,16 +14,32 @@ const SnackbarStateContext = (props) => {
     if (reason === "clickaway") {
       return;
     }
-    const newState = {
+    const newSnackbar = {
+      ...snackbar,
       open: false,
-      severity: "",
-      message: "",
     };
-    setSnackbar(newState);
+    setSnackbar(newSnackbar);
   };
 
+  const openSuccessSnackbar = (message) => {
+    setSnackbar({
+      open: true,
+      severity: 'success',
+      message 
+    });
+  }
+
+  const openErrorSnackbar = (message) => {
+    setSnackbar({
+      open: true,
+      severity: 'error',
+      message
+    });
+  }
+
   return (
-    <SnackbarContext.Provider value={{ snackbar, setSnackbar, closeSnackbar }}>
+    <SnackbarContext.Provider 
+      value={{snackbar, closeSnackbar, openSuccessSnackbar, openErrorSnackbar }}>
       {props.children}
     </SnackbarContext.Provider>
   );
