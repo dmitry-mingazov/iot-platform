@@ -2,10 +2,14 @@ import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import { Device } from './schemas/device.schema';
 import { DevicesService } from './devices.service';
 import { CreateDeviceDto } from './dto/create-device.dto';
+import { ConfigService } from '@nestjs/config';
 
 @Controller('/api/devices')
 export class DevicesController {
-  constructor(private readonly devicesService: DevicesService) {}
+  constructor(
+    private readonly devicesService: DevicesService,
+    private readonly configService: ConfigService,
+  ) {}
 
   @Get()
   findAll(): Promise<Device[]> {
