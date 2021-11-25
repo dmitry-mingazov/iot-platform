@@ -9,7 +9,7 @@ import MenuItem from "@mui/material/MenuItem";
 import devices from "../components/data/deviceTypes.json";
 import interfaces from "../components/data/interfaceTypes.json";
 import AddIcon from "@mui/icons-material/Add";
-import { useNavigate } from "react-router";
+import { Navigate, useNavigate } from "react-router";
 import { SnackbarContext } from "../components/context/SnackbarContext";
 import DeviceService from "../services/DeviceService";
 
@@ -52,6 +52,7 @@ function AddDevice() {
   const deviceTypes = devices;
   const [lastKey, setLastKey] = useState(0);
   const [deviceType, setDeviceType] = useState(deviceTypes[0].value);
+  const [redirectToHome, setRedirectToHome] = useState(false);
   const [deviceServices, setDeviceServices] = useState([
     {
       key: lastKey,
@@ -211,6 +212,7 @@ function AddDevice() {
       DeviceService.createDevice(jsonObject)
         .then(_ => {
           openSuccessSnackbar('Device added successfully');
+          setRedirectToHome(true);
         })
         .catch(_ => {
           openErrorSnackbar('Something went wrong!');
@@ -222,6 +224,10 @@ function AddDevice() {
   };
 
   return (
+    redirectToHome 
+    ?
+    <Navigate to="/" replace />
+    : 
     <Box className={classes.formColumn}>
       <form noValidate autoComplete="off" onSubmit={addDevice}>
         <Typography
