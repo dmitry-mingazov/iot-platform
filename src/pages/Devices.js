@@ -2,6 +2,9 @@ import React, { useEffect, useState } from "react";
 import { Stack, Button } from "@mui/material";
 import { useNavigate } from "react-router";
 import DeviceService from "../services/DeviceService";
+import Box from "@mui/material/Box";
+import Grid from "@mui/material/Grid";
+import Device from "../components/Device";
 
 function Devices() {
   const navigate = useNavigate();
@@ -9,24 +12,39 @@ function Devices() {
 
   // will run only on first render
   useEffect(() => {
-    DeviceService.getDevices().then(dvs => {
+    DeviceService.getDevices().then((dvs) => {
       setDevices(dvs);
     });
   }, []);
 
-  useEffect(() => {
-
-  }, [devices])
+  useEffect(() => {}, [devices]);
 
   return (
     <div>
-      <Stack
-        direction="row"
-        spacing={2}
-        sx={{ justifyContent: 'flex-end'}}
-      >
-        <Button variant="contained" size="medium" onClick={() => {navigate("/add-device-form")}}>Add device</Button>
+      <Stack direction="row" spacing={2} sx={{ justifyContent: "flex-end" }}>
+        <Button
+          variant="contained"
+          size="medium"
+          onClick={() => {
+            navigate("/add-device-form");
+          }}
+        >
+          Add device
+        </Button>
       </Stack>
+      <Box m={6}>
+        <Grid
+          container
+          spacing={{ xs: 4, md: 6 }}
+          columns={{ xs: 4, sm: 12, md: 20 }}
+        >
+          {devices.map((device) => (
+            <Grid item xs={2} sm={4} md={4} align="center">
+              <Device key={device._id} deviceName={device.name}></Device>{" "}
+            </Grid>
+          ))}
+        </Grid>
+      </Box>
     </div>
   );
 }
