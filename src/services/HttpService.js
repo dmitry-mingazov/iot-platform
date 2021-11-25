@@ -6,10 +6,8 @@ export default class HttpService {
       if (response.status < 300) {
         return response.data;
       } else {
-        throw new Error('GET got error');
+        throw new Error(`GET api call returned status code ${response.status}`);
       }
-    }).catch(err => {
-      this.handleError(err)
     });
   }
 
@@ -19,11 +17,8 @@ export default class HttpService {
         if (response.status < 300) {
           return response.data;
         } else {
-          throw new Error("POST Api call didn't return status code 200");
+          throw new Error(`POST api call returned status code ${response.status}`);
         }
-      })
-      .catch(err => {
-        this.handleError(err);
       });
   }
 
@@ -33,11 +28,8 @@ export default class HttpService {
         if (response.status < 300) {
           return response.data;
         } else {
-          throw new Error("PUT Api call didn't return status code 200");
+        throw new Error(`PUT api call returned status code ${response.status}`);
         }
-      })
-      .catch(err => {
-        this.handleError(err);
       });
   }
 
@@ -47,15 +39,9 @@ export default class HttpService {
         if (response.status < 300) {
           return response.data;
         } else {
-          throw new Error("PUT Api call didn't return status code 200");
+          throw new Error(`DELETE api call returned status code ${response.status}`);
         }
-      })
-      .catch(err => {
-        this.handleError(err);
-      })
+      });
   }
 
-  static handleError(error) {
-    console.error(error);
-  }
 }
