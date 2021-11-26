@@ -1,21 +1,25 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Stack, Button } from "@mui/material";
 import { useNavigate } from "react-router";
 import DeviceService from "../services/DeviceService";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import Device from "../components/Device";
+import { AuthContext } from "../components/context/AuthContext";
 
 function Devices() {
   const navigate = useNavigate();
   const [devices, setDevices] = useState([]);
+  const { isTokenReady } = useContext(AuthContext);
 
   // will run only on first render
   useEffect(() => {
-    DeviceService.getDevices().then((dvs) => {
-      setDevices(dvs);
-    });
-  }, []);
+    if(isTokenReady) {
+      DeviceService.getDevices().then((dvs) => {
+        setDevices(dvs);
+      });
+    }
+  }, [isTokenReady]);
 
   useEffect(() => {}, [devices]);
 
