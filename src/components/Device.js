@@ -6,6 +6,7 @@ import { Typography, CardActionArea, Divider } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import EmojiObjectsIcon from "@mui/icons-material/EmojiObjects";
 import { useNavigate } from "react-router-dom";
+import DeviceService from "../services/DeviceService";
 
 const useStyles = makeStyles({
   circle: {
@@ -25,14 +26,17 @@ function Device(props) {
   const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = React.useState(null);
 
-  const navigateToViewInformation = () => {
-    console.log("Navigation to implement");
-  };
+  const openInfo = () => {
+    DeviceService.getDevice(props._id).then(dv => {
+      // got device info
+      console.log(dv);
+    })
+  }
 
   const menuItems = [
     {
       title: "View information",
-      function: navigateToViewInformation,
+      fn: openInfo
     },
   ];
 
@@ -79,7 +83,7 @@ function Device(props) {
         </MenuItem>
         <Divider></Divider>
         {menuItems.map((item) => (
-          <MenuItem onClick={item.function} key={item.title} value={item.title}>
+          <MenuItem onClick={() => {item.fn()}} key={item.title} value={item.title}>
             {item.title}
           </MenuItem>
         ))}

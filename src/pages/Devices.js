@@ -14,7 +14,7 @@ function Devices() {
 
   // will run only on first render
   useEffect(() => {
-    if(isTokenReady) {
+    if (isTokenReady) {
       DeviceService.getDevices().then((dvs) => {
         setDevices(dvs);
       });
@@ -44,7 +44,11 @@ function Devices() {
         >
           {devices.map((device) => (
             <Grid key={device._id} item xs={2} sm={4} md={4} align="center">
-              <Device key={device._id} deviceName={device.name}></Device>
+              <Device
+                key={device._id}
+                _id={device._id}
+                deviceName={device.name}
+              ></Device>
             </Grid>
           ))}
         </Grid>
