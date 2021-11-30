@@ -37,7 +37,6 @@ function Device(props) {
   ];
 
   const handleClick = (e) => {
-    console.log(e.currentTarget);
     setAnchorEl(e.currentTarget);
   };
 
