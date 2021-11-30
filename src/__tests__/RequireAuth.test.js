@@ -22,7 +22,7 @@ jest.mock('@auth0/auth0-react', () => (
         useAuth0: () => {
             return {
                 isLoading: false,
-                isAuthenticated: true
+                isAuthenticated: true,
             }
         }
     }
