@@ -1,8 +1,8 @@
 import React from "react";
 import { BrowserRouter } from "react-router-dom";
-import { render, screen } from "@testing-library/react";
+import { fireEvent, render, screen } from "@testing-library/react";
 import Device from "../components/Device";
-import '@testing-library/jest-dom/extend-expect';
+import "@testing-library/jest-dom/extend-expect";
 
 const renderComponent = () => {
   render(
@@ -10,11 +10,18 @@ const renderComponent = () => {
       <Device />
     </BrowserRouter>
   );
-}
+};
 
-describe("Devices component", () => {
-  test("renders Devices component", async () => {
+describe("Device component", () => {
+  test("renders Device component", () => {
     renderComponent();
+    expect(screen.getByRole("button", { name: "" })).toBeInTheDocument();
     expect(screen.getByText("View information")).toBeInTheDocument();
   });
+
+  test("opens menu correctly when clicked", () => {
+    renderComponent();
+    fireEvent.click(screen.getByRole("button"));
+    expect(screen.getAllByRole("menuitem").length).toBe(2);
+  }); 
 });
