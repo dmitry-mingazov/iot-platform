@@ -1,7 +1,7 @@
 import React from "react";
 import { BrowserRouter } from "react-router-dom";
 import { fireEvent, render, screen } from "@testing-library/react";
-import Device from "../components/Device";
+import Device from "../Device";
 import "@testing-library/jest-dom/extend-expect";
 
 const renderComponent = () => {

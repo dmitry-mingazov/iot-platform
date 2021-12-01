@@ -1,8 +1,8 @@
 import React from "react";
 import { BrowserRouter } from "react-router-dom";
 import { render, screen, fireEvent, within } from "@testing-library/react";
-import AddDevice from "../pages/AddDevice";
-import { SnackbarStateContext } from "../components/context/SnackbarContext";
+import AddDevice from "../AddDevice";
+import { SnackbarStateContext } from "../../components/context/SnackbarContext";
 import "@testing-library/jest-dom";
 
 const renderComponent = () => {

@@ -1,7 +1,7 @@
-import { Auth0Provider, useAuth0 } from '@auth0/auth0-react';
-import { render, screen, fireEvent } from '@testing-library/react';
+import { Auth0Provider } from '@auth0/auth0-react';
+import { render, screen } from '@testing-library/react';
 import { act } from 'react-dom/test-utils';
-import Unauthorized from "../pages/Unauthorized";
+import Unauthorized from "../Unauthorized";
 
 const renderUnauthorized = () => {
     render(

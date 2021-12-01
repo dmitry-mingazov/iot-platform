@@ -1,6 +1,6 @@
 import React from "react";
 import { render, screen } from "@testing-library/react";
-import { AuthStateContext } from "../components/context/AuthContext";
+import { AuthStateContext } from "../AuthContext";
 import { useAuth0 } from "@auth0/auth0-react";
 import "@testing-library/jest-dom/extend-expect";
 
