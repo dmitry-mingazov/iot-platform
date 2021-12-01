@@ -43,8 +43,8 @@ function Devices() {
           columns={{ xs: 4, sm: 12, md: 20 }}
         >
           {devices.map((device) => (
-            <Grid item xs={2} sm={4} md={4} align="center">
-              <Device key={device._id} deviceName={device.name}></Device>{" "}
+            <Grid key={device._id} item xs={2} sm={4} md={4} align="center">
+              <Device key={device._id} deviceName={device.name}></Device>
             </Grid>
           ))}
         </Grid>
