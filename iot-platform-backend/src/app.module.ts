@@ -7,10 +7,10 @@ import { AuthModule } from './auth.module';
 @Module({
   imports: [
     ConfigModule.forRoot(),
-    MongooseModule.forRoot('mongodb://localhost/devices', {
+    MongooseModule.forRoot(`${process.env.MONGO_URL}/devices`, {
       connectionName: 'devices',
     }),
-    MongooseModule.forRoot('mongodb://localhost/devicesTest', {
+    MongooseModule.forRoot(`${process.env.MONGO_URL}/devicesTest`, {
       connectionName: 'devicesTest',
     }),
     DevicesModule,
