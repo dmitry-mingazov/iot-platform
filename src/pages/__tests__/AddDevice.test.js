@@ -4,12 +4,19 @@ import { render, screen, fireEvent, within } from "@testing-library/react";
 import AddDevice from "../AddDevice";
 import { SnackbarStateContext } from "../../components/context/SnackbarContext";
 import "@testing-library/jest-dom";
+import DeviceService from "../../services/DeviceService";
+import { act } from "react-dom/test-utils";
+import Layout from "../../components/Layout";
+
+jest.mock("../../services/DeviceService");
 
 const renderComponent = () => {
   render(
     <BrowserRouter>
       <SnackbarStateContext>
-        <AddDevice />
+        <Layout>
+          <AddDevice />
+        </Layout>
       </SnackbarStateContext>
     </BrowserRouter>
   );
@@ -155,7 +162,11 @@ describe("AddDevice component", () => {
     ).toHaveValue("Test endpoint");
   });
 
-  test("submits form correctly", () => {
+  test("submits form correctly", async () => {
+    DeviceService.createDevice.mockResolvedValue({
+      something: true,
+    });
+
     renderComponent();
     fireEvent.change(screen.getByRole("textbox", { name: "device name" }), {
       target: { value: "Test name" },
@@ -172,9 +183,9 @@ describe("AddDevice component", () => {
         target: { value: "Test metadata" },
       }
     );
-    fireEvent.click(screen.getByRole("button", { name: "Add device" }));
-    expect(screen.getByRole("textbox", { name: "device name" })).toHaveValue(
-      ""
-    );
+    await act(async () => {
+      fireEvent.click(screen.getByRole("button", { name: "Add device" }));
+      await expect(screen.findByText("Device added successfully")).resolves.toBeInTheDocument();
+    });
   });
 });
