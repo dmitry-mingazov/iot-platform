@@ -282,6 +282,7 @@ function AddDevice() {
             isFirst={s.isFirst}
             endpoint={s.endpoint}
             interface={s.interface}
+            interfaceTypes={interfaceTypes}
             metadata={s.metadata}
             endpointError={s.endpointError}
             metadataError={s.metadataError}

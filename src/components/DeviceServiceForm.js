@@ -2,7 +2,6 @@ import * as React from "react";
 import TextField from "@mui/material/TextField";
 import MenuItem from "@mui/material/MenuItem";
 import { makeStyles } from "@mui/styles";
-import interfaces from "./data/interfaceTypes.json";
 import { Button } from "@mui/material";
 
 //Styles
@@ -30,7 +29,6 @@ const useStyles = makeStyles({
 //Component
 function DeviceServiceForm(props) {
   const classes = useStyles();
-  const interfaceTypes = interfaces;
 
   return (
     <div>
@@ -58,7 +56,7 @@ function DeviceServiceForm(props) {
         required
         fullWidth
       >
-        {interfaceTypes.map((option) => (
+        {props.interfaceTypes.map((option) => (
           <MenuItem key={option.value} value={option.value}>
             {option.label}
           </MenuItem>
