@@ -12,6 +12,7 @@ import AddIcon from "@mui/icons-material/Add";
 import { useNavigate } from "react-router";
 import { SnackbarContext } from "../components/context/SnackbarContext";
 import DeviceService from "../services/DeviceService";
+import DeviceInformationForm from "../components/DeviceInformationForm";
 
 //Styles
 const useStyles = makeStyles({
@@ -64,10 +65,8 @@ function AddDevice() {
     },
   ]);
   // const { setSnackbar } = React.useContext(SnackbarContext);
-  const { 
-    openSuccessSnackbar,
-    openErrorSnackbar 
-  } = React.useContext(SnackbarContext);
+  const { openSuccessSnackbar, openErrorSnackbar } =
+    React.useContext(SnackbarContext);
 
   //Add service into the form
   const addService = () => {
@@ -98,8 +97,13 @@ function AddDevice() {
     }
   };
 
+  //Handle changes on device name
+  const onDeviceNameChange = (event) => {
+    setDeviceName(event.target.value);
+  };
+
   //Handle changes on device type
-  const onChangeDeviceType = (event) => {
+  const onDeviceTypeChange = (event) => {
     const newValue = event.target.value;
     setDeviceType(newValue);
   };
@@ -119,27 +123,6 @@ function AddDevice() {
       }
       setDeviceServices(newDeviceServices);
     }
-  };
-
-  //Reset all textfield states
-  const resetForm = () => {
-    const lastKey = 0;
-    setLastKey(lastKey);
-    const newValue = "";
-    setDeviceName(newValue);
-    setDeviceType(deviceTypes[0].value);
-    const newDeviceServices = [
-      {
-        key: lastKey,
-        isFirst: true,
-        endpoint: "",
-        interface: interfaceTypes[0].value,
-        metadata: "",
-        endpointError: false,
-        metadataError: false,
-      },
-    ];
-    setDeviceServices(newDeviceServices);
   };
 
   //Reset all textfield errors
@@ -209,16 +192,15 @@ function AddDevice() {
         services: jsonServices,
       };
       DeviceService.createDevice(jsonObject)
-        .then(_ => {
-          openSuccessSnackbar('Device added successfully');
-          navigate('/');
+        .then((_) => {
+          openSuccessSnackbar("Device added successfully");
+          navigate("/");
         })
-        .catch(_ => {
-          openErrorSnackbar('Something went wrong!');
+        .catch((_) => {
+          openErrorSnackbar("Something went wrong!");
         });
-      resetForm();
     } else {
-      openErrorSnackbar('Please fill the form');
+      openErrorSnackbar("Please fill the form");
     }
   };
 
@@ -233,36 +215,14 @@ function AddDevice() {
         >
           Add Device
         </Typography>
-        <TextField
-          inputProps={{ "aria-label": "device name" }}
-          className={classes.field}
-          label={"Name"}
-          value={deviceName}
-          margin="normal"
-          onChange={(event) => {
-            setDeviceName(event.target.value);
-          }}
-          required
-          error={deviceNameError}
-          fullWidth
-        />
-        <TextField
-          inputProps={{ "aria-label": "device type" }}
-          select
-          className={classes.field}
-          label={"Device type"}
-          value={deviceType}
-          onChange={onChangeDeviceType}
-          margin="normal"
-          required
-          fullWidth
-        >
-          {deviceTypes.map((option) => (
-            <MenuItem key={option.value} value={option.value}>
-              {option.label}
-            </MenuItem>
-          ))}
-        </TextField>
+        <DeviceInformationForm
+          name={deviceName}
+          onDeviceNameChange={onDeviceNameChange}
+          nameError={deviceNameError}
+          deviceType={deviceType}
+          deviceTypes={deviceTypes}
+          onDeviceTypeChange={onDeviceTypeChange}
+        ></DeviceInformationForm>
         <Box className={classes.serviceRow}>
           <Typography variant="h6">Service(s)</Typography>
           <Button
