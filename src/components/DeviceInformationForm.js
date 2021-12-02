@@ -9,7 +9,7 @@ const useStyles = makeStyles({
     marginTop: 20,
     marginBottom: 20,
     display: "block",
-  }
+  },
 });
 
 //Component
@@ -19,33 +19,44 @@ function DeviceInformationForm(props) {
   return (
     <div>
       <TextField
-          inputProps={{ "aria-label": "device name" }}
-          className={classes.field}
-          label={"Name"}
-          value={props.deviceName}
-          margin="normal"
-          onChange={props.onDeviceNameChange}
-          required
-          error={props.nameError}
-          fullWidth
-        />
-        <TextField
-          inputProps={{ "aria-label": "device type" }}
-          select
-          className={classes.field}
-          label={"Device type"}
-          value={props.deviceType}
-          onChange={props.onDeviceTypeChange}
-          margin="normal"
-          required
-          fullWidth
-        >
-          {props.deviceTypes.map((option) => (
-            <MenuItem key={option.value} value={option.value}>
-              {option.label}
-            </MenuItem>
-          ))}
-        </TextField>
+        inputProps={{ "aria-label": "device name" }}
+        className={classes.field}
+        label={"Name"}
+        value={props.deviceName}
+        margin="normal"
+        onChange={props.onDeviceNameChange}
+        required
+        error={props.nameError}
+        fullWidth
+      />
+      <TextField
+        inputProps={{ "aria-label": "device description" }}
+        className={classes.field}
+        label={"Description"}
+        value={props.deviceDescription}
+        margin="normal"
+        multiline
+        rows={3}
+        onChange={props.onDeviceDescriptionChange}
+        fullWidth
+      />
+      <TextField
+        inputProps={{ "aria-label": "device type" }}
+        select
+        className={classes.field}
+        label={"Type"}
+        value={props.deviceType}
+        onChange={props.onDeviceTypeChange}
+        margin="normal"
+        required
+        fullWidth
+      >
+        {props.deviceTypes.map((option) => (
+          <MenuItem key={option.value} value={option.value}>
+            {option.label}
+          </MenuItem>
+        ))}
+      </TextField>
     </div>
   );
 }

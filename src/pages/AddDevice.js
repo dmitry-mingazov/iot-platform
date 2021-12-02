@@ -49,6 +49,7 @@ function AddDevice() {
   const navigate = useNavigate();
   const [deviceName, setDeviceName] = useState("");
   const [deviceNameError, setDeviceNameError] = useState(false);
+  const [deviceDescription, setDeviceDescription] = useState("");
   const interfaceTypes = interfaces;
   const deviceTypes = devices;
   const [lastKey, setLastKey] = useState(0);
@@ -100,6 +101,10 @@ function AddDevice() {
   //Handle changes on device name
   const onDeviceNameChange = (event) => {
     setDeviceName(event.target.value);
+  };
+
+  const onDeviceDescriptionChange = (event) => {
+    setDeviceDescription(event.target.value);
   };
 
   //Handle changes on device type
@@ -188,6 +193,7 @@ function AddDevice() {
       });
       jsonObject = {
         name: deviceName,
+        description: deviceDescription,
         devtype: deviceType,
         services: jsonServices,
       };
@@ -216,9 +222,11 @@ function AddDevice() {
           Add Device
         </Typography>
         <DeviceInformationForm
-          name={deviceName}
+          deviceName={deviceName}
           onDeviceNameChange={onDeviceNameChange}
           nameError={deviceNameError}
+          deviceDescription={deviceDescription}
+          onDeviceDescriptionChange={onDeviceDescriptionChange}
           deviceType={deviceType}
           deviceTypes={deviceTypes}
           onDeviceTypeChange={onDeviceTypeChange}
