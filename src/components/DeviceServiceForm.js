@@ -3,13 +3,23 @@ import TextField from "@mui/material/TextField";
 import MenuItem from "@mui/material/MenuItem";
 import { makeStyles } from "@mui/styles";
 import interfaces from "./data/interfaceTypes.json";
-import { Button } from "@mui/material";
+import { Button, Stack, Typography, Switch, Box } from "@mui/material";
 
 //Styles
 const useStyles = makeStyles({
   field: {
     marginTop: 20,
     marginBottom: 20,
+    display: "block",
+  },
+  typeRow: {
+    display: "flex",
+    justifyContent: "space-between",
+    flexDirection: "row",
+  },
+  typeRowField: {
+    marginTop: 20,
+    marginBottom: 0,
     display: "block",
   },
   divider: {
@@ -25,6 +35,9 @@ const useStyles = makeStyles({
     marginTop: 18,
     display: "block",
   },
+  textTypeSelected: {
+    fontWeight: "bold",
+  },
 });
 
 //Component
@@ -35,46 +48,46 @@ function DeviceServiceForm(props) {
   return (
     <div>
       {props.isFirst ? null : <div className={classes.divider} />}
-
-      <TextField
-        inputProps={{ "aria-label": "service endpoint" }}
-        className={classes.field}
-        label="Endpoint"
-        margin="normal"
-        value={props.endpoint}
-        onChange={(event) => props.onEndpointChange(event)}
-        required
-        error={props.endpointError}
-        fullWidth
-      ></TextField>
-      <TextField
-        inputProps={{ "aria-label": "service interface" }}
-        className={classes.field}
-        select
-        label="Interface type"
-        margin="normal"
-        value={props.interface}
-        onChange={(event) => props.onInterfaceTypeChange(event)}
-        required
-        fullWidth
-      >
-        {interfaceTypes.map((option) => (
-          <MenuItem key={option.value} value={option.value}>
-            {option.label}
-          </MenuItem>
-        ))}
-      </TextField>
-      <TextField
-        inputProps={{ "aria-label": "service metadata" }}
-        className={classes.field}
-        label="Metadata"
-        margin="normal"
-        value={props.metadata}
-        onChange={(event) => props.onMetadataChange(event)}
-        required
-        error={props.metadataError}
-        fullWidth
-      ></TextField>
+      <Box className={classes.typeRow}>
+        <TextField
+          inputProps={{ "aria-label": "service interface" }}
+          className={classes.typeRowField}
+          select
+          label="Interface type"
+          margin="normal"
+          value={props.interface}
+          onChange={(event) => props.onInterfaceTypeChange(event)}
+          required
+          style={{ width: "100%" }}
+          fullWidth
+        >
+          {interfaceTypes.map((option) => (
+            <MenuItem key={option.value} value={option.value}>
+              {option.label}
+            </MenuItem>
+          ))}
+        </TextField>
+        <Stack
+          marginLeft={2}
+          flex={"auto"}
+          direction="row"
+          spacing={1}
+          alignItems="center"
+        >
+          <Typography className={props.isIn ? null : classes.textTypeSelected}>
+            Out
+          </Typography>
+          <Switch
+            defaultChecked
+            inputProps={{ "aria-label": "Switch in out" }}
+            value={props.isIn}
+            onChange={props.onIsInSwitch}
+          />
+          <Typography className={props.isIn ? classes.textTypeSelected : null}>
+            In
+          </Typography>
+        </Stack>
+      </Box>
       {props.isFirst ? null : (
         <Button
           className={classes.button}

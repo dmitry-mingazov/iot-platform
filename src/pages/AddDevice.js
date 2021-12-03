@@ -1,13 +1,11 @@
 import React from "react";
 import { useState } from "react";
-import TextField from "@mui/material/TextField";
 import { Box } from "@mui/system";
 import { Button, Typography } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import DeviceServiceForm from "../components/DeviceServiceForm";
-import MenuItem from "@mui/material/MenuItem";
-import devices from "../components/data/deviceTypes.json";
-import interfaces from "../components/data/interfaceTypes.json";
+import deviceTypes from "../components/data/deviceTypes.json";
+import interfaceTypes from "../components/data/interfaceTypes.json";
 import AddIcon from "@mui/icons-material/Add";
 import { useNavigate } from "react-router";
 import { SnackbarContext } from "../components/context/SnackbarContext";
@@ -50,19 +48,15 @@ function AddDevice() {
   const [deviceName, setDeviceName] = useState("");
   const [deviceNameError, setDeviceNameError] = useState(false);
   const [deviceDescription, setDeviceDescription] = useState("");
-  const interfaceTypes = interfaces;
-  const deviceTypes = devices;
   const [lastKey, setLastKey] = useState(0);
   const [deviceType, setDeviceType] = useState(deviceTypes[0].value);
   const [deviceServices, setDeviceServices] = useState([
     {
       key: lastKey,
       isFirst: true,
-      endpoint: "",
+      isIn: true,
       interface: interfaceTypes[0].value,
-      metadata: "",
-      endpointError: false,
-      metadataError: false,
+      serviceInfo: {},
     },
   ]);
   // const { setSnackbar } = React.useContext(SnackbarContext);
@@ -77,11 +71,9 @@ function AddDevice() {
       deviceServices.concat({
         key: newKey,
         isFirst: false,
-        endpoint: "",
+        isIn: true,
         interface: interfaceTypes[0].value,
-        metadata: "",
-        endpointError: false,
-        metadataError: false,
+        serviceInfo: {},
       })
     );
   };
@@ -113,19 +105,24 @@ function AddDevice() {
     setDeviceType(newValue);
   };
 
+  //Handle changes on the out / in switch
+  const onIsInSwitch = (key) => {
+    const newDeviceServices = deviceServices.slice();
+    const indexToReplace = newDeviceServices.findIndex((el) => el.key === key);
+    if (indexToReplace !== -1) {
+      newDeviceServices[indexToReplace].isIn =
+        !newDeviceServices[indexToReplace].isIn;
+      setDeviceServices(newDeviceServices);
+    }
+  };
+
   //Handle changes on a service form
-  const onChangeService = (event, key, attribute) => {
+  const onInterfaceTypeChange = (event, key) => {
     const newValue = event.target.value;
     const newDeviceServices = deviceServices.slice();
     const indexToReplace = newDeviceServices.findIndex((el) => el.key === key);
     if (indexToReplace !== -1) {
-      if (attribute === "endpoint") {
-        newDeviceServices[indexToReplace].endpoint = newValue;
-      } else if (attribute === "interface") {
-        newDeviceServices[indexToReplace].interface = newValue;
-      } else if (attribute === "metadata") {
-        newDeviceServices[indexToReplace].metadata = newValue;
-      }
+      newDeviceServices[indexToReplace].interface = newValue;
       setDeviceServices(newDeviceServices);
     }
   };
@@ -248,20 +245,12 @@ function AddDevice() {
           <DeviceServiceForm
             key={s.key}
             isFirst={s.isFirst}
-            endpoint={s.endpoint}
+            isIn={s.isIn}
             interface={s.interface}
-            metadata={s.metadata}
-            endpointError={s.endpointError}
-            metadataError={s.metadataError}
-            onEndpointChange={(event) =>
-              onChangeService(event, s.key, "endpoint")
-            }
             onInterfaceTypeChange={(event) =>
-              onChangeService(event, s.key, "interface")
+              onInterfaceTypeChange(event, s.key)
             }
-            onMetadataChange={(event) => {
-              onChangeService(event, s.key, "metadata");
-            }}
+            onIsInSwitch={() => onIsInSwitch(s.key)}
             removeService={() => {
               removeService(s.key);
             }}
