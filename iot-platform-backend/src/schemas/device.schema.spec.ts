@@ -5,6 +5,8 @@ jest.useFakeTimers('legacy');
 const exDevDto = () => {
   return {
     name: 'test',
+    userId: 'pino_spanuli',
+    description: "Gastani Frinzi's favourite device",
     devtype: 'ActuatingDevice',
     services: [
       {
@@ -29,6 +31,22 @@ describe('DeviceSchema', () => {
     const dev = new devModel(dto);
     dev.validate((err) => {
       expect(err).toBeUndefined();
+      done();
+    });
+  });
+  it('should fail on missing user id field', (done) => {
+    delete dto.userId;
+    const dev = new devModel(dto);
+    dev.validate((err) => {
+      expect(err.errors.userId).toBeDefined();
+      done();
+    });
+  });
+  it('should fail on missing description field', (done) => {
+    delete dto.description;
+    const dev = new devModel(dto);
+    dev.validate((err) => {
+      expect(err.errors.description).toBeDefined();
       done();
     });
   });
