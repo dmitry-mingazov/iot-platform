@@ -17,8 +17,6 @@ const useStyles = makeStyles({
 //Component
 function MQTTForm(props) {
   const classes = useStyles();
-  const qos = qosTypes;
-  const protocolVs = protocolVersions;
 
   return (
     <div>
@@ -64,7 +62,7 @@ function MQTTForm(props) {
         onChange={(event) => props.onServiceInfoChange(event, "qos")}
         fullWidth
       >
-        {qos.map((option) => (
+        {qosTypes.map((option) => (
           <MenuItem key={option.value} value={option.value}>
             {option.label}
           </MenuItem>
@@ -82,7 +80,7 @@ function MQTTForm(props) {
         }
         fullWidth
       >
-        {protocolVs.map((option) => (
+        {protocolVersions.map((option) => (
           <MenuItem key={option.value} value={option.value}>
             {option.label}
           </MenuItem>
