@@ -16,7 +16,6 @@ const useStyles = makeStyles({
 //Component
 function HTTPForm(props) {
   const classes = useStyles();
-  const methods = httpMethods;
 
   return (
     <div>
@@ -25,7 +24,7 @@ function HTTPForm(props) {
           <TextField
             inputProps={{ "aria-label": "http url" }}
             className={classes.field}
-            label="url"
+            label="Url"
             margin="normal"
             value={props.serviceInfo.url}
             onChange={(event) => props.onServiceInfoChange(event, "url")}
@@ -43,7 +42,7 @@ function HTTPForm(props) {
             onChange={(event) => props.onServiceInfoChange(event, "method")}
             fullWidth
           >
-            {methods.map((option) => (
+            {httpMethods.map((option) => (
               <MenuItem key={option.value} value={option.value}>
                 {option.label}
               </MenuItem>
