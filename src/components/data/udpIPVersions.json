@@ -1,10 +1,10 @@
 [
-    {
-      "value": "udp4",
-      "label": "IPv4"
-    },
-    {
-      "value": "udp6",
-      "label": "IPv6"
-    }
-  ]
+  {
+    "value": "udp4",
+    "label": "IPv4"
+  },
+  {
+    "value": "udp6",
+    "label": "IPv6"
+  }
+]
