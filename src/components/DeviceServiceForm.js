@@ -4,6 +4,7 @@ import MenuItem from "@mui/material/MenuItem";
 import { makeStyles } from "@mui/styles";
 import interfaces from "./data/interfaceTypes.json";
 import { Button, Stack, Typography, Switch, Box } from "@mui/material";
+import ServiceInfoManager from "../services/ServiceInfoManager";
 
 //Styles
 const useStyles = makeStyles({
@@ -14,7 +15,6 @@ const useStyles = makeStyles({
   },
   typeRow: {
     display: "flex",
-    justifyContent: "space-between",
     flexDirection: "row",
   },
   typeRowField: {
@@ -68,6 +68,7 @@ function DeviceServiceForm(props) {
           ))}
         </TextField>
         <Stack
+          paddingTop={2}
           marginLeft={2}
           flex={"auto"}
           direction="row"
@@ -88,6 +89,12 @@ function DeviceServiceForm(props) {
           </Typography>
         </Stack>
       </Box>
+      {ServiceInfoManager.displayServiceInfo(
+        props.interface,
+        props.serviceInfo,
+        props.onServiceInfoChange,
+        props.isIn
+      )}
       {props.isFirst ? null : (
         <Button
           className={classes.button}
