@@ -22,23 +22,53 @@ const renderComponent = () => {
   );
 };
 
+const changeTextboxValue = (name, value) => {
+  fireEvent.change(screen.getByRole("textbox", { name: name }), {
+    target: { value: value },
+  });
+};
+
+const checkTextboxToHaveValue = (name, value) => {
+  expect(screen.getByRole("textbox", { name: name })).toHaveValue(value);
+};
+
+const changeDropdownValue = (name, value) => {
+  fireEvent.mouseDown(screen.getByRole("button", { name: name }));
+  const listbox = within(screen.getByRole("listbox"));
+  fireEvent.click(listbox.getByText(value));
+};
+
+const checkDropdownToHaveValue = (name, value) => {
+  expect(
+    screen.getByRole("button", { name: name, value: value })
+  ).toBeInTheDocument();
+};
+
+const changeSwitchValueInOut = () => {
+  fireEvent.click(screen.getByRole("checkbox", { name: "switch in out" }));
+};
+
+const clickOnSubmit = () => {
+  fireEvent.click(screen.getByRole("button", { name: "Add device" }));
+};
+
 describe("AddDevice component", () => {
   test("renders AddDevice component", () => {
     renderComponent();
     expect(screen.getAllByRole("textbox", { name: "device name" }).length).toBe(
       1
     );
+    expect(
+      screen.getAllByRole("textbox", { name: "device description" }).length
+    ).toBe(1);
     expect(screen.getAllByRole("button", { name: "device type" }).length).toBe(
       1
     );
     expect(
-      screen.getAllByRole("textbox", { name: "service endpoint" }).length
-    ).toBe(1);
-    expect(
       screen.getAllByRole("button", { name: "service interface" }).length
     ).toBe(1);
     expect(
-      screen.getAllByRole("textbox", { name: "service metadata" }).length
+      screen.getAllByRole("checkbox", { name: "switch in out" }).length
     ).toBe(1);
     expect(screen.getAllByRole("button", { name: "Add" }).length).toBe(1);
     expect(screen.getAllByRole("button", { name: "Cancel" }).length).toBe(1);
@@ -51,13 +81,10 @@ describe("AddDevice component", () => {
     renderComponent();
     fireEvent.click(screen.getByRole("button", { name: "Add" }));
     expect(
-      screen.getAllByRole("textbox", { name: "service endpoint" }).length
-    ).toBe(2);
-    expect(
       screen.getAllByRole("button", { name: "service interface" }).length
     ).toBe(2);
     expect(
-      screen.getAllByRole("textbox", { name: "service metadata" }).length
+      screen.getAllByRole("checkbox", { name: "switch in out" }).length
     ).toBe(2);
     expect(screen.getByRole("button", { name: "Remove Service" })).toBeTruthy();
   });
@@ -67,125 +94,347 @@ describe("AddDevice component", () => {
     fireEvent.click(screen.getByRole("button", { name: "Add" }));
     fireEvent.click(screen.getByRole("button", { name: "Remove Service" }));
     expect(
-      screen.getAllByRole("textbox", { name: "service endpoint" }).length
-    ).toBe(1);
-    expect(
       screen.getAllByRole("button", { name: "service interface" }).length
     ).toBe(1);
     expect(
-      screen.getAllByRole("textbox", { name: "service metadata" }).length
+      screen.getAllByRole("checkbox", { name: "switch in out" }).length
     ).toBe(1);
   });
 
   test("inserts data correctly inside device name textfield", () => {
     renderComponent();
-    fireEvent.change(screen.getByRole("textbox", { name: "device name" }), {
-      target: { value: "Test name" },
-    });
-    expect(
-      screen.getByRole("textbox", { name: "device name", value: "Test name" })
-    ).toBeInTheDocument();
+    changeTextboxValue("device name", "Test name");
+    checkTextboxToHaveValue("device name", "Test name");
+  });
+
+  test("inserts data correctly inside device description textfield", () => {
+    renderComponent();
+    changeTextboxValue("device description", "Test description");
+    checkTextboxToHaveValue("device description", "Test description");
   });
 
   test("selects an option correctly inside device type dropdown", () => {
     renderComponent();
-    fireEvent.mouseDown(screen.getByRole("button", { name: "device type" }));
-    const listbox = within(screen.getByRole("listbox"));
-    fireEvent.click(listbox.getByText("Sensing"));
-    expect(screen.getAllByText("Sensing")).toBeTruthy();
-  });
-
-  test("inserts data correctly inside endpoint textfield", () => {
-    renderComponent();
-    fireEvent.change(
-      screen.getByRole("textbox", { name: "service endpoint" }),
-      {
-        target: { value: "Test endpoint" },
-      }
-    );
-    expect(
-      screen.getByRole("textbox", {
-        name: "service endpoint",
-        value: "Test endpoint",
-      })
-    ).toBeInTheDocument();
+    changeDropdownValue("device type", "Sensing");
+    checkDropdownToHaveValue("device type", "Sensing");
   });
 
   test("selects an option correctly inside interface type dropdown", () => {
     renderComponent();
-    fireEvent.mouseDown(
-      screen.getByRole("button", { name: "service interface" })
-    );
-    const listbox = within(screen.getByRole("listbox"));
-    fireEvent.click(listbox.getByText("TCP"));
-    expect(screen.getAllByText("TCP")).toBeTruthy();
+    changeDropdownValue("service interface", "TCP");
+    checkDropdownToHaveValue("service interface", "TCP");
   });
 
-  test("inserts data correctly inside metadata textfield", () => {
+  test("changes in out switch correctly", () => {
     renderComponent();
-    fireEvent.change(
-      screen.getByRole("textbox", { name: "service metadata" }),
-      {
-        target: { value: "Test metadata" },
-      }
-    );
     expect(
-      screen.getByRole("textbox", {
-        name: "service metadata",
-        value: "Test metadata",
-      })
+      screen.getByRole("checkbox", { name: "switch in out" }).checked
+    ).toBe(true);
+    changeSwitchValueInOut();
+    expect(
+      screen.getByRole("checkbox", { name: "switch in out" }).checked
+    ).toBe(false);
+  });
+});
+
+describe("MQTTForm component", () => {
+  test("renders MQTTForm component", () => {
+    renderComponent();
+    expect(
+      screen.getByRole("textbox", { name: "mqtt broker" })
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("textbox", { name: "mqtt port" })
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("textbox", { name: "mqtt topic" })
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: "mqtt qos" })
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: "mqtt protocol version" })
     ).toBeInTheDocument();
   });
 
-  test("submits form with only device name field filled and get errors", () => {
+  test("inserts data in all fields correctly with MQTT", () => {
     renderComponent();
-    fireEvent.change(screen.getByRole("textbox", { name: "device name" }), {
-      target: { value: "Test name" },
-    });
-    fireEvent.click(screen.getByRole("button", { name: "Add device" }));
-    expect(screen.getByRole("textbox", { name: "device name" })).toHaveValue(
-      "Test name"
-    );
+    changeTextboxValue("mqtt broker", "Test broker");
+    checkTextboxToHaveValue("mqtt broker", "Test broker");
+    changeTextboxValue("mqtt port", "Test port");
+    checkTextboxToHaveValue("mqtt port", "Test port");
+    changeTextboxValue("mqtt topic", "Test topic");
+    checkTextboxToHaveValue("mqtt topic", "Test topic");
+    changeDropdownValue("mqtt qos", "1");
+    checkDropdownToHaveValue("mqtt qos", "1");
+    changeDropdownValue("mqtt protocol version", "V3.1.1");
+    checkDropdownToHaveValue("mqtt protocol version", "V3.1.1");
   });
 
-  test("submits form with only endpoint field filled and get errors", () => {
+  test("submits form without all fields filled with MQTT", () => {
     renderComponent();
-    fireEvent.change(
-      screen.getByRole("textbox", { name: "service endpoint" }),
-      {
-        target: { value: "Test endpoint" },
-      }
-    );
-    fireEvent.click(screen.getByRole("button", { name: "Add device" }));
-    expect(
-      screen.getByRole("textbox", { name: "service endpoint" })
-    ).toHaveValue("Test endpoint");
-  });
+    clickOnSubmit();
+    expect(screen.getByText("Please fill the form")).toBeInTheDocument();
+  })
 
-  test("submits form correctly", async () => {
+  test("submits form correctly with MQTT", async () => {
     DeviceService.createDevice.mockResolvedValue({
       something: true,
     });
-
     renderComponent();
-    fireEvent.change(screen.getByRole("textbox", { name: "device name" }), {
-      target: { value: "Test name" },
-    });
-    fireEvent.change(
-      screen.getByRole("textbox", { name: "service endpoint" }),
-      {
-        target: { value: "Test endpoint" },
-      }
-    );
-    fireEvent.change(
-      screen.getByRole("textbox", { name: "service metadata" }),
-      {
-        target: { value: "Test metadata" },
-      }
-    );
+    changeTextboxValue("device name", "Dev1");
+    changeTextboxValue("mqtt broker", "Test broker");
+    changeTextboxValue("mqtt topic", "Test topic");
     await act(async () => {
-      fireEvent.click(screen.getByRole("button", { name: "Add device" }));
-      await expect(screen.findByText("Device added successfully")).resolves.toBeInTheDocument();
+      clickOnSubmit();
+      await expect(
+        screen.findByText("Device added successfully")
+      ).resolves.toBeInTheDocument();
+    });
+  });
+});
+
+describe("HTTPForm component", () => {
+  test("renders HTTPForm component", () => {
+    renderComponent();
+    changeDropdownValue("service interface", "HTTP");
+    expect(
+      screen.getByRole("textbox", { name: "http url" })
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: "http method" })
+    ).toBeInTheDocument();
+    changeSwitchValueInOut();
+    expect(
+      screen.getByRole("textbox", { name: "http status" })
+    ).toBeInTheDocument();
+  });
+
+  test("inserts data in all fields correctly with HTTP", () => {
+    renderComponent();
+    changeDropdownValue("service interface", "HTTP");
+    changeTextboxValue("http url", "Test url");
+    checkTextboxToHaveValue("http url", "Test url");
+    changeDropdownValue("http method", "POST");
+    checkDropdownToHaveValue("http method", "POST");
+    changeSwitchValueInOut();
+    changeTextboxValue("http status", "Test status");
+    checkTextboxToHaveValue("http status", "Test status");
+  });
+
+  test("submits form without all fields filled with HTTP", () => {
+    renderComponent();
+    changeDropdownValue("service interface", "HTTP");
+    clickOnSubmit();
+    expect(screen.getByText("Please fill the form")).toBeInTheDocument();
+  });
+
+  test("submits form correctly with HTTP", async () => {
+    DeviceService.createDevice.mockResolvedValue({
+      something: true,
+    });
+    renderComponent();
+    changeDropdownValue("service interface", "HTTP");
+    changeTextboxValue("device name", "Dev1");
+    changeTextboxValue("http url", "Test url");
+    await act(async () => {
+      clickOnSubmit();
+      await expect(
+        screen.findByText("Device added successfully")
+      ).resolves.toBeInTheDocument();
+    });
+  });
+});
+
+describe("WebSocketForm component", () => {
+  test("renders WebSocketForm component", () => {
+    renderComponent();
+    changeDropdownValue("service interface", "WebSocket");
+    expect(
+      screen.getByRole("button", { name: "web socket type" })
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("textbox", { name: "web socket path" })
+    ).toBeInTheDocument();
+    changeDropdownValue("web socket type", "Client");
+    expect(
+      screen.getByRole("textbox", { name: "web socket url" })
+    ).toBeInTheDocument();
+  });
+
+  test("inserts data in all fields correctly with WebSocket", () => {
+    renderComponent();
+    changeDropdownValue("service interface", "WebSocket");
+    changeTextboxValue("web socket path", "Test path");
+    checkTextboxToHaveValue("web socket path", "Test path");
+    changeDropdownValue("web socket type", "Client");
+    checkDropdownToHaveValue("web socket type", "Client");
+    changeTextboxValue("web socket url", "Test url");
+    checkTextboxToHaveValue("web socket url", "Test url");
+  });
+
+  test("submits form without all fields filled with WebSocket", () => {
+    renderComponent();
+    changeDropdownValue("service interface", "WebSocket");
+    clickOnSubmit();
+    expect(screen.getByText("Please fill the form")).toBeInTheDocument();
+  });
+
+  test("submits form correctly with WebSocket", async () => {
+    DeviceService.createDevice.mockResolvedValue({
+      something: true,
+    });
+    renderComponent();
+    changeDropdownValue("service interface", "WebSocket");
+    changeTextboxValue("device name", "Dev1");
+    changeTextboxValue("web socket path", "Test path");
+    await act(async () => {
+      clickOnSubmit();
+      await expect(
+        screen.findByText("Device added successfully")
+      ).resolves.toBeInTheDocument();
+    });
+    changeDropdownValue("web socket type", "Client");
+    changeTextboxValue("web socket url", "Test url");
+    await act(async () => {
+      clickOnSubmit();
+      await expect(
+        screen.findByText("Device added successfully")
+      ).resolves.toBeInTheDocument();
+    });
+  });
+});
+
+describe("TCPForm component", () => {
+  test("renders TCPForm component", () => {
+    renderComponent();
+    changeDropdownValue("service interface", "TCP");
+    expect(
+      screen.getByRole("button", { name: "tcp type in" })
+    ).toBeInTheDocument();
+    changeDropdownValue("tcp type in", "Client");
+    expect(
+      screen.getByRole("textbox", { name: "tcp host" })
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("textbox", { name: "tcp port" })
+    ).toBeInTheDocument();
+    changeSwitchValueInOut();
+    expect(
+      screen.getByRole("button", { name: "tcp type out" })
+    ).toBeInTheDocument();
+    changeDropdownValue("tcp type out", "Client");
+    expect(
+      screen.getByRole("textbox", { name: "tcp host" })
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("textbox", { name: "tcp port" })
+    ).toBeInTheDocument();
+    changeSwitchValueInOut();
+  });
+
+  test("inserts data in all fields correctly with TCP", () => {
+    renderComponent();
+    changeDropdownValue("service interface", "TCP");
+    changeDropdownValue("tcp type in", "Client");
+    checkDropdownToHaveValue("tcp type in", "Client");
+    changeTextboxValue("tcp host", "Test host");
+    checkTextboxToHaveValue("tcp host", "Test host");
+    changeTextboxValue("tcp port", "Test port");
+    checkTextboxToHaveValue("tcp port", "Test port");
+    changeSwitchValueInOut();
+    changeDropdownValue("tcp type out", "Client");
+    checkDropdownToHaveValue("tcp type out", "Client");
+    changeTextboxValue("tcp host", "Test host 2");
+    checkTextboxToHaveValue("tcp host", "Test host 2");
+    changeTextboxValue("tcp port", "Test port 2");
+    checkTextboxToHaveValue("tcp port", "Test port 2");
+  });
+
+  test("submits form without all fields filled with TCP", () => {
+    renderComponent();
+    changeDropdownValue("service interface", "TCP");
+    clickOnSubmit();
+    expect(screen.getByText("Please fill the form")).toBeInTheDocument();
+  });
+
+  test("submits form correctly with TCP", async () => {
+    DeviceService.createDevice.mockResolvedValue({
+      something: true,
+    });
+    renderComponent();
+    changeDropdownValue("service interface", "TCP");
+    changeTextboxValue("device name", "Dev1");
+    changeDropdownValue("tcp type in", "Client");
+    changeTextboxValue("tcp host", "Test host");
+    changeTextboxValue("tcp port", "Test port");
+    await act(async () => {
+      clickOnSubmit();
+      await expect(
+        screen.findByText("Device added successfully")
+      ).resolves.toBeInTheDocument();
+    });
+    changeSwitchValueInOut();
+    changeDropdownValue("tcp type out", "Client");
+    changeTextboxValue("tcp host", "Test host 2");
+    changeTextboxValue("tcp port", "Test port 2");
+    await act(async () => {
+      clickOnSubmit();
+      await expect(
+        screen.findByText("Device added successfully")
+      ).resolves.toBeInTheDocument();
+    });
+  });
+});
+
+describe("UDPForm component", () => {
+  test("renders UDPForm component", () => {
+    renderComponent();
+    changeDropdownValue("service interface", "UDP");
+    expect(
+      screen.getByRole("textbox", { name: "udp port" })
+    ).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "udp ipv" })).toBeInTheDocument();
+    changeSwitchValueInOut();
+    expect(
+      screen.getByRole("textbox", { name: "udp address" })
+    ).toBeInTheDocument();
+  });
+
+  test("inserts data in all fields correctly with UDP", () => {
+    renderComponent();
+    changeDropdownValue("service interface", "UDP");
+    changeTextboxValue("udp port", "Test port");
+    checkTextboxToHaveValue("udp port", "Test port");
+    changeDropdownValue("udp ipv", "IPv6");
+    checkDropdownToHaveValue("udp ipv", "IPv6");
+    changeSwitchValueInOut();
+    changeTextboxValue("udp address", "Test address");
+    checkTextboxToHaveValue("udp address", "Test address");
+  });
+
+  test("submits form without all fields filled with UDP", () => {
+    renderComponent();
+    changeDropdownValue("service interface", "UDP");
+    clickOnSubmit();
+    expect(screen.getByText("Please fill the form")).toBeInTheDocument();
+  });
+
+  test("submits form correctly with UDP", async () => {
+    DeviceService.createDevice.mockResolvedValue({
+      something: true,
+    });
+    renderComponent();
+    changeDropdownValue("service interface", "UDP");
+    changeSwitchValueInOut();
+    changeTextboxValue("device name", "Dev1");
+    changeTextboxValue("udp address", "Test address");
+    changeTextboxValue("udp port", "Test port");
+    await act(async () => {
+      clickOnSubmit();
+      await expect(
+        screen.findByText("Device added successfully")
+      ).resolves.toBeInTheDocument();
     });
   });
 });
