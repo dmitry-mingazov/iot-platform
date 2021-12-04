@@ -80,7 +80,7 @@ function DeviceServiceForm(props) {
           </Typography>
           <Switch
             defaultChecked
-            inputProps={{ "aria-label": "Switch in out" }}
+            inputProps={{ "aria-label": "switch in out" }}
             value={props.isIn}
             onChange={props.onIsInSwitch}
           />
