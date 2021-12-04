@@ -3,7 +3,7 @@ import TextField from "@mui/material/TextField";
 import MenuItem from "@mui/material/MenuItem";
 import { makeStyles } from "@mui/styles";
 import qosTypes from "../components/data/mqttQos.json";
-import protocolVersions from "../components/data/mqttProtocolVersion.json";
+import protocolVersions from "../components/data/mqttProtocolVersions.json";
 
 //Styles
 const useStyles = makeStyles({
@@ -34,7 +34,6 @@ function MQTTForm(props) {
       <TextField
         inputProps={{ "aria-label": "mqtt port" }}
         className={classes.field}
-        select
         label="Port"
         margin="normal"
         value={props.serviceInfo.port}
@@ -59,7 +58,8 @@ function MQTTForm(props) {
         label="Qos"
         margin="normal"
         value={props.serviceInfo.qos}
-        onChange={(event) => props.onServiceInfoChange(event, "qos")}
+        onChange={(event) =>
+          props.onServiceInfoChange(event, "qos")}
         fullWidth
       >
         {qosTypes.map((option) => (
