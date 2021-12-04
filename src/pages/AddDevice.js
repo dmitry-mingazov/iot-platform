@@ -11,6 +11,7 @@ import { useNavigate } from "react-router";
 import { SnackbarContext } from "../components/context/SnackbarContext";
 import DeviceService from "../services/DeviceService";
 import DeviceInformationForm from "../components/DeviceInformationForm";
+import ServiceInfoManager from "../services/ServiceInfoManager";
 
 //Styles
 const useStyles = makeStyles({
@@ -56,7 +57,9 @@ function AddDevice() {
       isFirst: true,
       isIn: true,
       interface: interfaceTypes[0].value,
-      serviceInfo: {},
+      serviceInfo: ServiceInfoManager.generateServiceInfo(
+        interfaceTypes[0].value
+      ),
     },
   ]);
   // const { setSnackbar } = React.useContext(SnackbarContext);
@@ -73,7 +76,9 @@ function AddDevice() {
         isFirst: false,
         isIn: true,
         interface: interfaceTypes[0].value,
-        serviceInfo: {},
+        serviceInfo: ServiceInfoManager.generateServiceInfo(
+          interfaceTypes[0].value
+        ),
       })
     );
   };
@@ -116,13 +121,26 @@ function AddDevice() {
     }
   };
 
-  //Handle changes on a service form
+  //Handle changes on the interface type of a service
   const onInterfaceTypeChange = (event, key) => {
     const newValue = event.target.value;
     const newDeviceServices = deviceServices.slice();
     const indexToReplace = newDeviceServices.findIndex((el) => el.key === key);
     if (indexToReplace !== -1) {
       newDeviceServices[indexToReplace].interface = newValue;
+      newDeviceServices[indexToReplace].serviceInfo =
+        ServiceInfoManager.generateServiceInfo(newValue);
+      setDeviceServices(newDeviceServices);
+    }
+  };
+
+  //Handle changes on the service info of a service
+  const onServiceInfoChange = (event, key, attribute) => {
+    const newValue = event.target.value;
+    const newDeviceServices = deviceServices.slice();
+    const indexToReplace = newDeviceServices.findIndex((el) => el.key === key);
+    if (indexToReplace !== -1) {
+      newDeviceServices[indexToReplace].serviceInfo[attribute] = newValue;
       setDeviceServices(newDeviceServices);
     }
   };
@@ -132,8 +150,10 @@ function AddDevice() {
     setDeviceNameError(false);
     const newDeviceServices = deviceServices.slice();
     newDeviceServices.forEach((service) => {
-      service.endpointError = false;
-      service.metadataError = false;
+      newDeviceServices.serviceInfo = ServiceInfoManager.resetServiceInfoErrors(
+        service.interface,
+        service.serviceInfo
+      );
     });
     setDeviceServices(newDeviceServices);
   };
@@ -154,14 +174,12 @@ function AddDevice() {
 
     const newDeviceServices = deviceServices.slice();
     newDeviceServices.forEach((service) => {
-      if (service.endpoint === "") {
-        error = true;
-        service.endpointError = true;
-      }
-      if (service.metadata === "") {
-        error = true;
-        service.metadataError = true;
-      }
+      error = ServiceInfoManager.checkServiceInfoErrors(
+        service.interface,
+        service.isIn,
+        service.serviceInfo,
+        error
+      );
     });
     if (error) {
       setDeviceServices(newDeviceServices);
@@ -180,12 +198,17 @@ function AddDevice() {
       let jsonServices = [];
       deviceServices.forEach((service) => {
         jsonServices.push({
-          endpoint: service.endpoint,
           interfaceType: service.interface,
-          metadata: {
-            metadataType: "Connection details",
-            value: service.metadata,
-          },
+          endpoint: ServiceInfoManager.getServiceEndpoint(
+            service.interface,
+            service.isIn,
+            service.serviceInfo
+          ),
+          metadata: ServiceInfoManager.getServiceMetadata(
+            service.interface,
+            service.isIn,
+            service.serviceInfo
+          ),
         });
       });
       jsonObject = {
@@ -194,6 +217,8 @@ function AddDevice() {
         devtype: deviceType,
         services: jsonServices,
       };
+      console.log(jsonObject);
+
       DeviceService.createDevice(jsonObject)
         .then((_) => {
           openSuccessSnackbar("Device added successfully");
@@ -247,10 +272,14 @@ function AddDevice() {
             isFirst={s.isFirst}
             isIn={s.isIn}
             interface={s.interface}
+            serviceInfo={s.serviceInfo}
             onInterfaceTypeChange={(event) =>
               onInterfaceTypeChange(event, s.key)
             }
             onIsInSwitch={() => onIsInSwitch(s.key)}
+            onServiceInfoChange={(event, attribute) =>
+              onServiceInfoChange(event, s.key, attribute)
+            }
             removeService={() => {
               removeService(s.key);
             }}
