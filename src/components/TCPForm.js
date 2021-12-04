@@ -23,13 +23,13 @@ function TCPForm(props) {
       {props.isIn ? (
         <div>
           <TextField
-            inputProps={{ "aria-label": "tcp type" }}
+            inputProps={{ "aria-label": "tcp type in" }}
             className={classes.field}
             select
             label="Type"
             margin="normal"
-            value={props.serviceInfo.type}
-            onChange={(event) => props.onServiceInfoChange(event, "type")}
+            value={props.serviceInfo.typeIn}
+            onChange={(event) => props.onServiceInfoChange(event, "typeIn")}
             fullWidth
           >
             {tcpServerTypes.map((option) => (
@@ -38,7 +38,7 @@ function TCPForm(props) {
               </MenuItem>
             ))}
           </TextField>
-          {props.serviceInfo.type === "client" ? (
+          {props.serviceInfo.typeIn === "client" ? (
             <TextField
               inputProps={{ "aria-label": "tcp host" }}
               className={classes.field}
@@ -66,13 +66,13 @@ function TCPForm(props) {
       ) : (
         <div>
           <TextField
-            inputProps={{ "aria-label": "tcp type" }}
+            inputProps={{ "aria-label": "tcp type out" }}
             className={classes.field}
             select
             label="Type"
             margin="normal"
-            value={props.serviceInfo.type}
-            onChange={(event) => props.onServiceInfoChange(event, "type")}
+            value={props.serviceInfo.typeOut}
+            onChange={(event) => props.onServiceInfoChange(event, "typeOut")}
             fullWidth
           >
             {tcpBeserverTypes.map((option) => (
@@ -81,7 +81,7 @@ function TCPForm(props) {
               </MenuItem>
             ))}
           </TextField>
-          {props.serviceInfo.type === "client" ? (
+          {props.serviceInfo.typeOut === "client" ? (
             <TextField
               inputProps={{ "aria-label": "tcp host" }}
               className={classes.field}
@@ -94,8 +94,8 @@ function TCPForm(props) {
               fullWidth
             ></TextField>
           ) : null}
-          {props.serviceInfo.type === "client" ||
-          props.serviceInfo.type === "server" ? (
+          {props.serviceInfo.typeOut === "client" ||
+          props.serviceInfo.typeOut === "server" ? (
             <TextField
               inputProps={{ "aria-label": "tcp port" }}
               className={classes.field}
