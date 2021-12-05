@@ -22,10 +22,16 @@ describe(DevicesController, () => {
         {
           endpoint: 'test.endpoint',
           interfaceType: 'black magic',
-          metadata: {
-            metadataType: 'magic word',
-            value: 'abracadabra',
-          },
+          metadata: [
+            {
+              metadataType: 'magic word',
+              value: 'abracadabra',
+            },
+            {
+              metadataType: 'magic spell',
+              value: 'fireball',
+            },
+        ]
         },
       ],
     },
@@ -38,10 +44,10 @@ describe(DevicesController, () => {
       {
         endpoint: 'test.endpoint',
         interfaceType: 'black magic',
-        metadata: {
+        metadata: [{
           metadataType: 'magic word',
           value: 'abracadabra',
-        },
+        }],
       },
     ],
   };
@@ -53,10 +59,10 @@ describe(DevicesController, () => {
       {
         endpoint: 'test.endpoint',
         interfaceType: 'black magic',
-        metadata: {
+        metadata: [{
           metadataType: 'magic word',
           value: 'abracadabra',
-        },
+        }],
       },
     ],
   };

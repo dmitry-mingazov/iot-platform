@@ -6,10 +6,12 @@ export class CreateDeviceDto {
     {
       endpoint: string;
       interfaceType: string;
-      metadata: {
-        metadataType: string;
-        value: string;
-      };
+      metadata: [
+        {
+          metadataType: string;
+          value: string;
+        }
+      ];
     },
   ];
 }

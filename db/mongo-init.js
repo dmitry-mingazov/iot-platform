@@ -35,16 +35,30 @@ db.createCollection("devices", {
                      description: "Interface Type"
                   },
 		  metadata: {
-		     bsonType: ["object"],
-		     required: [ "metadataType", "value" ],
-		     properties: {
-			metadataType: {
-			   bsonType: ["string"]
-			},
-			value: {
-			   bsonType: ["string"]
-			}
-		     }
+		     bsonType: ["array"],
+           uniqueItems: true,
+           additionalItems: false,
+           items: {
+              bsonType: ["object"],
+               required: [ "metadataType", "value"],
+               properties: {
+                  metadataType: {
+                     bsonType: ["string"]
+                  },
+                  value: {
+                     bsonType: ["string"]
+                  }
+               }
+           }
+		   //   required: [ "metadataType", "value" ],
+		   //   properties: {
+			// metadataType: {
+			//    bsonType: ["string"]
+			// },
+			// value: {
+			//    bsonType: ["string"]
+			// }
+		   //   }
 		  }
 	       }
                }
@@ -86,22 +100,26 @@ db.createCollection("devices", {
                      bsonType: ["string"],
                      description: "Interface Type"
                   },
-		  metadata: {
-		     bsonType: ["object"],
-		     required: [ "metadataType", "value" ],
-		     properties: {
-			metadataType: {
-			   bsonType: ["string"]
-			},
-			value: {
-			   bsonType: ["string"]
-			}
-		     }
-		  }
-	       }
+                  metadata: {
+                     bsonType: ["array"],
+                     uniqueItems: true,
+                     additionalItems: false,
+                     items: {
+                        bsonType: ["object"],
+                         required: [ "metadataType", "value"],
+                         properties: {
+                            metadataType: {
+                               bsonType: ["string"]
+                            },
+                            value: {
+                               bsonType: ["string"]
+                            }
+                         }
+                     }
+                  }
                }
             }
          }
       }
    }
-});
+}});
