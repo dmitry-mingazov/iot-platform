@@ -197,6 +197,7 @@ function AddDevice() {
       let jsonObject;
       let jsonServices = [];
       deviceServices.forEach((service) => {
+        const metadata = ServiceInfoManager.getServiceMetadata(service.serviceInfo);
         jsonServices.push({
           interfaceType: service.interface,
           endpoint: ServiceInfoManager.getServiceEndpoint(
@@ -204,14 +205,7 @@ function AddDevice() {
             service.isIn,
             service.serviceInfo
           ),
-          metadata: {
-            metadataType: "Connection details",
-            value: ServiceInfoManager.getServiceMetadata(
-              service.interface,
-              service.isIn,
-              service.serviceInfo
-            ),
-          },
+          metadata
         });
       });
       jsonObject = {

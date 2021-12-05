@@ -10,6 +10,7 @@ import HTTPForm from "../components/HTTPForm";
 import WebSocketForm from "../components/WebSocketForm";
 import TCPForm from "../components/TCPForm";
 import UDPForm from "../components/UDPForm";
+import React from "react";
 
 class ServiceInfoManager {
   static generateServiceInfo(interfaceType) {
@@ -236,65 +237,17 @@ class ServiceInfoManager {
     }
   }
 
-  static getServiceMetadata(interfaceType, isIn, serviceInfo) {
-    switch (interfaceType) {
-      case "mqtt":
-        return {
-          broker: serviceInfo.broker,
-          port: serviceInfo.port,
-          topic: serviceInfo.topic,
-          qos: serviceInfo.qos,
-          protocolVersion: serviceInfo.protocolVersion,
-        };
-      case "http":
-        if (isIn) {
-          return {
-            url: serviceInfo.url,
-            method: serviceInfo.method,
-          };
-        } else {
-          return { status: serviceInfo.status };
-        }
-      case "websocket":
-        if (serviceInfo.type === "websocket-listener") {
-          return {
-            type: serviceInfo.type,
-            path: serviceInfo.path,
-          };
-        } else {
-          return {
-            type: serviceInfo.type,
-            url: serviceInfo.url,
-          };
-        }
-      case "tcp":
-        let type;
-        if (isIn) {
-          type = serviceInfo.typeIn;
-        } else {
-          type = serviceInfo.typeOut;
-        }
-        return {
-          type: type,
-          host: serviceInfo.host,
-          port: serviceInfo.port,
-        };
-      case "udp":
-        if (isIn) {
-          return {
-            port: serviceInfo.port,
-            ipv: serviceInfo.ipv,
-          };
-        } else {
-          return {
-            address: serviceInfo.address,
-            port: serviceInfo.port,
-            ipv: serviceInfo.ipv,
-          };
-        }
-      default:
-        return {};
+  static getServiceMetadata(serviceInfo) {
+    const metadata = [];
+    // get only actual metadata excluding Error booleans
+    const entries = Object
+                      .entries(serviceInfo)
+                      .filter(([key, _]) => !key.endsWith('Error') );
+    for (const [metadataType, value] of entries) {
+      metadata.push({metadataType, value});
     }
+    return metadata;
   }
 }
+
 export default ServiceInfoManager;
