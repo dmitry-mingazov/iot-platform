@@ -1,6 +1,7 @@
 export class CreateDeviceDto {
   name: string;
   devtype: string;
+  userId: string;
   services: [
     {
       endpoint: string;

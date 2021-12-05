@@ -17,6 +17,7 @@ describe(DevicesController, () => {
     {
       name: 'testDevice',
       devtype: 'ActuatingDevice',
+      userId: 'magic-user',
       services: [
         {
           endpoint: 'test.endpoint',
@@ -32,6 +33,7 @@ describe(DevicesController, () => {
   const exDev: Device = {
     name: 'testDevice',
     devtype: 'ActuatingDevice',
+    userId: 'magic-user',
     services: [
       {
         endpoint: 'test.endpoint',
@@ -46,6 +48,7 @@ describe(DevicesController, () => {
   const exCreateDevDto: CreateDeviceDto = {
     name: 'testDevice',
     devtype: 'ActuatingDevice',
+    userId: 'magic-user',
     services: [
       {
         endpoint: 'test.endpoint',
@@ -90,7 +93,7 @@ describe(DevicesController, () => {
     it('should return a device', async () => {
       jest.spyOn(devicesService, 'create').mockResolvedValueOnce(exDev);
 
-      expect(await devicesController.addOne(exCreateDevDto)).toBe(exDev);
+      expect(await devicesController.addOne('gattino', exCreateDevDto)).toBe(exDev);
     });
   });
 

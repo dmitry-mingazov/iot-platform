@@ -1,9 +1,10 @@
-import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, UseGuards, } from '@nestjs/common';
 import { Device } from './schemas/device.schema';
 import { DevicesService } from './devices.service';
 import { CreateDeviceDto } from './dto/create-device.dto';
 import { ConfigService } from '@nestjs/config';
 import { AuthGuard } from '@nestjs/passport';
+import { AuthUserId } from './decorators/user.decorator';
 
 @Controller('/api/devices')
 export class DevicesController {
@@ -26,7 +27,7 @@ export class DevicesController {
 
   @Post()
   @UseGuards(AuthGuard('jwt'))
-  addOne(@Body() dto: CreateDeviceDto): Promise<Device> {
-    return this.devicesService.create(dto);
+  addOne(@AuthUserId() userId: string, @Body() dto: CreateDeviceDto): Promise<Device> {
+    return this.devicesService.create({userId, ...dto});
   }
 }

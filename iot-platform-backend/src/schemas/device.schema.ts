@@ -7,6 +7,7 @@ export type DeviceDocument = Device & Document;
 export class Device {
   name: string;
   devtype: string;
+  userId: string;
   services: Service[];
 }
 
