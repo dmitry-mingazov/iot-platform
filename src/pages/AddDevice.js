@@ -204,11 +204,14 @@ function AddDevice() {
             service.isIn,
             service.serviceInfo
           ),
-          metadata: ServiceInfoManager.getServiceMetadata(
-            service.interface,
-            service.isIn,
-            service.serviceInfo
-          ),
+          metadata: {
+            metadataType: "Connection details",
+            value: ServiceInfoManager.getServiceMetadata(
+              service.interface,
+              service.isIn,
+              service.serviceInfo
+            ),
+          },
         });
       });
       jsonObject = {
