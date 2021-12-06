@@ -17,7 +17,7 @@ pipeline {
         stage('Test') { 
             steps {
                 sh "chmod +x -R ${env.WORKSPACE}"
-                sh './jenkins/scripts/frontedTest.sh' 
+                sh './jenkins/scripts/frontendTest.sh' 
             }
         }
     }
