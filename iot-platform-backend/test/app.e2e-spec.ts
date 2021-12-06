@@ -10,6 +10,8 @@ describe('AppController (e2e)', () => {
   let app: INestApplication;
   const exCreateDevDto = {
     name: 'testDevice',
+    userId: 'id',
+    description: 'description',
     devtype: 'ActuatingDevice',
     services: [
       {
