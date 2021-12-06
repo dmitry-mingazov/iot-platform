@@ -55,7 +55,7 @@ function DeviceServiceForm(props) {
           select
           label="Interface type"
           margin="normal"
-          value={props.interface}
+          value={props.interfaceType}
           onChange={(event) => props.onInterfaceTypeChange(event)}
           required
           style={{ width: "100%" }}
@@ -89,12 +89,8 @@ function DeviceServiceForm(props) {
           </Typography>
         </Stack>
       </Box>
-      {ServiceInfoManager.displayServiceInfo(
-        props.interface,
-        props.serviceInfo,
-        props.onServiceInfoChange,
-        props.isIn
-      )}
+      {ServiceInfoManager.displayServiceInfo(props)} 
+
       {props.isFirst ? null : (
         <Button
           className={classes.button}

@@ -56,7 +56,7 @@ function AddDevice() {
       key: lastKey,
       isFirst: true,
       isIn: true,
-      interface: interfaceTypes[0].value,
+      interfaceType: interfaceTypes[0].value,
       serviceInfo: ServiceInfoManager.generateServiceInfo(
         interfaceTypes[0].value
       ),
@@ -75,7 +75,7 @@ function AddDevice() {
         key: newKey,
         isFirst: false,
         isIn: true,
-        interface: interfaceTypes[0].value,
+        interfaceType: interfaceTypes[0].value,
         serviceInfo: ServiceInfoManager.generateServiceInfo(
           interfaceTypes[0].value
         ),
@@ -127,7 +127,7 @@ function AddDevice() {
     const newDeviceServices = deviceServices.slice();
     const indexToReplace = newDeviceServices.findIndex((el) => el.key === key);
     if (indexToReplace !== -1) {
-      newDeviceServices[indexToReplace].interface = newValue;
+      newDeviceServices[indexToReplace].interfaceType = newValue;
       newDeviceServices[indexToReplace].serviceInfo =
         ServiceInfoManager.generateServiceInfo(newValue);
       setDeviceServices(newDeviceServices);
@@ -151,7 +151,7 @@ function AddDevice() {
     const newDeviceServices = deviceServices.slice();
     newDeviceServices.forEach((service) => {
       newDeviceServices.serviceInfo = ServiceInfoManager.resetServiceInfoErrors(
-        service.interface,
+        service.interfaceType,
         service.serviceInfo
       );
     });
@@ -175,7 +175,7 @@ function AddDevice() {
     const newDeviceServices = deviceServices.slice();
     newDeviceServices.forEach((service) => {
       error = ServiceInfoManager.checkServiceInfoErrors(
-        service.interface,
+        service.interfaceType,
         service.isIn,
         service.serviceInfo,
         error
@@ -199,9 +199,9 @@ function AddDevice() {
       deviceServices.forEach((service) => {
         const metadata = ServiceInfoManager.getServiceMetadata(service.serviceInfo);
         jsonServices.push({
-          interfaceType: service.interface,
+          interfaceType: service.interfaceType,
           endpoint: ServiceInfoManager.getServiceEndpoint(
-            service.interface,
+            service.interfaceType,
             service.isIn,
             service.serviceInfo
           ),
@@ -214,7 +214,7 @@ function AddDevice() {
         devtype: deviceType,
         services: jsonServices,
       };
-      console.log(jsonObject);
+      // console.log(jsonObject);
 
       DeviceService.createDevice(jsonObject)
         .then((_) => {
@@ -268,7 +268,7 @@ function AddDevice() {
             key={s.key}
             isFirst={s.isFirst}
             isIn={s.isIn}
-            interface={s.interface}
+            interfaceType={s.interfaceType}
             serviceInfo={s.serviceInfo}
             onInterfaceTypeChange={(event) =>
               onInterfaceTypeChange(event, s.key)

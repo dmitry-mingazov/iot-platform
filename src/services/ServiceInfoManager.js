@@ -61,56 +61,21 @@ class ServiceInfoManager {
     }
   }
 
-  static displayServiceInfo(
+  static displayServiceInfo({
     interfaceType,
     serviceInfo,
     onServiceInfoChange,
     isIn
-  ) {
-    switch (interfaceType) {
-      case "mqtt":
-        return (
-          <MQTTForm
-            serviceInfo={serviceInfo}
-            onServiceInfoChange={onServiceInfoChange}
-            isIn={isIn}
-          />
-        );
-      case "http":
-        return (
-          <HTTPForm
-            serviceInfo={serviceInfo}
-            onServiceInfoChange={onServiceInfoChange}
-            isIn={isIn}
-          />
-        );
-      case "websocket":
-        return (
-          <WebSocketForm
-            serviceInfo={serviceInfo}
-            onServiceInfoChange={onServiceInfoChange}
-            isIn={isIn}
-          />
-        );
-      case "tcp":
-        return (
-          <TCPForm
-            serviceInfo={serviceInfo}
-            onServiceInfoChange={onServiceInfoChange}
-            isIn={isIn}
-          />
-        );
-      case "udp":
-        return (
-          <UDPForm
-            serviceInfo={serviceInfo}
-            onServiceInfoChange={onServiceInfoChange}
-            isIn={isIn}
-          />
-        );
-      default:
-        return {};
+  }) {
+    const interfaceTypes = {
+      'mqtt': MQTTForm,
+      'http': HTTPForm,
+      'websocket': WebSocketForm,
+      'tcp': TCPForm,
+      'udp': UDPForm,
     }
+    const form = interfaceTypes[interfaceType];
+    return React.createElement(form, {serviceInfo, onServiceInfoChange, isIn});
   }
 
   static resetServiceInfoErrors(interfaceType, serviceInfo) {
