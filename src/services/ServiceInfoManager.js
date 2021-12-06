@@ -207,7 +207,7 @@ class ServiceInfoManager {
     // get only actual metadata excluding Error booleans
     const entries = Object
                       .entries(serviceInfo)
-                      .filter(([key, _]) => !key.endsWith('Error') );
+                      .filter(([key, value]) => !key.endsWith('Error') && value);
     for (const [metadataType, value] of entries) {
       metadata.push({metadataType, value});
     }
