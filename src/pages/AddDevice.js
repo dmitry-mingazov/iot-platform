@@ -1,17 +1,17 @@
 import React from "react";
 import { useState } from "react";
-import TextField from "@mui/material/TextField";
 import { Box } from "@mui/system";
 import { Button, Typography } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import DeviceServiceForm from "../components/DeviceServiceForm";
-import MenuItem from "@mui/material/MenuItem";
-import devices from "../components/data/deviceTypes.json";
-import interfaces from "../components/data/interfaceTypes.json";
+import deviceTypes from "../components/data/deviceTypes.json";
+import interfaceTypes from "../components/data/interfaceTypes.json";
 import AddIcon from "@mui/icons-material/Add";
 import { useNavigate } from "react-router";
 import { SnackbarContext } from "../components/context/SnackbarContext";
 import DeviceService from "../services/DeviceService";
+import DeviceInformationForm from "../components/DeviceInformationForm";
+import ServiceInfoManager from "../services/ServiceInfoManager";
 
 //Styles
 const useStyles = makeStyles({
@@ -48,26 +48,23 @@ function AddDevice() {
   const navigate = useNavigate();
   const [deviceName, setDeviceName] = useState("");
   const [deviceNameError, setDeviceNameError] = useState(false);
-  const interfaceTypes = interfaces;
-  const deviceTypes = devices;
+  const [deviceDescription, setDeviceDescription] = useState("");
   const [lastKey, setLastKey] = useState(0);
   const [deviceType, setDeviceType] = useState(deviceTypes[0].value);
   const [deviceServices, setDeviceServices] = useState([
     {
       key: lastKey,
       isFirst: true,
-      endpoint: "",
-      interface: interfaceTypes[0].value,
-      metadata: "",
-      endpointError: false,
-      metadataError: false,
+      isIn: true,
+      interfaceType: interfaceTypes[0].value,
+      serviceInfo: ServiceInfoManager.generateServiceInfo(
+        interfaceTypes[0].value
+      ),
     },
   ]);
   // const { setSnackbar } = React.useContext(SnackbarContext);
-  const { 
-    openSuccessSnackbar,
-    openErrorSnackbar 
-  } = React.useContext(SnackbarContext);
+  const { openSuccessSnackbar, openErrorSnackbar } =
+    React.useContext(SnackbarContext);
 
   //Add service into the form
   const addService = () => {
@@ -77,11 +74,11 @@ function AddDevice() {
       deviceServices.concat({
         key: newKey,
         isFirst: false,
-        endpoint: "",
-        interface: interfaceTypes[0].value,
-        metadata: "",
-        endpointError: false,
-        metadataError: false,
+        isIn: true,
+        interfaceType: interfaceTypes[0].value,
+        serviceInfo: ServiceInfoManager.generateServiceInfo(
+          interfaceTypes[0].value
+        ),
       })
     );
   };
@@ -98,48 +95,54 @@ function AddDevice() {
     }
   };
 
+  //Handle changes on device name
+  const onDeviceNameChange = (event) => {
+    setDeviceName(event.target.value);
+  };
+
+  const onDeviceDescriptionChange = (event) => {
+    setDeviceDescription(event.target.value);
+  };
+
   //Handle changes on device type
-  const onChangeDeviceType = (event) => {
+  const onDeviceTypeChange = (event) => {
     const newValue = event.target.value;
     setDeviceType(newValue);
   };
 
-  //Handle changes on a service form
-  const onChangeService = (event, key, attribute) => {
-    const newValue = event.target.value;
+  //Handle changes on the out / in switch
+  const onIsInSwitch = (key) => {
     const newDeviceServices = deviceServices.slice();
     const indexToReplace = newDeviceServices.findIndex((el) => el.key === key);
     if (indexToReplace !== -1) {
-      if (attribute === "endpoint") {
-        newDeviceServices[indexToReplace].endpoint = newValue;
-      } else if (attribute === "interface") {
-        newDeviceServices[indexToReplace].interface = newValue;
-      } else if (attribute === "metadata") {
-        newDeviceServices[indexToReplace].metadata = newValue;
-      }
+      newDeviceServices[indexToReplace].isIn =
+        !newDeviceServices[indexToReplace].isIn;
       setDeviceServices(newDeviceServices);
     }
   };
 
-  //Reset all textfield states
-  const resetForm = () => {
-    const lastKey = 0;
-    setLastKey(lastKey);
-    const newValue = "";
-    setDeviceName(newValue);
-    setDeviceType(deviceTypes[0].value);
-    const newDeviceServices = [
-      {
-        key: lastKey,
-        isFirst: true,
-        endpoint: "",
-        interface: interfaceTypes[0].value,
-        metadata: "",
-        endpointError: false,
-        metadataError: false,
-      },
-    ];
-    setDeviceServices(newDeviceServices);
+  //Handle changes on the interface type of a service
+  const onInterfaceTypeChange = (event, key) => {
+    const newValue = event.target.value;
+    const newDeviceServices = deviceServices.slice();
+    const indexToReplace = newDeviceServices.findIndex((el) => el.key === key);
+    if (indexToReplace !== -1) {
+      newDeviceServices[indexToReplace].interfaceType = newValue;
+      newDeviceServices[indexToReplace].serviceInfo =
+        ServiceInfoManager.generateServiceInfo(newValue);
+      setDeviceServices(newDeviceServices);
+    }
+  };
+
+  //Handle changes on the service info of a service
+  const onServiceInfoChange = (event, key, attribute) => {
+    const newValue = event.target.value;
+    const newDeviceServices = deviceServices.slice();
+    const indexToReplace = newDeviceServices.findIndex((el) => el.key === key);
+    if (indexToReplace !== -1) {
+      newDeviceServices[indexToReplace].serviceInfo[attribute] = newValue;
+      setDeviceServices(newDeviceServices);
+    }
   };
 
   //Reset all textfield errors
@@ -147,8 +150,10 @@ function AddDevice() {
     setDeviceNameError(false);
     const newDeviceServices = deviceServices.slice();
     newDeviceServices.forEach((service) => {
-      service.endpointError = false;
-      service.metadataError = false;
+      newDeviceServices.serviceInfo = ServiceInfoManager.resetServiceInfoErrors(
+        service.interfaceType,
+        service.serviceInfo
+      );
     });
     setDeviceServices(newDeviceServices);
   };
@@ -169,14 +174,12 @@ function AddDevice() {
 
     const newDeviceServices = deviceServices.slice();
     newDeviceServices.forEach((service) => {
-      if (service.endpoint === "") {
-        error = true;
-        service.endpointError = true;
-      }
-      if (service.metadata === "") {
-        error = true;
-        service.metadataError = true;
-      }
+      error = ServiceInfoManager.checkServiceInfoErrors(
+        service.interfaceType,
+        service.isIn,
+        service.serviceInfo,
+        error
+      );
     });
     if (error) {
       setDeviceServices(newDeviceServices);
@@ -194,31 +197,35 @@ function AddDevice() {
       let jsonObject;
       let jsonServices = [];
       deviceServices.forEach((service) => {
+        const metadata = ServiceInfoManager.getServiceMetadata(service.serviceInfo);
         jsonServices.push({
-          endpoint: service.endpoint,
-          interfaceType: service.interface,
-          metadata: {
-            metadataType: "Connection details",
-            value: service.metadata,
-          },
+          interfaceType: service.interfaceType,
+          endpoint: ServiceInfoManager.getServiceEndpoint(
+            service.interfaceType,
+            service.isIn,
+            service.serviceInfo
+          ),
+          metadata
         });
       });
       jsonObject = {
         name: deviceName,
+        description: deviceDescription,
         devtype: deviceType,
         services: jsonServices,
       };
+      // console.log(jsonObject);
+
       DeviceService.createDevice(jsonObject)
-        .then(_ => {
-          openSuccessSnackbar('Device added successfully');
-          navigate('/');
+        .then((_) => {
+          openSuccessSnackbar("Device added successfully");
+          navigate("/");
         })
-        .catch(_ => {
-          openErrorSnackbar('Something went wrong!');
+        .catch((_) => {
+          openErrorSnackbar("Something went wrong!");
         });
-      resetForm();
     } else {
-      openErrorSnackbar('Please fill the form');
+      openErrorSnackbar("Please fill the form");
     }
   };
 
@@ -233,36 +240,16 @@ function AddDevice() {
         >
           Add Device
         </Typography>
-        <TextField
-          inputProps={{ "aria-label": "device name" }}
-          className={classes.field}
-          label={"Name"}
-          value={deviceName}
-          margin="normal"
-          onChange={(event) => {
-            setDeviceName(event.target.value);
-          }}
-          required
-          error={deviceNameError}
-          fullWidth
-        />
-        <TextField
-          inputProps={{ "aria-label": "device type" }}
-          select
-          className={classes.field}
-          label={"Device type"}
-          value={deviceType}
-          onChange={onChangeDeviceType}
-          margin="normal"
-          required
-          fullWidth
-        >
-          {deviceTypes.map((option) => (
-            <MenuItem key={option.value} value={option.value}>
-              {option.label}
-            </MenuItem>
-          ))}
-        </TextField>
+        <DeviceInformationForm
+          deviceName={deviceName}
+          onDeviceNameChange={onDeviceNameChange}
+          nameError={deviceNameError}
+          deviceDescription={deviceDescription}
+          onDeviceDescriptionChange={onDeviceDescriptionChange}
+          deviceType={deviceType}
+          deviceTypes={deviceTypes}
+          onDeviceTypeChange={onDeviceTypeChange}
+        ></DeviceInformationForm>
         <Box className={classes.serviceRow}>
           <Typography variant="h6">Service(s)</Typography>
           <Button
@@ -280,20 +267,16 @@ function AddDevice() {
           <DeviceServiceForm
             key={s.key}
             isFirst={s.isFirst}
-            endpoint={s.endpoint}
-            interface={s.interface}
-            metadata={s.metadata}
-            endpointError={s.endpointError}
-            metadataError={s.metadataError}
-            onEndpointChange={(event) =>
-              onChangeService(event, s.key, "endpoint")
-            }
+            isIn={s.isIn}
+            interfaceType={s.interfaceType}
+            serviceInfo={s.serviceInfo}
             onInterfaceTypeChange={(event) =>
-              onChangeService(event, s.key, "interface")
+              onInterfaceTypeChange(event, s.key)
             }
-            onMetadataChange={(event) => {
-              onChangeService(event, s.key, "metadata");
-            }}
+            onIsInSwitch={() => onIsInSwitch(s.key)}
+            onServiceInfoChange={(event, attribute) =>
+              onServiceInfoChange(event, s.key, attribute)
+            }
             removeService={() => {
               removeService(s.key);
             }}

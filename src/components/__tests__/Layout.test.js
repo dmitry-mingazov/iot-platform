@@ -4,15 +4,18 @@ import { fireEvent, render, screen } from "@testing-library/react";
 import Layout from "../Layout";
 import "@testing-library/jest-dom/extend-expect";
 import { SnackbarStateContext } from "../context/SnackbarContext";
+import { act } from "react-dom/test-utils";
 
 const renderComponent = () => {
-  render(
-    <BrowserRouter>
-      <SnackbarStateContext>
-        <Layout />
-      </SnackbarStateContext>
-    </BrowserRouter>
-  );
+  act(() => {
+    render(
+      <BrowserRouter>
+        <SnackbarStateContext>
+          <Layout />
+        </SnackbarStateContext>
+      </BrowserRouter>
+    );
+  });
 };
 
 describe("Layout component", () => {

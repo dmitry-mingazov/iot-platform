@@ -3,11 +3,14 @@ import { render, screen } from "@testing-library/react";
 import { AuthStateContext } from "../AuthContext";
 import { useAuth0 } from "@auth0/auth0-react";
 import "@testing-library/jest-dom/extend-expect";
+import { act } from "react-dom/test-utils";
 
 jest.mock("@auth0/auth0-react");
 
 const renderComponent = (children) => {
-  render(<AuthStateContext>{children}</AuthStateContext>);
+  act(() => {
+    render(<AuthStateContext>{children}</AuthStateContext>);
+  });
 };
 
 describe("Auth context", () => {
