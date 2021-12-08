@@ -4,7 +4,7 @@ import NodeRedService from "../../services/NodeRedService";
 
 const NodeRedContext = createContext();
 const NodeRedStateContext = props => {
-    const { token, isTokenReady } = useContext(AuthContext);
+    const { token } = useContext(AuthContext);
     const [ nodeRedUrl, setNodeRedUrl ] = useState(null);
 
     useEffect(() => {
