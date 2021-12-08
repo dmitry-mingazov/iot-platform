@@ -6,6 +6,7 @@ const AuthContext = createContext();
 const AuthStateContext = props => {
     const { isAuthenticated, getAccessTokenSilently } = useAuth0();
     const [ isTokenReady, setTokenReady ] = useState(false);
+    const [ token, setToken ] = useState(null);
 
     useEffect(() => {
         if (isAuthenticated) {
@@ -15,13 +16,14 @@ const AuthStateContext = props => {
                     return config;
                 });
                 setTokenReady(true);
+                setToken(token);
             });
         }
     }, [isAuthenticated]);
 
     return (
         <AuthContext.Provider
-            value={{ isTokenReady }}
+            value={{ token, isTokenReady }}
         >
             {props.children}
         </AuthContext.Provider>
