@@ -11,15 +11,17 @@ import Layout from "../../components/Layout";
 jest.mock("../../services/DeviceService");
 
 const renderComponent = () => {
-  render(
-    <BrowserRouter>
-      <SnackbarStateContext>
-        <Layout>
-          <AddDevice />
-        </Layout>
-      </SnackbarStateContext>
-    </BrowserRouter>
-  );
+  act(() => {
+    render(
+      <BrowserRouter>
+        <SnackbarStateContext>
+          <Layout>
+            <AddDevice />
+          </Layout>
+        </SnackbarStateContext>
+      </BrowserRouter>
+    );
+  })
 };
 
 const changeTextboxValue = (name, value) => {

@@ -3,13 +3,16 @@ import { BrowserRouter } from "react-router-dom";
 import { fireEvent, render, screen } from "@testing-library/react";
 import Device from "../Device";
 import "@testing-library/jest-dom/extend-expect";
+import { act } from "react-dom/test-utils";
 
 const renderComponent = () => {
-  render(
-    <BrowserRouter>
-      <Device />
-    </BrowserRouter>
-  );
+  act(() => {
+    render(
+      <BrowserRouter>
+        <Device />
+      </BrowserRouter>
+    );
+  });
 };
 
 describe("Device component", () => {
