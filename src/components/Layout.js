@@ -19,6 +19,8 @@ import CloseIcon from "@mui/icons-material/Close";
 import Logout from "./Logout";
 import Snackbar from "@mui/material/Snackbar";
 import MuiAlert from "@mui/material/Alert";
+import Stack from '@mui/material/Stack';
+
 import { SnackbarContext } from "./context/SnackbarContext";
 
 const drawerWidth = 240;
@@ -26,6 +28,9 @@ const drawerWidth = 240;
 const Main = styled("main", { shouldForwardProp: (prop) => prop !== "open" })(
   ({ theme, open }) => ({
     flexGrow: 1,
+    minWidth: `100vw`,
+    minHeight: `100vh - mui--appbar-height`,
+    marginTop: '64px',
     padding: theme.spacing(3),
     transition: theme.transitions.create("margin", {
       easing: theme.transitions.easing.sharp,
@@ -90,25 +95,8 @@ export default function Layout({ children }) {
   };
 
   return (
-    <Box sx={{ display: "flex" }}>
+    <Box sx={{ minHeight: "100vh", display: "flex" }} >
       <CssBaseline />
-      <AppBar position="fixed" open={open} color="primary">
-        <Toolbar>
-          <IconButton
-            color="inherit"
-            aria-label="open drawer"
-            onClick={handleDrawerOpen}
-            edge="start"
-            sx={{ mr: 2, ...(open && { display: "none" }) }}
-          >
-            <MenuIcon />
-          </IconButton>
-          <Typography variant="h6" noWrap component="div" sx={{ flexGrow: 1 }}>
-            {title}
-          </Typography>
-          <Logout />
-        </Toolbar>
-      </AppBar>
       <Drawer
         sx={{
           width: drawerWidth,
@@ -143,8 +131,26 @@ export default function Layout({ children }) {
           </ListItem>
         </List>
       </Drawer>
-      <Main open={open}>
-        <DrawerHeader />
+      <Stack >
+      <AppBar position="fixed" open={open} color="primary">
+        <Toolbar>
+          <IconButton
+            color="inherit"
+            aria-label="open drawer"
+            onClick={handleDrawerOpen}
+            edge="start"
+            sx={{ mr: 2, ...(open && { display: "none" }) }}
+          >
+            <MenuIcon />
+          </IconButton>
+          <Typography variant="h6" noWrap component="div" sx={{ flexGrow: 1 }}>
+            {title}
+          </Typography>
+          <Logout />
+        </Toolbar>
+      </AppBar>
+      <Main open={open} >
+        
         {children}
         <Snackbar
           anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
@@ -161,6 +167,7 @@ export default function Layout({ children }) {
           </Alert>
         </Snackbar>
       </Main>
+      </Stack>
     </Box>
   );
 }
