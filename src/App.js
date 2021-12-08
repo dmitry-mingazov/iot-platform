@@ -6,6 +6,7 @@ import RequireAuth from "./RequireAuth";
 import Unauthorized from "./pages/Unauthorized";
 import AddDevice from "./pages/AddDevice";
 import { SnackbarStateContext } from "./components/context/SnackbarContext";
+import NodeRed from "./pages/NodeRed";
 
 export default function App() {
   return (
@@ -25,6 +26,13 @@ export default function App() {
                 element={
                   <RequireAuth>
                     <AddDevice />
+                  </RequireAuth>
+                } 
+              />
+              <Route path="/node-red" 
+                element={
+                  <RequireAuth>
+                    <NodeRed />
                   </RequireAuth>
                 } 
               />
