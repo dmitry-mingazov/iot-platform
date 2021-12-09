@@ -48,7 +48,7 @@ function Device(props) {
     },
     {
       title: "Export to Node-Red",
-      function: exportToNodered,
+      fn: exportToNodered,
     }
   ];
 
