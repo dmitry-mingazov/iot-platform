@@ -147,6 +147,8 @@ function DeviceInfoDialog(props) {
                       "Description",
                       "Description",
                       props.deviceInfo.description
+                        ? props.deviceInfo.description
+                        : "No description available"
                     )}
                     {generateTableRow("Type", "Type", props.deviceInfo.devtype)}
                     {generateServicesTableRows(props.deviceInfo.services)}
