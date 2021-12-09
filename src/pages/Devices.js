@@ -14,14 +14,12 @@ function Devices() {
 
   // will run only on first render
   useEffect(() => {
-    if(isTokenReady) {
+    if (isTokenReady) {
       DeviceService.getDevices().then((dvs) => {
         setDevices(dvs);
       });
     }
   }, [isTokenReady]);
-
-  useEffect(() => {}, [devices]);
 
   return (
     <div>
@@ -36,7 +34,7 @@ function Devices() {
           Add device
         </Button>
       </Stack>
-      <Box m={6}>
+      <Box mt={6} ml={8} mr={8} mb={6}>
         <Grid
           container
           spacing={{ xs: 4, md: 6 }}
@@ -44,7 +42,11 @@ function Devices() {
         >
           {devices.map((device) => (
             <Grid key={device._id} item xs={2} sm={4} md={4} align="center">
-              <Device key={device._id} deviceName={device.name}></Device>
+              <Device
+                key={device._id}
+                _id={device._id}
+                deviceName={device.name}
+              ></Device>
             </Grid>
           ))}
         </Grid>
