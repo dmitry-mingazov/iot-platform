@@ -12,7 +12,7 @@ const NodeRedStateContext = props => {
     useEffect(() => {
         if (token) {
             NodeRedService.getInstance().then((instance) => {
-                setNodeRedUrl(process.env.REACT_APP_MANAGER_URL+':'+instance.port+'?access_token='+token);
+                setNodeRedUrl(instance.url);
             });
             setInterval(() => {
                 NodeRedService.getInstance();
