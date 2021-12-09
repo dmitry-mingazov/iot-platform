@@ -21,8 +21,6 @@ function Devices() {
     }
   }, [isTokenReady]);
 
-  useEffect(() => {}, [devices]);
-
   return (
     <div>
       <Stack direction="row" spacing={2} sx={{ justifyContent: "flex-end" }}>
@@ -36,7 +34,7 @@ function Devices() {
           Add device
         </Button>
       </Stack>
-      <Box m={6}>
+      <Box mt={6} ml={8} mr={8} mb={6}>
         <Grid
           container
           spacing={{ xs: 4, md: 6 }}
