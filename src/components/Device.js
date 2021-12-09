@@ -7,6 +7,7 @@ import { makeStyles } from "@mui/styles";
 import EmojiObjectsIcon from "@mui/icons-material/EmojiObjects";
 import { useNavigate } from "react-router-dom";
 import DeviceService from "../services/DeviceService";
+import DeviceInfoDialog from "./DeviceInfoDialog";
 
 const useStyles = makeStyles({
   circle: {
@@ -17,7 +18,8 @@ const useStyles = makeStyles({
     height: "72px",
     backgroundColor: "#8f0000",
     borderRadius: "50%",
-    marginTop: "20px",
+    marginTop: "30px",
+    marginBottom: "5px",
   },
 });
 
@@ -25,18 +27,20 @@ function Device(props) {
   const classes = useStyles();
   const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = React.useState(null);
+  const [openInformation, setOpenInformation] = React.useState(false);
+  const [deviceInfo, setDeviceInfo] = React.useState(undefined);
 
   const openInfo = () => {
-    DeviceService.getDevice(props._id).then(dv => {
-      // got device info
-      console.log(dv);
-    })
-  }
+    DeviceService.getDevice(props._id).then((dv) => {
+      setOpenInformation(true);
+      setDeviceInfo(dv);
+    });
+  };
 
   const menuItems = [
     {
       title: "View information",
-      fn: openInfo
+      fn: openInfo,
     },
   ];
 
@@ -50,7 +54,7 @@ function Device(props) {
 
   return (
     <div>
-      <Card sx={{ maxWidth: 345 }}>
+      <Card elevation={4} sx={{ maxWidth: 260 }}>
         <CardActionArea
           onClick={(e) => {
             handleClick(e);
@@ -83,11 +87,24 @@ function Device(props) {
         </MenuItem>
         <Divider></Divider>
         {menuItems.map((item) => (
-          <MenuItem onClick={() => {item.fn()}} key={item.title} value={item.title}>
+          <MenuItem
+            onClick={() => {
+              item.fn();
+            }}
+            key={item.title}
+            value={item.title}
+          >
             {item.title}
           </MenuItem>
         ))}
       </Menu>
+      <DeviceInfoDialog
+        openInformation={openInformation}
+        deviceInfo={deviceInfo}
+        handleClose={() => {
+          setOpenInformation(false);
+        }}
+      />
     </div>
   );
 }
