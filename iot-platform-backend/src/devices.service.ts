@@ -22,4 +22,8 @@ export class DevicesService {
   async findAll(): Promise<Device[]> {
     return this.deviceModel.find().exec();
   }
+
+  async findAllById(userId: string): Promise<Device[]> {
+    return this.deviceModel.find({userId}).exec();
+  }
 }

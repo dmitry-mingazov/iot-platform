@@ -15,8 +15,8 @@ export class DevicesController {
 
   @Get()
   @UseGuards(AuthGuard('jwt'))
-  findAll(): Promise<Device[]> {
-    return this.devicesService.findAll();
+  findAll(@AuthUserId() userId: string): Promise<Device[]> {
+    return this.devicesService.findAllById(userId);
   }
 
   @Get(':id')
