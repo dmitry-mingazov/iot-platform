@@ -3,14 +3,14 @@ import { Metadata, MetadataSchema } from './metadata.schema';
 import * as mongoose from 'mongoose';
 
 export class Service {
-  endpoint: string;
+  endpoint?: string;
   interfaceType: string;
   metadata: Metadata[];
 }
 
 export const ServiceSchema = new mongoose.Schema(
   {
-    endpoint: { type: String, required: true },
+    endpoint: { type: String, required: false},
     interfaceType: { type: String, required: true },
     metadata: {
       type: [MetadataSchema],

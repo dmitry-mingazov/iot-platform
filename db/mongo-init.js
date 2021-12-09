@@ -24,7 +24,7 @@ db.createCollection("devices", {
 	       minItems: 1,	
 	       items: {
 	       	  bsonType: ["object"],
-               	  required: [ "endpoint", "interfaceType", "metadata" ],
+               	  required: [ "interfaceType", "metadata" ],
                	  properties: {
                   endpoint: {
                      bsonType: ["string"],
@@ -50,15 +50,6 @@ db.createCollection("devices", {
                   }
                }
            }
-		   //   required: [ "metadataType", "value" ],
-		   //   properties: {
-			// metadataType: {
-			//    bsonType: ["string"]
-			// },
-			// value: {
-			//    bsonType: ["string"]
-			// }
-		   //   }
 		  }
 	       }
                }
@@ -90,7 +81,7 @@ db.createCollection("devices", {
 	       minItems: 1,	
 	       items: {
 	       	  bsonType: ["object"],
-               	  required: [ "endpoint", "interfaceType", "metadata" ],
+               	  required: [ "interfaceType", "metadata" ],
                	  properties: {
                   endpoint: {
                      bsonType: ["string"],
