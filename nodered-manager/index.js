@@ -1,7 +1,11 @@
 const express = require('express');
+const cors = require('cors');
+
 const app = express();
 const port = 3000;
 const cleanUpInterval = 20 * 1000; 
+
+app.use(cors());
 
 const exec = require('child_process').exec;
 
