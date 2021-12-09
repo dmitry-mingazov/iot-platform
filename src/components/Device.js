@@ -29,11 +29,19 @@ function Device(props) {
     console.log("Navigation to implement");
   };
 
+  const exportToNodered = () => {
+    console.log('Export to node not implemented');
+  }
+
   const menuItems = [
     {
       title: "View information",
       function: navigateToViewInformation,
     },
+    {
+      title: "Export to Node-Red",
+      function: exportToNodered,
+    }
   ];
 
   const handleClick = (e) => {
