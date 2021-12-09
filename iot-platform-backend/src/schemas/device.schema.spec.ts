@@ -12,10 +12,18 @@ const exDevDto = () => {
       {
         endpoint: 'test.endpoint',
         interfaceType: 'black magic',
-        metadata: {
-          metadataType: 'magic word',
-          value: 'abracadabra',
-        },
+        metadata: [
+          {
+            metadataType: 'magic word',
+            value: 'abracadabra',
+          },
+          {
+            metadataType: 'magic spell',
+            value: 'fireball',
+          },
+
+        ]
+        ,
       },
     ],
   };
@@ -116,18 +124,18 @@ describe('DeviceSchema', () => {
     });
   });
   it('should fail on missing metadata type field', (done) => {
-    delete dto.services[0].metadata.metadataType;
+    delete dto.services[0].metadata[0].metadataType;
     const dev = new devModel(dto);
     dev.validate((err) => {
-      expect(err.errors['services.0.metadata.metadataType']).toBeDefined();
+      expect(err.errors['services.0.metadata.0.metadataType']).toBeDefined();
       done();
     });
   });
   it('should fail on missing metadata value field', (done) => {
-    delete dto.services[0].metadata.value;
+    delete dto.services[0].metadata[0].value;
     const dev = new devModel(dto);
     dev.validate((err) => {
-      expect(err.errors['services.0.metadata.value']).toBeDefined();
+      expect(err.errors['services.0.metadata.0.value']).toBeDefined();
       done();
     });
   });

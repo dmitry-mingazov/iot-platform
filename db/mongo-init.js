@@ -24,7 +24,7 @@ db.createCollection("devices", {
 	       minItems: 1,	
 	       items: {
 	       	  bsonType: ["object"],
-               	  required: [ "endpoint", "interfaceType", "metadata" ],
+               	  required: [ "interfaceType", "metadata" ],
                	  properties: {
                   endpoint: {
                      bsonType: ["string"],
@@ -35,16 +35,21 @@ db.createCollection("devices", {
                      description: "Interface Type"
                   },
 		  metadata: {
-		     bsonType: ["object"],
-		     required: [ "metadataType", "value" ],
-		     properties: {
-			metadataType: {
-			   bsonType: ["string"]
-			},
-			value: {
-			   bsonType: ["string"]
-			}
-		     }
+		     bsonType: ["array"],
+           uniqueItems: true,
+           additionalItems: false,
+           items: {
+              bsonType: ["object"],
+               required: [ "metadataType", "value"],
+               properties: {
+                  metadataType: {
+                     bsonType: ["string"]
+                  },
+                  value: {
+                     bsonType: ["string"]
+                  }
+               }
+           }
 		  }
 	       }
                }
@@ -76,7 +81,7 @@ db.createCollection("devices", {
 	       minItems: 1,	
 	       items: {
 	       	  bsonType: ["object"],
-               	  required: [ "endpoint", "interfaceType", "metadata" ],
+               	  required: [ "interfaceType", "metadata" ],
                	  properties: {
                   endpoint: {
                      bsonType: ["string"],
@@ -86,22 +91,26 @@ db.createCollection("devices", {
                      bsonType: ["string"],
                      description: "Interface Type"
                   },
-		  metadata: {
-		     bsonType: ["object"],
-		     required: [ "metadataType", "value" ],
-		     properties: {
-			metadataType: {
-			   bsonType: ["string"]
-			},
-			value: {
-			   bsonType: ["string"]
-			}
-		     }
-		  }
-	       }
+                  metadata: {
+                     bsonType: ["array"],
+                     uniqueItems: true,
+                     additionalItems: false,
+                     items: {
+                        bsonType: ["object"],
+                         required: [ "metadataType", "value"],
+                         properties: {
+                            metadataType: {
+                               bsonType: ["string"]
+                            },
+                            value: {
+                               bsonType: ["string"]
+                            }
+                         }
+                     }
+                  }
                }
             }
          }
       }
    }
-});
+}});

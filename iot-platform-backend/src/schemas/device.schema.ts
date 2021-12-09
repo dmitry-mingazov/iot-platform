@@ -7,12 +7,14 @@ export type DeviceDocument = Device & Document;
 export class Device {
   name: string;
   devtype: string;
+  userId: string;
+  description?: string;
   services: Service[];
 }
 
 export const DeviceSchema = new mongoose.Schema({
   name: { type: String, required: true },
-  description: { type: String, required: true },
+  description: { type: String, required: false },
   userId: { type: String, required: true },
   devtype: {
     type: String,

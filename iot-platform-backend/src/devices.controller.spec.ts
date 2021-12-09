@@ -17,14 +17,21 @@ describe(DevicesController, () => {
     {
       name: 'testDevice',
       devtype: 'ActuatingDevice',
+      userId: 'magic-user',
       services: [
         {
           endpoint: 'test.endpoint',
           interfaceType: 'black magic',
-          metadata: {
-            metadataType: 'magic word',
-            value: 'abracadabra',
-          },
+          metadata: [
+            {
+              metadataType: 'magic word',
+              value: 'abracadabra',
+            },
+            {
+              metadataType: 'magic spell',
+              value: 'fireball',
+            },
+        ]
         },
       ],
     },
@@ -32,28 +39,30 @@ describe(DevicesController, () => {
   const exDev: Device = {
     name: 'testDevice',
     devtype: 'ActuatingDevice',
+    userId: 'magic-user',
     services: [
       {
         endpoint: 'test.endpoint',
         interfaceType: 'black magic',
-        metadata: {
+        metadata: [{
           metadataType: 'magic word',
           value: 'abracadabra',
-        },
+        }],
       },
     ],
   };
   const exCreateDevDto: CreateDeviceDto = {
     name: 'testDevice',
     devtype: 'ActuatingDevice',
+    userId: 'magic-user',
     services: [
       {
         endpoint: 'test.endpoint',
         interfaceType: 'black magic',
-        metadata: {
+        metadata: [{
           metadataType: 'magic word',
           value: 'abracadabra',
-        },
+        }],
       },
     ],
   };
@@ -80,9 +89,9 @@ describe(DevicesController, () => {
 
   describe('findAll', () => {
     it('should return an array of devices', async () => {
-      jest.spyOn(devicesService, 'findAll').mockResolvedValueOnce(exDevArray);
+      jest.spyOn(devicesService, 'findAllById').mockResolvedValueOnce(exDevArray);
 
-      expect(await devicesController.findAll()).toBe(exDevArray);
+      expect(await devicesController.findAll('magic-user')).toBe(exDevArray);
     });
   });
 
@@ -90,7 +99,7 @@ describe(DevicesController, () => {
     it('should return a device', async () => {
       jest.spyOn(devicesService, 'create').mockResolvedValueOnce(exDev);
 
-      expect(await devicesController.addOne(exCreateDevDto)).toBe(exDev);
+      expect(await devicesController.addOne('gattino', exCreateDevDto)).toBe(exDev);
     });
   });
 
