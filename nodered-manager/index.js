@@ -6,7 +6,7 @@ var fs = require('fs');
 require('dotenv').config();
 
 const app = express();
-const port = 3000;
+const port = 8000;
 const cleanUpInterval = 20 * 1000; 
 
 app.use(cors());
@@ -45,7 +45,7 @@ app.get('/api/nodered', (req, res) => {
     if(index >= 0) {
         const user = users[index];
         user.active = true;
-        res.status(200).send({port: user.port});
+        res.status(200).send({url: `http://localhost:${user.port}`});
         return;
     }
     currPort++;
