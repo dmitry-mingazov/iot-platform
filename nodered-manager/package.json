@@ -1,0 +1,18 @@
+{
+  "name": "nodered-manager",
+  "version": "1.0.0",
+  "description": "## Setup Run the following: ``` mkdir users sudo chown -R 1000:1000 users/ ```",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "TLD",
+  "license": "ISC",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^10.0.0",
+    "express": "^4.17.1",
+    "express-jwt": "^6.1.0",
+    "fs": "^0.0.1-security"
+  }
+}
