@@ -13,7 +13,7 @@ import UDPForm from "../components/UDPForm";
 import React from "react";
 
 class ServiceInfoManager {
-  static generateServiceInfo(interfaceType) {
+  static generateServiceInfo(interfaceType, isIn) {
     switch (interfaceType) {
       case "mqtt":
         return {
@@ -26,12 +26,15 @@ class ServiceInfoManager {
           topicError: false,
         };
       case "http":
-        return {
-          url: "",
-          method: httpMethods[0].value,
-          status: "",
-          urlError: false,
-        };
+        return isIn
+          ? {
+              url: "",
+              method: httpMethods[0].value,
+              urlError: false,
+            }
+          : {
+              status: "",
+            };
       case "websocket":
         return {
           type: webSocketTypes[0].value,
@@ -41,21 +44,26 @@ class ServiceInfoManager {
           urlError: false,
         };
       case "tcp":
-        return {
-          typeIn: tcpServerTypes[0].value,
-          typeOut: tcpBeserverTypes[0].value,
-          host: "",
-          port: "",
-          hostError: false,
-          portError: false,
-        };
+        const serviceInfoTcp = isIn
+          ? {
+              typeIn: tcpServerTypes[0].value,
+            }
+          : { typeOut: tcpBeserverTypes[0].value };
+        serviceInfoTcp.host = "";
+        serviceInfoTcp.port = "";
+        serviceInfoTcp.hostError = false;
+        serviceInfoTcp.portError = false;
+        return serviceInfoTcp;
       case "udp":
-        return {
-          address: "",
-          port: "",
-          ipv: udpIPVersions[0].value,
-          portError: false,
-        };
+        const serviceInfoUdp = isIn
+          ? {}
+          : {
+              address: "",
+            };
+        serviceInfoUdp.port = "";
+        serviceInfoUdp.ipv = udpIPVersions[0].value;
+        serviceInfoUdp.portError = false;
+        return serviceInfoUdp;
       default:
         return {};
     }
@@ -65,17 +73,21 @@ class ServiceInfoManager {
     interfaceType,
     serviceInfo,
     onServiceInfoChange,
-    isIn
+    isIn,
   }) {
     const interfaceTypes = {
-      'mqtt': MQTTForm,
-      'http': HTTPForm,
-      'websocket': WebSocketForm,
-      'tcp': TCPForm,
-      'udp': UDPForm,
-    }
+      mqtt: MQTTForm,
+      http: HTTPForm,
+      websocket: WebSocketForm,
+      tcp: TCPForm,
+      udp: UDPForm,
+    };
     const form = interfaceTypes[interfaceType];
-    return React.createElement(form, {serviceInfo, onServiceInfoChange, isIn});
+    return React.createElement(form, {
+      serviceInfo,
+      onServiceInfoChange,
+      isIn,
+    });
   }
 
   static resetServiceInfoErrors(interfaceType, serviceInfo) {
@@ -205,11 +217,11 @@ class ServiceInfoManager {
   static getServiceMetadata(serviceInfo) {
     const metadata = [];
     // get only actual metadata excluding Error booleans
-    const entries = Object
-                      .entries(serviceInfo)
-                      .filter(([key, value]) => !key.endsWith('Error') && value);
+    const entries = Object.entries(serviceInfo).filter(
+      ([key, value]) => !key.endsWith("Error") && value
+    );
     for (const [metadataType, value] of entries) {
-      metadata.push({metadataType, value});
+      metadata.push({ metadataType, value });
     }
     return metadata;
   }
