@@ -38,7 +38,7 @@ function Device(props) {
   };
 
   const exportToNodered = () => {
-    console.log('Export to node not implemented');
+    navigate(`/node-red/export/${props._id}`)
   }
 
   const menuItems = [

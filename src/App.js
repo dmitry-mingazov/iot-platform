@@ -36,6 +36,14 @@ export default function App() {
                   </RequireAuth>
                 } 
               />
+              <Route path="/node-red/:action/:deviceId" 
+                element={
+                  <RequireAuth>
+                    <NodeRed />
+                  </RequireAuth>
+                } 
+              />
+
               <Route exact path="/unauthorized" element={<Unauthorized />} />
             </Routes>
           </Layout>
