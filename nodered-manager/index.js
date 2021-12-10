@@ -1,5 +1,8 @@
 const express = require('express');
 const cors = require('cors');
+var jwt = require('express-jwt');
+var fs = require('fs');
+
 require('dotenv').config();
 
 const app = express();
@@ -7,6 +10,19 @@ const port = 3000;
 const cleanUpInterval = 20 * 1000; 
 
 app.use(cors());
+var publicKey = fs.readFileSync(process.env.PATH_TO_PUBLIC_KEY);
+app.use(jwt({   secret: publicKey, 
+                audience: process.env.AUTH0_AUDIENCE,
+                issuer: process.env.AUTH0_ISSUER,
+                algorithms: ['RS256'], 
+                requestProperty: 'auth' }));
+
+app.use(function (err, req, res, next) {
+    if (err.name === 'UnauthorizedError') {
+        res.status(401).send('invalid token');
+    }
+});
+                  
 
 const exec = require('child_process').exec;
 
@@ -22,9 +38,9 @@ exec('./cleanup.sh', (err, stdout, stderr) => {
     }
 });
 
-app.get('/api/nodered/:userId', (req, res) => {
-    // console.log(req.params.userId);
-    const userId = req.params.userId;
+app.get('/api/nodered', (req, res) => {
+    console.log(req.auth);
+    const userId = req.auth.sub.split('|')[1];
     const index = users.findIndex(el => el.userId === userId)
     if(index >= 0) {
         const user = users[index];
