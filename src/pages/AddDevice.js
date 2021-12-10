@@ -115,8 +115,11 @@ function AddDevice() {
     const newDeviceServices = deviceServices.slice();
     const indexToReplace = newDeviceServices.findIndex((el) => el.key === key);
     if (indexToReplace !== -1) {
-      newDeviceServices[indexToReplace].isIn =
-        !newDeviceServices[indexToReplace].isIn;
+      const newIsIn = !newDeviceServices[indexToReplace].isIn;
+      newDeviceServices[indexToReplace].isIn = newIsIn;
+      const interfaceType = newDeviceServices[indexToReplace].interfaceType;
+      newDeviceServices[indexToReplace].serviceInfo =
+        ServiceInfoManager.generateServiceInfo(interfaceType, newIsIn);
       setDeviceServices(newDeviceServices);
     }
   };
@@ -127,9 +130,10 @@ function AddDevice() {
     const newDeviceServices = deviceServices.slice();
     const indexToReplace = newDeviceServices.findIndex((el) => el.key === key);
     if (indexToReplace !== -1) {
+      const isIn = newDeviceServices[indexToReplace].isIn;
       newDeviceServices[indexToReplace].interfaceType = newValue;
       newDeviceServices[indexToReplace].serviceInfo =
-        ServiceInfoManager.generateServiceInfo(newValue);
+        ServiceInfoManager.generateServiceInfo(newValue, isIn);
       setDeviceServices(newDeviceServices);
     }
   };
@@ -197,15 +201,18 @@ function AddDevice() {
       let jsonObject;
       let jsonServices = [];
       deviceServices.forEach((service) => {
-        const metadata = ServiceInfoManager.getServiceMetadata(service.serviceInfo);
+        const metadata = ServiceInfoManager.getServiceMetadata(
+          service.serviceInfo
+        );
         jsonServices.push({
-          interfaceType: service.interfaceType,
+          interfaceType:
+            service.interfaceType + (service.isIn ? " in" : " out"),
           endpoint: ServiceInfoManager.getServiceEndpoint(
             service.interfaceType,
             service.isIn,
             service.serviceInfo
           ),
-          metadata
+          metadata,
         });
       });
       jsonObject = {
@@ -214,7 +221,7 @@ function AddDevice() {
         devtype: deviceType,
         services: jsonServices,
       };
-      // console.log(jsonObject);
+      console.log(jsonObject);
 
       DeviceService.createDevice(jsonObject)
         .then((_) => {
