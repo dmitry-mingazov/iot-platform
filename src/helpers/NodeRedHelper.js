@@ -1,9 +1,5 @@
-
-var uuid = require('uuid');
-
 class NodeRedHelper {
-    static createFlowFromDevice(device) {
-        const id = uuid.v4();
+    static createFlowFromDevice(device, getUniqueIds) {
         const label = `${device.name} flow`;
         const type = 'tab';
         const nodes = [];
@@ -11,8 +7,7 @@ class NodeRedHelper {
         var x = 120;
         device.services.forEach(s => {
             const node = {x, y};
-            node['id'] = uuid.v4();
-            y += 20;
+            y += 40;
             node.type = s.interfaceType;
             node.name = device.name;
             s.metadata.forEach(m => {
@@ -22,12 +17,18 @@ class NodeRedHelper {
             });
             nodes.push(node);
         });
+        // add id to each node
+        const ids = getUniqueIds(device._id, nodes.length);
+        for(let i = 0; i < nodes.length; i++) {
+            nodes[i].id = ids[i];
+        }
+
         return {
-            id,
             label,
             type,
             nodes
         }
     }
+
 }
 export default NodeRedHelper;

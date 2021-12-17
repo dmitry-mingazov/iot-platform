@@ -10,7 +10,7 @@ import { Backdrop, CircularProgress } from "@mui/material";
 
 
 const NodeRed = () => {
-  const { nodeRedUrl } = useContext(NodeRedContext);
+  const { nodeRedUrl, getUniqueNodeIds, isNodeRedReady } = useContext(NodeRedContext);
   const { action, deviceId } = useParams();
   const [ isReady, setReady ] = useState(false);
 
@@ -18,7 +18,7 @@ const NodeRed = () => {
     if (!nodeRedUrl) {return;}
     if (action === 'export') {
       DeviceService.getDevice(deviceId).then(device => {
-        const flow = NodeRedHelper.createFlowFromDevice(device);
+        const flow = NodeRedHelper.createFlowFromDevice(device, getUniqueNodeIds);
         NodeRedService.createFlow(nodeRedUrl, flow).then(() => {
           setReady(true);
         });
@@ -26,7 +26,7 @@ const NodeRed = () => {
     } else {
       setReady(true);
     }
-  }, [nodeRedUrl])
+  }, [isNodeRedReady])
 
   return (
       isReady ? (

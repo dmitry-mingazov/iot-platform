@@ -10,6 +10,7 @@ const NodeRedStateContext = props => {
     const [ nodeRedUrl, setNodeRedUrl ] = useState(null);
     const [ flows, setFlows ] = useState([]);
     const [ isNodeRedReady, setNodeRedReady ] = useState(false);
+    const [ pushedIds, setPushedIds ] = useState({});
 
     useEffect(() => {
         if (token) {
@@ -31,9 +32,49 @@ const NodeRedStateContext = props => {
         }
     }, [nodeRedUrl])
 
+    const updatePushedIds = (deviceId, ids) => {
+        const newDeviceIds = pushedIds[deviceId] || {};
+        ids.forEach(id => {
+            newDeviceIds[id] = true;
+        });
+        const newPushedIds = pushedIds;
+        newPushedIds[deviceId] = newDeviceIds;
+        setPushedIds(newPushedIds);
+    }
+
+    const getUniqueNodeIds = (deviceId, requiredIds) => {
+        const _ids = [];
+        const usedIds = {};
+        /* a node id is structured as `deviceId|counter`
+         the following code gets all the ids matching the
+         given deviceId, then saves their counter in the
+         usedIds map <id, bool> */
+        flows
+            ?.map(flow => flow.id)
+            .filter(id => id.split('|')[0] === deviceId)
+            ?.map(id => parseInt(id.split('|')[1]))
+            ?.forEach(id => {usedIds[id] = true;});
+        let k = 0;
+        const devicePushedIds = pushedIds[deviceId] || [];
+        while(_ids.length < requiredIds) {
+            const curr = k++;
+            if(!usedIds[curr] && !devicePushedIds[curr]) {
+                _ids.push(curr);
+            }
+        }
+        updatePushedIds(deviceId, _ids);
+        return _ids.map(id => `${deviceId}|${id}`);
+    };
+
+    const value = {
+        nodeRedUrl,
+        getUniqueNodeIds,
+        isNodeRedReady
+    }
+
     return (
         <NodeRedContext.Provider
-            value={{ nodeRedUrl }}
+            value={value}
         >
             {props.children}
         </NodeRedContext.Provider>
