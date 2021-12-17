@@ -8,6 +8,8 @@ const NodeRedContext = createContext();
 const NodeRedStateContext = props => {
     const { token } = useContext(AuthContext);
     const [ nodeRedUrl, setNodeRedUrl ] = useState(null);
+    const [ flows, setFlows ] = useState([]);
+    const [ isNodeRedReady, setNodeRedReady ] = useState(false);
 
     useEffect(() => {
         if (token) {
@@ -19,6 +21,15 @@ const NodeRedStateContext = props => {
             }, getInstanceInterval);
         }
     }, [token]);
+
+    useEffect(() => {
+        if (nodeRedUrl) {
+            NodeRedService.getFlows(nodeRedUrl).then(_flows => {
+                setFlows(_flows);
+                setNodeRedReady(true);
+            });
+        }
+    }, [nodeRedUrl])
 
     return (
         <NodeRedContext.Provider

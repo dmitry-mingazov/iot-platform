@@ -9,5 +9,9 @@ class NodeRedService {
     static async createFlow(nodeRedUrl, flow) {
         return HttpService.post(`${nodeRedUrl}/flow`, flow);
     }
+
+    static async getFlows(nodeRedUrl) {
+        return HttpService.get(`${nodeRedUrl}/flows`);
+    }
 }
 export default NodeRedService;
