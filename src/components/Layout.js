@@ -20,7 +20,7 @@ import Logout from "./Logout";
 import Snackbar from "@mui/material/Snackbar";
 import MuiAlert from "@mui/material/Alert";
 import Stack from "@mui/material/Stack";
-
+import NRInstanceStatus from "./NRInstanceStatus";
 import { SnackbarContext } from "./context/SnackbarContext";
 
 const drawerWidth = 240;
@@ -152,6 +152,7 @@ export default function Layout({ children }) {
             >
               {title}
             </Typography>
+            <NRInstanceStatus />
             <Logout />
           </Toolbar>
         </AppBar>
