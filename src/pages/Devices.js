@@ -4,7 +4,7 @@ import { useNavigate } from "react-router";
 import DeviceService from "../services/DeviceService";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
-import Device from "../components/Device";
+import DeviceCard from "../components/DeviceCard";
 import { AuthContext } from "../components/context/AuthContext";
 
 function Devices() {
@@ -42,11 +42,11 @@ function Devices() {
         >
           {devices.map((device) => (
             <Grid key={device._id} item xs={2} sm={4} md={4} align="center">
-              <Device
+              <DeviceCard
                 key={device._id}
                 _id={device._id}
                 deviceName={device.name}
-              ></Device>
+              ></DeviceCard>
             </Grid>
           ))}
         </Grid>

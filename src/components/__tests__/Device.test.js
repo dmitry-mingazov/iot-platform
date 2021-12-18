@@ -1,7 +1,7 @@
 import React from "react";
 import { BrowserRouter } from "react-router-dom";
 import { fireEvent, render, screen } from "@testing-library/react";
-import Device from "../Device";
+import DeviceCard from "../DeviceCard";
 import "@testing-library/jest-dom/extend-expect";
 import { act } from "react-dom/test-utils";
 import DeviceService from "../../services/DeviceService";
@@ -12,7 +12,7 @@ const renderComponent = () => {
   act(() => {
     render(
       <BrowserRouter>
-        <Device />
+        <DeviceCard />
       </BrowserRouter>
     );
   });
@@ -55,7 +55,6 @@ describe("Device component", () => {
   test("renders Device component", () => {
     renderComponent();
     expect(screen.getByRole("button", { name: "" })).toBeInTheDocument();
-    expect(screen.getByText("View information")).toBeInTheDocument();
   });
 
   test("opens menu correctly when clicked", () => {
