@@ -15,19 +15,13 @@ import ServiceInfoManager from "../services/ServiceInfoManager";
 
 //Styles
 const useStyles = makeStyles({
-  field: {
-    marginTop: 20,
-    marginBottom: 20,
-    display: "block",
-  },
   formColumn: {
     display: "flex",
     flexDirection: "column",
     padding: "10px",
-    paddingLeft: "30px",
     alignItems: "center",
     justifyContent: "center",
-    "& .MuiTextField-root": { width: "55ch" },
+    "& .MuiTextField-root": { width: "52ch" },
   },
   serviceRow: {
     display: "flex",
