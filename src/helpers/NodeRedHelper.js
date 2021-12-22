@@ -39,6 +39,7 @@ const mapConfigValue = (metadataType, value, configNode) => {
         case 'path':
             _configNode[metadataType] = value;
             _value = undefined;
+             break;
         case 'url':
             _configNode['path'] = value;
             _value = undefined;
