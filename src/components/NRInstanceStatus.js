@@ -1,13 +1,58 @@
 import { useAuth0 } from "@auth0/auth0-react";
 import { Chip, Popover, Typography } from "@mui/material";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+import PendingIcon from "@mui/icons-material/Pending";
 import ErrorIcon from "@mui/icons-material/Error";
 import { useState } from "react";
 
 const NRInstanceStatus = () => {
   const { isAuthenticated, isLoading } = useAuth0();
   const [anchorEl, setAnchorEl] = useState(null);
-  const [isReady, setIsReady] = useState(false);
+  const [isReady, setIsReady] = useState(0.5);
+
+  const getMessage = () => {
+    switch (isReady) {
+      case 0:
+        return "Error in the creation";
+      case 0.5:
+        return "Not ready yet";
+      case 1:
+        return "Ready to use";
+      default:
+        return "Error in getting the popover message";
+    }
+  };
+
+  const displayIcon = () => {
+    switch (isReady) {
+      case 0:
+        return (
+          <ErrorIcon
+            onMouseEnter={handlePopoverOpen}
+            onMouseLeave={handlePopoverClose}
+            style={{ color: "#8F0000" }}
+          />
+        );
+      case 0.5:
+        return (
+          <PendingIcon
+            onMouseEnter={handlePopoverOpen}
+            onMouseLeave={handlePopoverClose}
+            style={{ color: "grey" }}
+          />
+        );
+      case 1:
+        return (
+          <CheckCircleIcon
+            onMouseEnter={handlePopoverOpen}
+            onMouseLeave={handlePopoverClose}
+            style={{ color: "green" }}
+          />
+        );
+      default:
+        break;
+    }
+  };
 
   const handlePopoverOpen = (event) => {
     setAnchorEl(event.currentTarget);
@@ -19,7 +64,7 @@ const NRInstanceStatus = () => {
 
   //TO REMOVE JUST FOR TESTING
   setTimeout(() => {
-    setIsReady(true);
+    setIsReady(1);
   }, 4000);
 
   return isLoading
@@ -29,21 +74,7 @@ const NRInstanceStatus = () => {
           <Chip
             label="Node-RED instance: "
             onDelete={() => {}}
-            deleteIcon={
-              isReady ? (
-                <CheckCircleIcon
-                  onMouseEnter={handlePopoverOpen}
-                  onMouseLeave={handlePopoverClose}
-                  style={{ color: "green" }}
-                />
-              ) : (
-                <ErrorIcon
-                  onMouseEnter={handlePopoverOpen}
-                  onMouseLeave={handlePopoverClose}
-                  style={{ color: "#8F0000" }}
-                />
-              )
-            }
+            deleteIcon={displayIcon()}
             sx={{ backgroundColor: "white", fontWeight: "bold" }}
           ></Chip>
           <Popover
@@ -67,7 +98,7 @@ const NRInstanceStatus = () => {
             disableScrollLock
           >
             <Typography fontSize={15} sx={{ p: 1 }}>
-              {isReady ? "Ready to use" : "Not ready yet"}
+              {getMessage()}
             </Typography>
           </Popover>
         </div>
