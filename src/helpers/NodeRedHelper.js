@@ -10,34 +10,13 @@ class NodeRedHelper {
         device.services.forEach(s => {
             const node = {x, y};
             y += 40;
-            let configNode = undefined
+            let configNode = undefined;
             switch(s.interfaceType){
                 case 'http out':
                     node.type = 'http response'
                     break;
                 case s.interfaceType.match(/^mqtt/)?.input:
-                    configNode = { // ugly, hopefully not everything is needed to avoid configuration errors in Node-RED
-                    clientid: "",
-                    autoConnect: true,
-                    usetls: false,
-                    keepalive: "15",
-                    cleansession: true,
-                    birthTopic: "",
-                    birthQos: "0",
-                    birthPayload: "",
-                    birthMsg: {},
-                    closeTopic: "",
-                    closePayload: "",
-                    closeMsg: {},
-                    willTopic: "",
-                    willQos: "0",
-                    willPayload: "",
-                    willMsg: {},
-                    sessionExpiry: "",
-                    credentials: {
-                        user: "",
-                        password: ""
-                    }}
+                    configNode = {};
                     configNode['id'] = getUniqueIds(device._id, 1)[0];
                     configNode['type'] = 'mqtt-broker'
                     node.type = s.interfaceType;
