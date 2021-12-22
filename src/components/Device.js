@@ -37,11 +37,19 @@ function Device(props) {
     });
   };
 
+  const exportToNodered = () => {
+    navigate(`/node-red/export/${props._id}`)
+  }
+
   const menuItems = [
     {
       title: "View information",
       fn: openInfo,
     },
+    {
+      title: "Export to Node-Red",
+      fn: exportToNodered,
+    }
   ];
 
   const handleClick = (e) => {
