@@ -63,9 +63,9 @@ const NRInstanceStatus = () => {
   };
 
   //TO REMOVE JUST FOR TESTING
-  setTimeout(() => {
+  /*setTimeout(() => {
     setIsReady(1);
-  }, 4000);
+  }, 4000);*/
 
   return isLoading
     ? null
