@@ -51,8 +51,8 @@ const openInformatioNDialog = async () => {
   });
 };
 
-describe("Device component", () => {
-  test("renders Device component", () => {
+describe("DeviceCard component", () => {
+  test("renders DeviceCard component", () => {
     renderComponent();
     expect(screen.getByRole("button", { name: "" })).toBeInTheDocument();
   });
