@@ -81,10 +81,7 @@ const Alert = React.forwardRef(function Alert(props, ref) {
 //Component
 export default function Layout({ children }) {
   const navigate = useNavigate();
-  //const location = useLocation();
   const [open, setOpen] = React.useState(false);
-  //let string = location.pathname.includes("flows") ? "Flows" : "Devices";
-  const [title, setTitle] = React.useState("Devices");
   const { snackbar, closeSnackbar } = React.useContext(SnackbarContext);
 
   const handleDrawerOpen = () => {
@@ -123,7 +120,6 @@ export default function Layout({ children }) {
             key={"Devices"}
             onClick={() => {
               navigate("/");
-              setTitle("Devices");
               handleDrawerClose();
             }}
           >
@@ -148,9 +144,12 @@ export default function Layout({ children }) {
               variant="h6"
               noWrap
               component="div"
-              sx={{ flexGrow: 1 }}
+              onClick={() => {
+                navigate("/");
+              }}
+              sx={{ flexGrow: 1, "&:hover": { cursor: "pointer" } }}
             >
-              {title}
+              IoT Platform
             </Typography>
             <NRInstanceStatus />
             <Logout />
