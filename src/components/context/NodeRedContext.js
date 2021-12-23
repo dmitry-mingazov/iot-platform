@@ -1,4 +1,5 @@
 import { useContext, useState, createContext, useEffect } from "react";
+import React from "react";
 import { AuthContext } from "./AuthContext";
 import NodeRedService from "../../services/NodeRedService";
 
@@ -83,4 +84,13 @@ const NodeRedStateContext = props => {
         </NodeRedContext.Provider>
     )
 }
-export { NodeRedContext, NodeRedStateContext };
+
+function useNodeRed() {
+    const context = React.useContext(NodeRedContext);
+    if (context === undefined) {
+        throw new Error('useNodeRed must be used within a NodeRedStateContext');
+    }
+    return context;
+}
+
+export { useNodeRed, NodeRedStateContext,  };

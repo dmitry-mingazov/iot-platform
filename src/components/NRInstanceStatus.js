@@ -3,8 +3,8 @@ import { Chip, Popover, Typography } from "@mui/material";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import PendingIcon from "@mui/icons-material/Pending";
 import ErrorIcon from "@mui/icons-material/Error";
-import { createElement, useContext, useEffect, useState } from "react";
-import { NodeRedContext } from "./context/NodeRedContext";
+import { createElement, useEffect, useState } from "react";
+import { useNodeRed } from "./context/NodeRedContext";
 
 const statuses = {
   NOT_READY: 'Not ready yet',
@@ -16,7 +16,7 @@ const NRInstanceStatus = () => {
   const { isAuthenticated, isLoading } = useAuth0();
   const [anchorEl, setAnchorEl] = useState(null);
   const [nodeRedStatus, setNodeRedStatus] = useState(statuses.NOT_READY);
-  const { isNodeRedLoading, isNodeRedReady } = useContext(NodeRedContext);
+  const { isNodeRedLoading, isNodeRedReady } = useNodeRed();
 
   useEffect(() => {
     if(!isNodeRedLoading) {
