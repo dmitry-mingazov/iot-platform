@@ -3,55 +3,45 @@ import { Chip, Popover, Typography } from "@mui/material";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import PendingIcon from "@mui/icons-material/Pending";
 import ErrorIcon from "@mui/icons-material/Error";
-import { useState } from "react";
+import { createElement, useState } from "react";
+
+const statuses = {
+  NOT_READY: 'Not ready yet',
+  FAULTY: 'Error in the creation',
+  READY: 'Ready to use',
+}
 
 const NRInstanceStatus = () => {
   const { isAuthenticated, isLoading } = useAuth0();
   const [anchorEl, setAnchorEl] = useState(null);
-  const [isReady, setIsReady] = useState(0.5);
+  const [nodeRedStatus, setNodeRedStatus] = useState(statuses.NOT_READY);
 
-  const getMessage = () => {
-    switch (isReady) {
-      case 0:
-        return "Error in the creation";
-      case 0.5:
-        return "Not ready yet";
-      case 1:
-        return "Ready to use";
-      default:
-        return "Error in getting the popover message";
-    }
-  };
+  const getMessage = () => nodeRedStatus || 'Error in getting the right popover message';
 
   const displayIcon = () => {
-    switch (isReady) {
-      case 0:
-        return (
-          <ErrorIcon
-            onMouseEnter={handlePopoverOpen}
-            onMouseLeave={handlePopoverClose}
-            style={{ color: "#8F0000" }}
-          />
-        );
-      case 0.5:
-        return (
-          <PendingIcon
-            onMouseEnter={handlePopoverOpen}
-            onMouseLeave={handlePopoverClose}
-            style={{ color: "grey" }}
-          />
-        );
-      case 1:
-        return (
-          <CheckCircleIcon
-            onMouseEnter={handlePopoverOpen}
-            onMouseLeave={handlePopoverClose}
-            style={{ color: "green" }}
-          />
-        );
-      default:
+    let component = ErrorIcon;
+    let color = 'black';
+
+    switch (nodeRedStatus) {
+      case statuses.FAULTY:
+        component = ErrorIcon;
+        color = '#8F0000';
+        break;
+      case statuses.NOT_READY:
+        component = PendingIcon;
+        color = 'grey';
+        break;
+      case statuses.READY:
+        component = CheckCircleIcon;
+        color = 'green';
         break;
     }
+
+    return createElement(component, {
+      onMouseEnter: handlePopoverOpen,
+      onMouseLeave: handlePopoverClose,
+      style: {color}
+    });
   };
 
   const handlePopoverOpen = (event) => {
@@ -64,7 +54,7 @@ const NRInstanceStatus = () => {
 
   //TO REMOVE JUST FOR TESTING
   /*setTimeout(() => {
-    setIsReady(1);
+    setNodeRedStatus(statuses.READY);
   }, 4000);*/
 
   return isLoading
