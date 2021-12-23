@@ -10,6 +10,7 @@ const NodeRedStateContext = props => {
     const [ nodeRedUrl, setNodeRedUrl ] = useState(null);
     const [ flows, setFlows ] = useState([]);
     const [ isNodeRedReady, setNodeRedReady ] = useState(false);
+    const [ isNodeRedLoading, setNodeRedLoading ] = useState(true);
     const [ pushedIds, setPushedIds ] = useState({});
 
     useEffect(() => {
@@ -28,6 +29,7 @@ const NodeRedStateContext = props => {
             NodeRedService.getFlows(nodeRedUrl).then(_flows => {
                 setFlows(_flows);
                 setNodeRedReady(true);
+                setNodeRedLoading(false);
             });
         }
     }, [nodeRedUrl])
@@ -69,7 +71,8 @@ const NodeRedStateContext = props => {
     const value = {
         nodeRedUrl,
         getUniqueNodeIds,
-        isNodeRedReady
+        isNodeRedReady,
+        isNodeRedLoading
     }
 
     return (
