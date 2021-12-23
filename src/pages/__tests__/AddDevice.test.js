@@ -9,6 +9,11 @@ import { act } from "react-dom/test-utils";
 import Layout from "../../components/Layout";
 
 jest.mock("../../services/DeviceService");
+jest.mock("../../components/context/NodeRedContext", () => ({
+  useNodeRed: () => ({
+    isNodeRedLoading: true
+  })
+}));
 
 const renderComponent = () => {
   render(
