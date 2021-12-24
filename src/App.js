@@ -1,5 +1,5 @@
 import Layout from "./components/Layout";
-import React, { useContext, useEffect } from "react";
+import React from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Devices from "./pages/Devices";
 import RequireAuth from "./RequireAuth";
@@ -7,6 +7,7 @@ import Unauthorized from "./pages/Unauthorized";
 import AddDevice from "./pages/AddDevice";
 import { SnackbarStateContext } from "./components/context/SnackbarContext";
 import NodeRed from "./pages/NodeRed";
+import Flows from "./pages/Flows";
 
 export default function App() {
   return (
@@ -26,6 +27,13 @@ export default function App() {
                 element={
                   <RequireAuth>
                     <AddDevice />
+                  </RequireAuth>
+                } 
+              />
+              <Route exact path="/flows" 
+                element={
+                  <RequireAuth>
+                    <Flows />
                   </RequireAuth>
                 } 
               />
