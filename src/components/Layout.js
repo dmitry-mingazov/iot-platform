@@ -19,18 +19,19 @@ import CloseIcon from "@mui/icons-material/Close";
 import Logout from "./Logout";
 import Snackbar from "@mui/material/Snackbar";
 import MuiAlert from "@mui/material/Alert";
-import Stack from '@mui/material/Stack';
-
+import Stack from "@mui/material/Stack";
+import NRInstanceStatus from "./NRInstanceStatus";
 import { SnackbarContext } from "./context/SnackbarContext";
 
 const drawerWidth = 240;
+const scrollbarWidth = window.innerWidth - document.body.clientWidth;
 
 const Main = styled("main", { shouldForwardProp: (prop) => prop !== "open" })(
   ({ theme, open }) => ({
     flexGrow: 1,
-    minWidth: `100vw`,
+    minWidth: `calc(99.99vw - ${scrollbarWidth}px)`,
     minHeight: `100vh - mui--appbar-height`,
-    marginTop: '64px',
+    marginTop: "64px",
     padding: theme.spacing(3),
     transition: theme.transitions.create("margin", {
       easing: theme.transitions.easing.sharp,
@@ -80,10 +81,7 @@ const Alert = React.forwardRef(function Alert(props, ref) {
 //Component
 export default function Layout({ children }) {
   const navigate = useNavigate();
-  //const location = useLocation();
   const [open, setOpen] = React.useState(false);
-  //let string = location.pathname.includes("flows") ? "Flows" : "Devices";
-  const [title, setTitle] = React.useState("Devices");
   const { snackbar, closeSnackbar } = React.useContext(SnackbarContext);
 
   const handleDrawerOpen = () => {
@@ -95,7 +93,7 @@ export default function Layout({ children }) {
   };
 
   return (
-    <Box sx={{ minHeight: "100vh", display: "flex" }} >
+    <Box sx={{ minHeight: "100vh", display: "flex" }}>
       <CssBaseline />
       <Drawer
         sx={{
@@ -122,7 +120,6 @@ export default function Layout({ children }) {
             key={"Devices"}
             onClick={() => {
               navigate("/");
-              setTitle("Devices");
               handleDrawerClose();
             }}
           >
@@ -131,42 +128,50 @@ export default function Layout({ children }) {
           </ListItem>
         </List>
       </Drawer>
-      <Stack >
-      <AppBar position="fixed" open={open} color="primary">
-        <Toolbar>
-          <IconButton
-            color="inherit"
-            aria-label="open drawer"
-            onClick={handleDrawerOpen}
-            edge="start"
-            sx={{ mr: 2, ...(open && { display: "none" }) }}
-          >
-            <MenuIcon />
-          </IconButton>
-          <Typography variant="h6" noWrap component="div" sx={{ flexGrow: 1 }}>
-            {title}
-          </Typography>
-          <Logout />
-        </Toolbar>
-      </AppBar>
-      <Main open={open} >
-        
-        {children}
-        <Snackbar
-          anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
-          open={snackbar.open}
-          autoHideDuration={5000}
-          onClose={closeSnackbar}
-        >
-          <Alert
+      <Stack>
+        <AppBar position="fixed" open={open} color="primary">
+          <Toolbar>
+            <IconButton
+              color="inherit"
+              aria-label="open drawer"
+              onClick={handleDrawerOpen}
+              edge="start"
+              sx={{ mr: 2, ...(open && { display: "none" }) }}
+            >
+              <MenuIcon />
+            </IconButton>
+            <Typography
+              variant="h6"
+              noWrap
+              component="div"
+              onClick={() => {
+                navigate("/");
+              }}
+              sx={{ flexGrow: 1, "&:hover": { cursor: "pointer" } }}
+            >
+              IoT Platform
+            </Typography>
+            <NRInstanceStatus />
+            <Logout />
+          </Toolbar>
+        </AppBar>
+        <Main open={open}>
+          {children}
+          <Snackbar
+            anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+            open={snackbar.open}
+            autoHideDuration={5000}
             onClose={closeSnackbar}
-            severity={snackbar.severity}
-            sx={{ width: "100%" }}
           >
-            {snackbar.message}
-          </Alert>
-        </Snackbar>
-      </Main>
+            <Alert
+              onClose={closeSnackbar}
+              severity={snackbar.severity}
+              sx={{ width: "100%" }}
+            >
+              {snackbar.message}
+            </Alert>
+          </Snackbar>
+        </Main>
       </Stack>
     </Box>
   );

@@ -6,6 +6,15 @@ import "@testing-library/jest-dom/extend-expect";
 import { SnackbarStateContext } from "../context/SnackbarContext";
 import { act } from "react-dom/test-utils";
 
+jest.mock("../../components/context/NodeRedContext", () => (
+  {
+    useNodeRed: () => ({
+      isNodeRedLoading: true
+    })
+  }
+  )
+);
+
 const renderComponent = () => {
   act(() => {
     render(

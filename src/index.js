@@ -3,7 +3,7 @@ import ReactDOM from "react-dom";
 import App from "./App";
 import { createTheme } from "@mui/material";
 import { ThemeProvider } from "@emotion/react";
-import { Auth0Provider } from '@auth0/auth0-react';
+import { Auth0Provider } from "@auth0/auth0-react";
 import { AuthStateContext } from "./components/context/AuthContext";
 import { NodeRedStateContext } from "./components/context/NodeRedContext";
 
@@ -12,6 +12,9 @@ const theme = createTheme({
     primary: {
       main: "#8f0000",
     },
+  },
+  typography: {
+    fontFamily: ["Nunito"].join(","),
   },
 });
 
@@ -24,11 +27,11 @@ ReactDOM.render(
   >
     <AuthStateContext>
       <NodeRedStateContext>
-      <React.StrictMode>
-        <ThemeProvider theme={theme}>
-          <App />
-        </ThemeProvider>
-      </React.StrictMode>
+        <React.StrictMode>
+          <ThemeProvider theme={theme}>
+            <App />
+          </ThemeProvider>
+        </React.StrictMode>
       </NodeRedStateContext>
     </AuthStateContext>
   </Auth0Provider>,

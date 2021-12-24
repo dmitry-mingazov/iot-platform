@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router";
 import { AuthContext } from "../components/context/AuthContext";
-import { NodeRedContext } from "../components/context/NodeRedContext";
+import { useNodeRed } from "../components/context/NodeRedContext";
 import Box from "@mui/material/Box";
 import DeviceService from "../services/DeviceService";
 import NodeRedService from "../services/NodeRedService";
@@ -10,7 +10,7 @@ import { Backdrop, CircularProgress } from "@mui/material";
 
 
 const NodeRed = () => {
-  const { nodeRedUrl, getUniqueNodeIds, isNodeRedReady } = useContext(NodeRedContext);
+  const { nodeRedUrl, getUniqueNodeIds, isNodeRedReady } = useNodeRed();
   const { action, deviceId } = useParams();
   const [ isReady, setReady ] = useState(false);
 

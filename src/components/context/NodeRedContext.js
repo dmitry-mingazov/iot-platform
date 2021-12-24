@@ -1,4 +1,5 @@
 import { useContext, useState, createContext, useEffect } from "react";
+import React from "react";
 import { AuthContext } from "./AuthContext";
 import NodeRedService from "../../services/NodeRedService";
 
@@ -10,6 +11,7 @@ const NodeRedStateContext = props => {
     const [ nodeRedUrl, setNodeRedUrl ] = useState(null);
     const [ flows, setFlows ] = useState([]);
     const [ isNodeRedReady, setNodeRedReady ] = useState(false);
+    const [ isNodeRedLoading, setNodeRedLoading ] = useState(true);
     const [ pushedIds, setPushedIds ] = useState({});
 
     useEffect(() => {
@@ -28,6 +30,7 @@ const NodeRedStateContext = props => {
             NodeRedService.getFlows(nodeRedUrl).then(_flows => {
                 setFlows(_flows);
                 setNodeRedReady(true);
+                setNodeRedLoading(false);
             });
         }
     }, [nodeRedUrl])
@@ -69,7 +72,8 @@ const NodeRedStateContext = props => {
     const value = {
         nodeRedUrl,
         getUniqueNodeIds,
-        isNodeRedReady
+        isNodeRedReady,
+        isNodeRedLoading
     }
 
     return (
@@ -80,4 +84,13 @@ const NodeRedStateContext = props => {
         </NodeRedContext.Provider>
     )
 }
-export { NodeRedContext, NodeRedStateContext };
+
+function useNodeRed() {
+    const context = React.useContext(NodeRedContext);
+    if (context === undefined) {
+        throw new Error('useNodeRed must be used within a NodeRedStateContext');
+    }
+    return context;
+}
+
+export { useNodeRed, NodeRedStateContext,  };
