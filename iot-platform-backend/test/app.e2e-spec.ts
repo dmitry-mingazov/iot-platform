@@ -44,7 +44,7 @@ describe('AppController (e2e)', () => {
     await app.init();
     configService = moduleFixture.get<ConfigService>(ConfigService);
     await request(app.getHttpServer())
-      .post('/api/devices')
+      .post('/api/device')
       .set('Authorization', 'Bearer ' + configService.get('TEST_TOKEN'))
       .send(exCreateDevDto)
       .then((res) => {
@@ -66,7 +66,7 @@ describe('AppController (e2e)', () => {
 
   it('/api/devices/:id (GET)', () => {
     return request(app.getHttpServer())
-      .get('/api/devices/' + devId)
+      .get('/api/device/' + devId)
       .set('Authorization', 'Bearer ' + configService.get('TEST_TOKEN'))
       .expect(200)
       .expect((res) => {
@@ -76,7 +76,7 @@ describe('AppController (e2e)', () => {
 
   it('/api/devices (POST)', () => {
     return request(app.getHttpServer())
-      .post('/api/devices')
+      .post('/api/device')
       .set('Authorization', 'Bearer ' + configService.get('TEST_TOKEN'))
       .send(exCreateDevDto)
       .expect(201)

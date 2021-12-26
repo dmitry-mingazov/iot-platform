@@ -6,28 +6,31 @@ import { ConfigService } from '@nestjs/config';
 import { AuthGuard } from '@nestjs/passport';
 import { AuthUserId } from './decorators/user.decorator';
 
-@Controller('/api/devices')
+@Controller('/api')
 export class DevicesController {
   constructor(
     private readonly devicesService: DevicesService,
     private readonly configService: ConfigService,
   ) {}
 
-  @Get()
+  @Get('/devices')
   @UseGuards(AuthGuard('jwt'))
   findAll(@AuthUserId() userId: string): Promise<Device[]> {
     return this.devicesService.findAllById(userId);
   }
 
-  @Get(':id')
+  @Get('/device/:id')
   @UseGuards(AuthGuard('jwt'))
   findOne(@Param('id') id: string): Promise<Device> {
     return this.devicesService.findOne(id);
   }
 
-  @Post()
+  @Post('/device')
   @UseGuards(AuthGuard('jwt'))
-  addOne(@AuthUserId() userId: string, @Body() dto: CreateDeviceDto): Promise<Device> {
-    return this.devicesService.create({userId, ...dto});
+  addOne(
+    @AuthUserId() userId: string,
+    @Body() dto: CreateDeviceDto,
+  ): Promise<Device> {
+    return this.devicesService.create({ userId, ...dto });
   }
 }
