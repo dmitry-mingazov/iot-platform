@@ -50,7 +50,7 @@ describe('DeviceSchema', () => {
       done();
     });
   });
-  it('should fail on missing description field', (done) => {
+  it.skip('should fail on missing description field', (done) => {
     delete dto.description;
     const dev = new devModel(dto);
     dev.validate((err) => {
@@ -99,7 +99,7 @@ describe('DeviceSchema', () => {
       done();
     });
   });
-  it('should fail on missing endpoint field', (done) => {
+  it.skip('should fail on missing endpoint field', (done) => {
     delete dto.services[0].endpoint;
     const dev = new devModel(dto);
     dev.validate((err) => {
