@@ -15,6 +15,10 @@ export class DevicesService {
     return createdDevice.save({ validateBeforeSave: true });
   }
 
+  async createMany(createDeviceDtos: CreateDeviceDto[]): Promise<Device[]> {
+    return this.deviceModel.insertMany(createDeviceDtos);
+  }
+
   async findOne(id: string): Promise<Device> {
     return this.deviceModel.findById(id).exec();
   }

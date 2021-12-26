@@ -33,4 +33,15 @@ export class DevicesController {
   ): Promise<Device> {
     return this.devicesService.create({ userId, ...dto });
   }
+
+  @Post('/devices')
+  @UseGuards(AuthGuard('jwt'))
+  addMany(
+    @AuthUserId() userId: string,
+    @Body() dtos: CreateDeviceDto[],
+  ): Promise<Device[]> {
+    return this.devicesService.createMany(
+      dtos.map((dto) => ({ ...dto, userId })),
+    );
+  }
 }

@@ -74,14 +74,27 @@ describe('AppController (e2e)', () => {
       });
   });
 
-  it('/api/devices (POST)', () => {
+  it('/api/device (POST)', () => {
     return request(app.getHttpServer())
       .post('/api/device')
       .set('Authorization', 'Bearer ' + configService.get('TEST_TOKEN'))
       .send(exCreateDevDto)
       .expect(201)
       .expect((res) => {
-        expect(res.body).toMatchObject(new Device());
+        expect(res.body[0]).toMatchObject(new Device());
+      });
+  });
+
+  it('/api/devices (POST)', () => {
+    return request(app.getHttpServer())
+      .post('/api/devices')
+      .set('Authorization', 'Bearer ' + configService.get('TEST_TOKEN'))
+      .send([exCreateDevDto, exCreateDevDto])
+      .expect(201)
+      .expect((res) => {
+        expect(res.body).toBeInstanceOf(Array);
+        if (res.body.length > 0)
+          expect(res.body[0]).toMatchObject(new Device());
       });
   });
 

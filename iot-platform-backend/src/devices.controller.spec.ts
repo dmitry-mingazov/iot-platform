@@ -95,6 +95,14 @@ describe(DevicesController, () => {
     });
   });
 
+  describe('addMany', () => {
+    it('should return an array of devices', async () => {
+      jest.spyOn(devicesService, 'createMany').mockResolvedValueOnce([exDev,exDev]);
+
+      expect(await devicesController.addMany('gattino', [exCreateDevDto, exCreateDevDto])).toStrictEqual([exDev, exDev]);
+    });
+  });
+
   describe('addOne', () => {
     it('should return a device', async () => {
       jest.spyOn(devicesService, 'create').mockResolvedValueOnce(exDev);
