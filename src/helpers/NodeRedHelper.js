@@ -52,6 +52,26 @@ const mapConfigValue = (metadataType, value, configNode) => {
     return [_value, _configNode];
 };
 
+const createGroupNode = (deviceName, serviceNodes, groupId) => {
+    const id = groupId;
+    const type = 'group';
+    const nodes = [];
+    const name = deviceName;
+    const style = {label: true}
+    serviceNodes.forEach((node) => {
+        node['g'] = id;
+        nodes.push(node['id']);
+    })
+
+    return {
+        id,
+        name,
+        type,
+        style,
+        nodes
+    }
+}
+
 class NodeRedHelper {
     static createFlowFromDevice(device, getUniqueIds) {
         const label = `${device.name} flow`;
@@ -89,6 +109,9 @@ class NodeRedHelper {
         for(let i = 0; i < nodes.length; i++) {
             nodes[i].id = ids[i];
         }
+
+        const groupNode = createGroupNode(device.name, nodes, getUniqueIds(device._id, 1)[0])
+        nodes.push(groupNode);
 
         return {
             label,
