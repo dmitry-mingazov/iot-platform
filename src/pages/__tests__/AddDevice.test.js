@@ -11,8 +11,8 @@ import Layout from "../../components/Layout";
 jest.mock("../../services/DeviceService");
 jest.mock("../../components/context/NodeRedContext", () => ({
   useNodeRed: () => ({
-    isNodeRedLoading: true
-  })
+    isNodeRedLoading: true,
+  }),
 }));
 
 const renderComponent = () => {
@@ -38,14 +38,16 @@ const checkTextboxToHaveValue = (name, value) => {
 };
 
 const changeDropdownValue = (name, value) => {
-  fireEvent.mouseDown(screen.getByRole("button", { name: name }));
+  fireEvent.mouseDown(
+    screen.getByRole("button", { name: new RegExp(name) })
+  );
   const listbox = within(screen.getByRole("listbox"));
   fireEvent.click(listbox.getByText(value));
 };
 
 const checkDropdownToHaveValue = (name, value) => {
   expect(
-    screen.getByRole("button", { name: name, value: value })
+    screen.getByRole("button", { name: new RegExp(name), value: value })
   ).toBeInTheDocument();
 };
 
@@ -66,11 +68,11 @@ describe("AddDevice component", () => {
     expect(
       screen.getAllByRole("textbox", { name: "device description" }).length
     ).toBe(1);
-    expect(screen.getAllByRole("button", { name: "device type" }).length).toBe(
+    expect(screen.getAllByRole("button", { name: /device type/ }).length).toBe(
       1
     );
     expect(
-      screen.getAllByRole("button", { name: "service interface" }).length
+      screen.getAllByRole("button", { name: /service interface/ }).length
     ).toBe(1);
     expect(
       screen.getAllByRole("checkbox", { name: "switch in out" }).length
@@ -86,7 +88,7 @@ describe("AddDevice component", () => {
     renderComponent();
     fireEvent.click(screen.getByRole("button", { name: "Add" }));
     expect(
-      screen.getAllByRole("button", { name: "service interface" }).length
+      screen.getAllByRole("button", { name: /service interface/ }).length
     ).toBe(2);
     expect(
       screen.getAllByRole("checkbox", { name: "switch in out" }).length
@@ -99,7 +101,7 @@ describe("AddDevice component", () => {
     fireEvent.click(screen.getByRole("button", { name: "Add" }));
     fireEvent.click(screen.getByRole("button", { name: "Remove Service" }));
     expect(
-      screen.getAllByRole("button", { name: "service interface" }).length
+      screen.getAllByRole("button", { name: /service interface/ }).length
     ).toBe(1);
     expect(
       screen.getAllByRole("checkbox", { name: "switch in out" }).length
@@ -155,10 +157,10 @@ describe("MQTTForm component", () => {
       screen.getByRole("textbox", { name: "mqtt topic" })
     ).toBeInTheDocument();
     expect(
-      screen.getByRole("button", { name: "mqtt qos" })
+      screen.getByRole("button", { name: /mqtt qos/ })
     ).toBeInTheDocument();
     expect(
-      screen.getByRole("button", { name: "mqtt protocol version" })
+      screen.getByRole("button", { name: /mqtt protocol version/ })
     ).toBeInTheDocument();
   });
 
@@ -180,7 +182,7 @@ describe("MQTTForm component", () => {
     renderComponent();
     clickOnSubmit();
     expect(screen.getByText("Please fill the form")).toBeInTheDocument();
-  })
+  });
 
   test("submits form correctly with MQTT", async () => {
     DeviceService.createDevice.mockResolvedValue({
@@ -207,7 +209,7 @@ describe("HTTPForm component", () => {
       screen.getByRole("textbox", { name: "http url" })
     ).toBeInTheDocument();
     expect(
-      screen.getByRole("button", { name: "http method" })
+      screen.getByRole("button", { name: /http method/ })
     ).toBeInTheDocument();
     changeSwitchValueInOut();
     expect(
@@ -256,7 +258,7 @@ describe("WebSocketForm component", () => {
     renderComponent();
     changeDropdownValue("service interface", "WebSocket");
     expect(
-      screen.getByRole("button", { name: "web socket type" })
+      screen.getByRole("button", { name: /web socket type/ })
     ).toBeInTheDocument();
     expect(
       screen.getByRole("textbox", { name: "web socket path" })
@@ -315,7 +317,7 @@ describe("TCPForm component", () => {
     renderComponent();
     changeDropdownValue("service interface", "TCP");
     expect(
-      screen.getByRole("button", { name: "tcp type in" })
+      screen.getByRole("button", { name: /tcp type in/ })
     ).toBeInTheDocument();
     changeDropdownValue("tcp type in", "Client");
     expect(
@@ -326,7 +328,7 @@ describe("TCPForm component", () => {
     ).toBeInTheDocument();
     changeSwitchValueInOut();
     expect(
-      screen.getByRole("button", { name: "tcp type out" })
+      screen.getByRole("button", { name: /tcp type out/ })
     ).toBeInTheDocument();
     changeDropdownValue("tcp type out", "Client");
     expect(
@@ -389,7 +391,7 @@ describe("UDPForm component", () => {
     expect(
       screen.getByRole("textbox", { name: "udp port" })
     ).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "udp ipv" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /udp ipv/ })).toBeInTheDocument();
     changeSwitchValueInOut();
     expect(
       screen.getByRole("textbox", { name: "udp address" })
