@@ -73,7 +73,8 @@ const NodeRedStateContext = props => {
         nodeRedUrl,
         getUniqueNodeIds,
         isNodeRedReady,
-        isNodeRedLoading
+        isNodeRedLoading,
+        flows
     }
 
     return (
