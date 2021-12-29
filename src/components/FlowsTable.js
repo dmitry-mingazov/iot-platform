@@ -1,16 +1,46 @@
 import { DataGrid } from "@mui/x-data-grid";
 import { Stack, IconButton } from "@mui/material";
+import { useState } from "react";
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 import EditIcon from "@mui/icons-material/Edit";
+import FlowEditDialog from "./FlowEditDialog";
 
 export default function FlowsTable(props) {
+  const [openEdit, setOpenEdit] = useState(false);
+  const [currentComment, setCurrentComment] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const handleOpenEdit = (comment) => {
+    setCurrentComment(comment);
+    setOpenEdit(true);
+  };
+
+  const handleCloseEdit = () => {
+    setOpenEdit(false);
+  };
+
+  const handleSaveEdit = async () => {
+    setLoading(true);
+    //API call to save new info (comment)
+    //TO DELETE
+    await new Promise((r) => setTimeout(r, 1000));
+    setLoading(false);
+    props.notifyUpdate();
+    setOpenEdit(false);
+  };
+
+  const onCommentChange = (event) => {
+    const newValue = event.target.value;
+    setCurrentComment(newValue);
+  };
+
   const renderActions = (params) => {
     return (
       <Stack direction="row" spacing={1}>
         <IconButton
           aria-label="edit"
           onClick={() => {
-            console.log("Not yet implemented.");
+            handleOpenEdit(params.row.col2);
           }}
         >
           <EditIcon color="primary" />
@@ -40,18 +70,29 @@ export default function FlowsTable(props) {
     },
   ];
 
-  return (
+  return [
     <DataGrid
+      key="DataGrid"
       rows={props.rows}
       rowsPerPageOptions={[100]}
       disableSelectionOnClick
       columns={columns}
+      scrollbarSize={17}
       sx={{
         "&.MuiDataGrid-root .MuiDataGrid-columnHeader, &.MuiDataGrid-root .MuiDataGrid-cell":
           {
             outline: "none",
           },
       }}
-    ></DataGrid>
-  );
+    ></DataGrid>,
+    <FlowEditDialog
+      key="EditDialog"
+      open={openEdit}
+      handleClose={handleCloseEdit}
+      handleSave={handleSaveEdit}
+      comment={currentComment}
+      onCommentChange={onCommentChange}
+      loading={loading}
+    />,
+  ];
 }

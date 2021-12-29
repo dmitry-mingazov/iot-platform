@@ -1,57 +1,112 @@
 import { Typography } from "@mui/material";
-import React, { useContext, useEffect, useState } from "react";
-import { AuthContext } from "../components/context/AuthContext";
+import React, { useEffect, useState } from "react";
 import { makeStyles } from "@mui/styles";
 import FlowsTable from "../components/FlowsTable";
+import { CircularProgress, Box } from "@mui/material";
+import { useNodeRed } from "../components/context/NodeRedContext";
 
 //Styles
 const useStyles = makeStyles({
+  containerColumn: {
+    display: "flex",
+    flexDirection: "column",
+    height: "100%",
+  },
   title: {
     marginTop: 20,
     marginLeft: 60,
     fontWeight: "bold",
   },
-  content: {
-    height: "580px",
-    marginRight: "60px",
-    marginLeft: "60px",
+  grid: {
+    alignItems: "center",
+    justifyContent: "center",
+    display: "flex",
+    height: "100%",
+    marginRight: "90px",
+    marginLeft: "90px",
     marginTop: "45px",
+    marginBottom: "50px",
   },
 });
 
 function Flows() {
   const classes = useStyles();
-  const { isTokenReady } = useContext(AuthContext);
+  const { flows } = useNodeRed();
   const [rows, setRows] = useState([]);
+  const [loading, setLoading] = useState(false);
+
+  const notifyUpdate = () => {
+    setLoading(true);
+  };
+
+  const mapFlowsToRows = (flows) => {
+    const flowsTemp = flows.slice();
+    const rows = new Map();
+
+    flowsTemp.forEach((flow) => {
+      if (flow.type === "tab") {
+        let rowTemp = rows.get(flow.id);
+        if (!rowTemp) {
+          rowTemp = {};
+          rowTemp.id = flow.id;
+        }
+        rowTemp.col1 = flow.label;
+        rows.set(flow.id, rowTemp);
+      } else if (flow.type === "comment") {
+        let rowTemp = rows.get(flow.z);
+        if (!rowTemp) {
+          rowTemp = {};
+          rowTemp.id = flow.z;
+        }
+        rowTemp.col2 = flow.info;
+        rows.set(flow.z, rowTemp);
+      } else if (!flow.z) {
+      } else {
+        let rowTemp = rows.get(flow.z);
+        if (!rowTemp) {
+          rowTemp = {};
+          rowTemp.id = flow.z;
+        }
+        rowTemp.col3 = rowTemp.col3
+          ? rowTemp.col3 + ", " + flow.name
+          : flow.name;
+        rows.set(flow.z, rowTemp);
+      }
+    });
+
+    return Array.from(rows.values());
+  };
 
   useEffect(() => {
-    if (isTokenReady) {
-      //GET FLOWS AND SET ROWS
-      setRows([
-        { id: 1, col1: "Hello", col2: "World", col3: "Device1, Device2" },
-        { id: 2, col1: "DataGrid", col2: "is Awesome", col3: "Device1" },
-        { id: 3, col1: "MUI", col2: "is Amazing", col3: "Device1, Device2" },
-        { id: 4, col1: "Ciao", col2: "is Amazing", col3: "Device1, Device2" },
-        { id: 5, col1: "Daje", col2: "is Amazing", col3: "Device1, Device2" },
-        { id: 6, col1: "Aloyaa", col2: "is Amazing", col3: "Device1, Device2" },
-        { id: 7, col1: "Aloyb", col2: "is Amazing", col3: "Device1, Device2" },
-        { id: 8, col1: "Aloyc", col2: "is Amazing", col3: "Device1, Device2" },
-        { id: 9, col1: "Aloyd", col2: "is Amazing", col3: "Device1, Device2" },
-        { id: 10, col1: "Aloyf", col2: "is Amazing", col3: "Device1, Device2" },
-        { id: 11, col1: "Aloytr", col2: "is Amazing", col3: "Device1" },
-      ]);
+    if (flows.length > 0) {
+      setLoading(true);
+      const rows = mapFlowsToRows(flows);
+      console.log(rows);
+      setRows(rows);
+      setLoading(false);
     }
-  }, [isTokenReady]);
+  }, [flows]);
 
   return (
-    <div>
+    <Box className={classes.containerColumn}>
       <Typography className={classes.title} variant="h4">
         Flows
       </Typography>
-      <div className={classes.content}>
-        <FlowsTable rows={rows} />
-      </div>
-    </div>
+      <Box className={classes.grid}>
+        {loading ? (
+          <Box
+            alignItems="center"
+            justifyContent="center"
+            display="flex"
+            minHeight="100%"
+          >
+            <CircularProgress size={35} />
+          </Box>
+        ) : (
+          <FlowsTable rows={rows} notifyUpdate={notifyUpdate} />
+        )}
+      </Box>
+    </Box>
   );
 }
 
