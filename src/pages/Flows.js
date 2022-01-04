@@ -35,10 +35,6 @@ function Flows() {
   const [rows, setRows] = useState([]);
   const [loading, setLoading] = useState(false);
 
-  const notifyUpdate = () => {
-    setLoading(true);
-  };
-
   const mapFlowsToRows = (flows) => {
     const flowsTemp = flows.slice();
     const rows = new Map();
@@ -103,7 +99,7 @@ function Flows() {
             <CircularProgress size={35} />
           </Box>
         ) : (
-          <FlowsTable rows={rows} notifyUpdate={notifyUpdate} />
+          <FlowsTable rows={rows} />
         )}
       </Box>
     </Box>
