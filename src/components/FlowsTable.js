@@ -4,13 +4,17 @@ import { useState } from "react";
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 import EditIcon from "@mui/icons-material/Edit";
 import FlowEditDialog from "./FlowEditDialog";
+import { useNodeRed } from "../components/context/NodeRedContext";
 
 export default function FlowsTable(props) {
   const [openEdit, setOpenEdit] = useState(false);
+  const [currentFlowId, setCurrentFlowId] = useState("");
   const [currentComment, setCurrentComment] = useState("");
+  const { updateComment } = useNodeRed();
   const [loading, setLoading] = useState(false);
 
-  const handleOpenEdit = (comment) => {
+  const handleOpenEdit = (flowId, comment) => {
+    setCurrentFlowId(flowId);
     setCurrentComment(comment);
     setOpenEdit(true);
   };
@@ -21,11 +25,8 @@ export default function FlowsTable(props) {
 
   const handleSaveEdit = async () => {
     setLoading(true);
-    //API call to save new info (comment)
-    //TO DELETE
-    await new Promise((r) => setTimeout(r, 1000));
+    updateComment(currentFlowId, currentComment);
     setLoading(false);
-    props.notifyUpdate();
     setOpenEdit(false);
   };
 
@@ -40,7 +41,7 @@ export default function FlowsTable(props) {
         <IconButton
           aria-label="edit"
           onClick={() => {
-            handleOpenEdit(params.row.col2);
+            handleOpenEdit(params.row.id, params.row.col2);
           }}
         >
           <EditIcon color="primary" />
