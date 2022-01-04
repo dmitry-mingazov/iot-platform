@@ -112,4 +112,4 @@ function useNodeRed() {
   return context;
 }
 
-export { useNodeRed, NodeRedStateContext };
+export { NodeRedContext, useNodeRed, NodeRedStateContext };
