@@ -23,6 +23,7 @@ import MuiAlert from "@mui/material/Alert";
 import Stack from "@mui/material/Stack";
 import NRInstanceStatus from "./NRInstanceStatus";
 import { SnackbarContext } from "./context/SnackbarContext";
+import { useNodeRed } from "../components/context/NodeRedContext";
 
 const drawerWidth = 240;
 const scrollbarWidth = window.innerWidth - document.body.clientWidth;
@@ -84,6 +85,7 @@ export default function Layout({ children }) {
   const navigate = useNavigate();
   const [open, setOpen] = React.useState(false);
   const { snackbar, closeSnackbar } = React.useContext(SnackbarContext);
+  const { updateFlows } = useNodeRed();
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -131,6 +133,7 @@ export default function Layout({ children }) {
             button
             key={"Flows"}
             onClick={() => {
+              updateFlows();
               navigate("/flows");
               handleDrawerClose();
             }}
