@@ -25,7 +25,7 @@ const useStyles = makeStyles({
     marginRight: "90px",
     marginLeft: "90px",
     marginTop: "45px",
-    marginBottom: "50px",
+    marginBottom: "65px",
   },
 });
 
