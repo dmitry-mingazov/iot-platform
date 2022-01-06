@@ -1,10 +1,11 @@
 import { DataGrid } from "@mui/x-data-grid";
 import { Stack, IconButton } from "@mui/material";
-import { useState } from "react";
+import { useState, useContext } from "react";
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 import EditIcon from "@mui/icons-material/Edit";
 import FlowEditDialog from "./FlowEditDialog";
 import { useNodeRed } from "../components/context/NodeRedContext";
+import { SnackbarContext } from "../components/context/SnackbarContext";
 
 export default function FlowsTable(props) {
   const [openEdit, setOpenEdit] = useState(false);
@@ -12,6 +13,8 @@ export default function FlowsTable(props) {
   const [currentComment, setCurrentComment] = useState("");
   const { updateComment } = useNodeRed();
   const [loading, setLoading] = useState(false);
+  const { openSuccessSnackbar, openErrorSnackbar } =
+  useContext(SnackbarContext);
 
   const handleOpenEdit = (flowId, comment) => {
     setCurrentFlowId(flowId);
@@ -25,7 +28,11 @@ export default function FlowsTable(props) {
 
   const handleSaveEdit = async () => {
     setLoading(true);
-    updateComment(currentFlowId, currentComment);
+    updateComment(currentFlowId, currentComment).then((_) => {
+      openSuccessSnackbar("Comment updated successfully");
+    }).catch((_) => {
+      openErrorSnackbar("Something went wrong!");
+    });
     setLoading(false);
     setOpenEdit(false);
   };
