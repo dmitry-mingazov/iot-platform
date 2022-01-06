@@ -45,20 +45,29 @@ const NodeRedStateContext = (props) => {
     setPushedIds(newPushedIds);
   };
 
-  const updateComment = (flowId, newComment) => {
-    const flowsToPost = flows.slice();
+  const updateFlows = () => {
+    NodeRedService.getFlows(nodeRedUrl).then((_flows) => {
+      setFlows(_flows);
+    });
+  };
+
+  const updateComment = async (flowId, newComment) => {
+    const flowsToPost = await NodeRedService.getFlows(nodeRedUrl);
     const commentNodeIndex = flowsToPost.findIndex((element) => {
       if (element.z && element.type) {
         return element.z === flowId && element.type === "comment";
       } else return false;
     });
+
     if (commentNodeIndex !== -1) {
       flowsToPost[commentNodeIndex].info = newComment;
+    } else {
+      updateFlows();
+      throw Error();
     }
-    NodeRedService.postFlows(nodeRedUrl, flowsToPost).then((_) => {
-      NodeRedService.getFlows(nodeRedUrl).then((_flows) => {
-        setFlows(_flows);
-      });
+
+    return NodeRedService.postFlows(nodeRedUrl, flowsToPost).then((_) => {
+      updateFlows();
     });
   };
 
@@ -95,6 +104,7 @@ const NodeRedStateContext = (props) => {
     isNodeRedLoading,
     flows,
     updateComment,
+    updateFlows,
   };
 
   return (
