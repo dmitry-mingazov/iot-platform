@@ -133,7 +133,6 @@ export default function Layout({ children }) {
             button
             key={"Flows"}
             onClick={() => {
-              updateFlows();
               navigate("/flows");
               handleDrawerClose();
             }}

@@ -31,7 +31,7 @@ const useStyles = makeStyles({
 
 function Flows() {
   const classes = useStyles();
-  const { flows } = useNodeRed();
+  const { flows, updateFlows } = useNodeRed();
   const [rows, setRows] = useState([]);
   const [loading, setLoading] = useState(false);
 
@@ -72,6 +72,10 @@ function Flows() {
 
     return Array.from(rows.values());
   };
+
+  useEffect(() => {
+    updateFlows();
+  }, []);
 
   useEffect(() => {
     if (flows.length > 0) {
