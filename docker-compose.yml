@@ -8,11 +8,8 @@ services:
       - ./src:/app/src
       - ./package.json:/app/package.json
       - ./package-lock.json:/app/package-lock.json
-      - iot-frontend-nm:/app/node_modules/
     env_file:
       - .env
     # these 2 lines allow hot-reloading
     environment:
       CHOKIDAR_USEPOLLING: "true"
-volumes:
-  iot-frontend-nm:
