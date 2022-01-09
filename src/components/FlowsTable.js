@@ -5,7 +5,7 @@ import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 import EditIcon from "@mui/icons-material/Edit";
 import FlowEditDialog from "./FlowEditDialog";
 import { useNodeRed } from "../components/context/NodeRedContext";
-import { SnackbarContext } from "../components/context/SnackbarContext";
+import { useSnackbar } from "../components/context/SnackbarContext";
 
 export default function FlowsTable(props) {
   const [openEdit, setOpenEdit] = useState(false);
@@ -13,8 +13,7 @@ export default function FlowsTable(props) {
   const [currentComment, setCurrentComment] = useState("");
   const { updateComment } = useNodeRed();
   const [loading, setLoading] = useState(false);
-  const { openSuccessSnackbar, openErrorSnackbar } =
-  useContext(SnackbarContext);
+  const { openSuccessSnackbar, openErrorSnackbar } = useSnackbar();
 
   const handleOpenEdit = (flowId, comment) => {
     setCurrentFlowId(flowId);

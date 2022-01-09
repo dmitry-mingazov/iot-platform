@@ -22,7 +22,7 @@ import Snackbar from "@mui/material/Snackbar";
 import MuiAlert from "@mui/material/Alert";
 import Stack from "@mui/material/Stack";
 import NRInstanceStatus from "./NRInstanceStatus";
-import { SnackbarContext } from "./context/SnackbarContext";
+import { useSnackbar } from "./context/SnackbarContext";
 import { useNodeRed } from "../components/context/NodeRedContext";
 
 const drawerWidth = 240;
@@ -84,7 +84,7 @@ const Alert = React.forwardRef(function Alert(props, ref) {
 export default function Layout({ children }) {
   const navigate = useNavigate();
   const [open, setOpen] = React.useState(false);
-  const { snackbar, closeSnackbar } = React.useContext(SnackbarContext);
+  const { snackbar, closeSnackbar } = useSnackbar();
   const { updateFlows } = useNodeRed();
 
   const handleDrawerOpen = () => {

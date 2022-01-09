@@ -45,4 +45,12 @@ const SnackbarStateContext = (props) => {
   );
 };
 
-export { SnackbarContext, SnackbarStateContext };
+const useSnackbar = () => {
+  const context = React.useContext(SnackbarContext);
+  if (context === undefined) {
+    throw new Error("useSnackbar must be used within a SnackbarStateContext");
+  }
+  return context;
+}
+
+export { useSnackbar, SnackbarStateContext, };
