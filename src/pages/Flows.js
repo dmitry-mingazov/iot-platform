@@ -46,7 +46,7 @@ function Flows() {
           rowTemp = {};
           rowTemp.id = flow.id;
         }
-        rowTemp.col1 = flow.label;
+        rowTemp.flow = flow.label;
         rows.set(flow.id, rowTemp);
       } else if (flow.type === "comment") {
         let rowTemp = rows.get(flow.z);
@@ -54,7 +54,7 @@ function Flows() {
           rowTemp = {};
           rowTemp.id = flow.z;
         }
-        rowTemp.col2 = flow.info;
+        rowTemp.comment = flow.info;
         rows.set(flow.z, rowTemp);
       } else if (!flow.z) {
       } else {
@@ -63,8 +63,8 @@ function Flows() {
           rowTemp = {};
           rowTemp.id = flow.z;
         }
-        rowTemp.col3 = rowTemp.col3
-          ? rowTemp.col3 + ", " + flow.name
+        rowTemp.devices = rowTemp.col3
+          ? rowTemp.devices + ", " + flow.name
           : flow.name;
         rows.set(flow.z, rowTemp);
       }

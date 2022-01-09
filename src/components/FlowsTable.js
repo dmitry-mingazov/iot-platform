@@ -48,7 +48,7 @@ export default function FlowsTable(props) {
         <IconButton
           aria-label="edit"
           onClick={() => {
-            handleOpenEdit(params.row.id, params.row.col2);
+            handleOpenEdit(params.row.id, params.row.comment);
           }}
         >
           <EditIcon color="primary" />
@@ -66,11 +66,11 @@ export default function FlowsTable(props) {
   };
 
   const columns = [
-    { field: "col1", headerName: "Name", flex: 0.7 },
-    { field: "col2", headerName: "Comment", flex: 0.9 },
-    { field: "col3", headerName: "Devices", flex: 1 },
+    { field: "flow", headerName: "Name", flex: 0.7 },
+    { field: "comment", headerName: "Comment", flex: 0.9 },
+    { field: "devices", headerName: "Devices", flex: 1 },
     {
-      field: "col4",
+      field: "actions",
       headerName: "Actions",
       flex: 0.2,
       renderCell: renderActions,
