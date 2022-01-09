@@ -11,6 +11,12 @@ import { NodeRedContext } from "../../components/context/NodeRedContext";
 
 jest.mock("@auth0/auth0-react");
 jest.mock("../../services/DeviceService");
+jest.mock("../../components/context/SnackbarContext", () => ({
+  useSnackbar: () => ({
+    openSnackbar: jest.fn(),
+    closeSnackbar: jest.fn()
+  })
+}));
 
 const isTokenReady = true;
 const flows = [
