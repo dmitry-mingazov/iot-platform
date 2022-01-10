@@ -8,6 +8,7 @@ import { useAuth0 } from "@auth0/auth0-react";
 import { AuthContext } from "../../components/context/AuthContext";
 import { act } from "react-dom/test-utils";
 import { NodeRedContext } from "../../components/context/NodeRedContext";
+import DeviceService from "../../services/DeviceService";
 
 jest.mock("@auth0/auth0-react");
 jest.mock("../../services/DeviceService");
@@ -63,6 +64,12 @@ beforeEach(() => {
     isAuthenticated: true,
     getAccessTokenSilently: jest.fn(() => new Promise(() => "tokenfinto")),
   });
+  DeviceService.getDevices.mockResolvedValue([
+    {
+      _id: '61bcd18bc5fe9a0e1b917f43',
+      name: 'Device 1'
+    }
+  ]);
 });
 
 describe("Flows component", () => {
