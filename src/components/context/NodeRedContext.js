@@ -3,7 +3,10 @@ import React from "react";
 import { AuthContext } from "./AuthContext";
 import NodeRedService from "../../services/NodeRedService";
 
-const getInstanceInterval = 10 * 1000;
+
+const getInstanceInterval = 10*1000;
+const NR_TIMEOUT = 3000;
+
 
 const NodeRedContext = createContext();
 const NodeRedStateContext = (props) => {
@@ -14,35 +17,55 @@ const NodeRedStateContext = (props) => {
   const [isNodeRedLoading, setNodeRedLoading] = useState(true);
   const [pushedIds, setPushedIds] = useState({});
 
-  useEffect(() => {
-    if (token) {
-      NodeRedService.getInstance().then((instance) => {
-        setNodeRedUrl(instance.url);
+  const getInstance = () => {
+      NodeRedService.getInstance().then(instance => {
+          if (instance.url !== nodeRedUrl) {
+              setNodeRedUrl(instance.url);
+          }
+      }).catch(_ => {
+          setNodeRedReady(false);
+          setNodeRedLoading(false);
+          setNodeRedUrl(undefined);
       });
-      setInterval(() => {
-        NodeRedService.getInstance();
-      }, getInstanceInterval);
-    }
+  }
+
+  useEffect(() => {
+      if (token) {
+          getInstance();
+          setInterval(() => {
+              getInstance();
+          }, getInstanceInterval);
+      }
   }, [token]);
 
   useEffect(() => {
-    if (nodeRedUrl) {
-      NodeRedService.getFlows(nodeRedUrl).then((_flows) => {
-        setFlows(_flows);
-        setNodeRedReady(true);
-        setNodeRedLoading(false);
+      if (nodeRedUrl) {
+          setTimeout(() => {
+              getFlows(nodeRedUrl);
+          }, NR_TIMEOUT);
+      }
+  }, [nodeRedUrl])
+
+  const getFlows = (nodeRedUrl) => {
+      NodeRedService.getFlows(nodeRedUrl).then(_flows => {
+          setFlows(_flows);
+          setNodeRedReady(true);
+          setNodeRedLoading(false);
+      }).catch(_ => {
+          setTimeout(() => {
+              getFlows(nodeRedUrl);
+          }, NR_TIMEOUT);
       });
-    }
-  }, [nodeRedUrl]);
+  }
 
   const updatePushedIds = (deviceId, ids) => {
-    const newDeviceIds = pushedIds[deviceId] || {};
-    ids.forEach((id) => {
-      newDeviceIds[id] = true;
-    });
-    const newPushedIds = pushedIds;
-    newPushedIds[deviceId] = newDeviceIds;
-    setPushedIds(newPushedIds);
+      const newDeviceIds = pushedIds[deviceId] || {};
+      ids.forEach(id => {
+          newDeviceIds[id] = true;
+      });
+      const newPushedIds = pushedIds;
+      newPushedIds[deviceId] = newDeviceIds;
+      setPushedIds(newPushedIds);
   };
 
   const updateFlows = () => {
