@@ -3,115 +3,146 @@ import React from "react";
 import { AuthContext } from "./AuthContext";
 import NodeRedService from "../../services/NodeRedService";
 
+
 const getInstanceInterval = 10*1000;
 const NR_TIMEOUT = 3000;
 
+
 const NodeRedContext = createContext();
-const NodeRedStateContext = props => {
-    const { token } = useContext(AuthContext);
-    const [ nodeRedUrl, setNodeRedUrl ] = useState(null);
-    const [ flows, setFlows ] = useState([]);
-    const [ isNodeRedReady, setNodeRedReady ] = useState(false);
-    const [ isNodeRedLoading, setNodeRedLoading ] = useState(true);
-    const [ pushedIds, setPushedIds ] = useState({});
+const NodeRedStateContext = (props) => {
+  const { token } = useContext(AuthContext);
+  const [nodeRedUrl, setNodeRedUrl] = useState(null);
+  const [flows, setFlows] = useState([]);
+  const [isNodeRedReady, setNodeRedReady] = useState(false);
+  const [isNodeRedLoading, setNodeRedLoading] = useState(true);
+  const [pushedIds, setPushedIds] = useState({});
 
-    const getInstance = () => {
-        NodeRedService.getInstance().then(instance => {
-            if (instance.url !== nodeRedUrl) {
-                setNodeRedUrl(instance.url);
-            }
-        }).catch(_ => {
-            setNodeRedReady(false);
-            setNodeRedLoading(false);
-            setNodeRedUrl(undefined);
-        });
+  const getInstance = () => {
+      NodeRedService.getInstance().then(instance => {
+          if (instance.url !== nodeRedUrl) {
+              setNodeRedUrl(instance.url);
+          }
+      }).catch(_ => {
+          setNodeRedReady(false);
+          setNodeRedLoading(false);
+          setNodeRedUrl(undefined);
+      });
+  }
+
+  useEffect(() => {
+      if (token) {
+          getInstance();
+          setInterval(() => {
+              getInstance();
+          }, getInstanceInterval);
+      }
+  }, [token]);
+
+  useEffect(() => {
+      if (nodeRedUrl) {
+          setTimeout(() => {
+              getFlows(nodeRedUrl);
+          }, NR_TIMEOUT);
+      }
+  }, [nodeRedUrl])
+
+  const getFlows = (nodeRedUrl) => {
+      NodeRedService.getFlows(nodeRedUrl).then(_flows => {
+          setFlows(_flows);
+          setNodeRedReady(true);
+          setNodeRedLoading(false);
+      }).catch(_ => {
+          setTimeout(() => {
+              getFlows(nodeRedUrl);
+          }, NR_TIMEOUT);
+      });
+  }
+
+  const updatePushedIds = (deviceId, ids) => {
+      const newDeviceIds = pushedIds[deviceId] || {};
+      ids.forEach(id => {
+          newDeviceIds[id] = true;
+      });
+      const newPushedIds = pushedIds;
+      newPushedIds[deviceId] = newDeviceIds;
+      setPushedIds(newPushedIds);
+  };
+
+  const updateFlows = () => {
+    NodeRedService.getFlows(nodeRedUrl).then((_flows) => {
+      setFlows(_flows);
+    });
+  };
+
+  const updateComment = async (flowId, newComment) => {
+    const flowsToPost = await NodeRedService.getFlows(nodeRedUrl);
+    const commentNodeIndex = flowsToPost.findIndex((element) => {
+      if (element.z && element.type) {
+        return element.z === flowId && element.type === "comment";
+      } else return false;
+    });
+
+    if (commentNodeIndex !== -1) {
+      flowsToPost[commentNodeIndex].info = newComment;
+    } else {
+      updateFlows();
+      throw Error();
     }
 
-    useEffect(() => {
-        if (token) {
-            getInstance();
-            setInterval(() => {
-                getInstance();
-            }, getInstanceInterval);
-        }
-    }, [token]);
+    return NodeRedService.postFlows(nodeRedUrl, flowsToPost).then((_) => {
+      updateFlows();
+    });
+  };
 
-    useEffect(() => {
-        if (nodeRedUrl) {
-            setTimeout(() => {
-                getFlows(nodeRedUrl);
-            }, NR_TIMEOUT);
-        }
-    }, [nodeRedUrl])
-
-    const getFlows = (nodeRedUrl) => {
-        NodeRedService.getFlows(nodeRedUrl).then(_flows => {
-            setFlows(_flows);
-            setNodeRedReady(true);
-            setNodeRedLoading(false);
-        }).catch(_ => {
-            setTimeout(() => {
-                getFlows(nodeRedUrl);
-            }, NR_TIMEOUT);
-        });
-    }
-
-    const updatePushedIds = (deviceId, ids) => {
-        const newDeviceIds = pushedIds[deviceId] || {};
-        ids.forEach(id => {
-            newDeviceIds[id] = true;
-        });
-        const newPushedIds = pushedIds;
-        newPushedIds[deviceId] = newDeviceIds;
-        setPushedIds(newPushedIds);
-    }
-
-    const getUniqueNodeIds = (deviceId, requiredIds) => {
-        const _ids = [];
-        const usedIds = {};
-        /* a node id is structured as `deviceId|counter`
+  const getUniqueNodeIds = (deviceId, requiredIds) => {
+    const _ids = [];
+    const usedIds = {};
+    /* a node id is structured as `deviceId|counter`
          the following code gets all the ids matching the
          given deviceId, then saves their counter in the
          usedIds map <id, bool> */
-        flows
-            ?.map(flow => flow.id)
-            .filter(id => id.split('|')[0] === deviceId)
-            ?.map(id => parseInt(id.split('|')[1]))
-            ?.forEach(id => {usedIds[id] = true;});
-        let k = 0;
-        const devicePushedIds = pushedIds[deviceId] || [];
-        while(_ids.length < requiredIds) {
-            const curr = k++;
-            if(!usedIds[curr] && !devicePushedIds[curr]) {
-                _ids.push(curr);
-            }
-        }
-        updatePushedIds(deviceId, _ids);
-        return _ids.map(id => `${deviceId}|${id}`);
-    };
-
-    const value = {
-        nodeRedUrl,
-        getUniqueNodeIds,
-        isNodeRedReady,
-        isNodeRedLoading
+    flows
+      ?.map((flow) => flow.id)
+      .filter((id) => id.split("|")[0] === deviceId)
+      ?.map((id) => parseInt(id.split("|")[1]))
+      ?.forEach((id) => {
+        usedIds[id] = true;
+      });
+    let k = 0;
+    const devicePushedIds = pushedIds[deviceId] || [];
+    while (_ids.length < requiredIds) {
+      const curr = k++;
+      if (!usedIds[curr] && !devicePushedIds[curr]) {
+        _ids.push(curr);
+      }
     }
+    updatePushedIds(deviceId, _ids);
+    return _ids.map((id) => `${deviceId}|${id}`);
+  };
 
-    return (
-        <NodeRedContext.Provider
-            value={value}
-        >
-            {props.children}
-        </NodeRedContext.Provider>
-    )
-}
+  const value = {
+    nodeRedUrl,
+    getUniqueNodeIds,
+    isNodeRedReady,
+    isNodeRedLoading,
+    flows,
+    updateComment,
+    updateFlows,
+  };
+
+  return (
+    <NodeRedContext.Provider value={value}>
+      {props.children}
+    </NodeRedContext.Provider>
+  );
+};
 
 function useNodeRed() {
-    const context = React.useContext(NodeRedContext);
-    if (context === undefined) {
-        throw new Error('useNodeRed must be used within a NodeRedStateContext');
-    }
-    return context;
+  const context = React.useContext(NodeRedContext);
+  if (context === undefined) {
+    throw new Error("useNodeRed must be used within a NodeRedStateContext");
+  }
+  return context;
 }
 
-export { useNodeRed, NodeRedStateContext,  };
+export { NodeRedContext, useNodeRed, NodeRedStateContext };

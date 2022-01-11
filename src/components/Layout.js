@@ -15,13 +15,15 @@ import ListItem from "@mui/material/ListItem";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import DevicesOtherIcon from "@mui/icons-material/DevicesOther";
+import InsightsIcon from '@mui/icons-material/Insights';
 import CloseIcon from "@mui/icons-material/Close";
 import Logout from "./Logout";
 import Snackbar from "@mui/material/Snackbar";
 import MuiAlert from "@mui/material/Alert";
 import Stack from "@mui/material/Stack";
 import NRInstanceStatus from "./NRInstanceStatus";
-import { SnackbarContext } from "./context/SnackbarContext";
+import { useSnackbar } from "./context/SnackbarContext";
+import { useNodeRed } from "../components/context/NodeRedContext";
 
 const drawerWidth = 240;
 const scrollbarWidth = window.innerWidth - document.body.clientWidth;
@@ -82,7 +84,8 @@ const Alert = React.forwardRef(function Alert(props, ref) {
 export default function Layout({ children }) {
   const navigate = useNavigate();
   const [open, setOpen] = React.useState(false);
-  const { snackbar, closeSnackbar } = React.useContext(SnackbarContext);
+  const { snackbar, closeSnackbar } = useSnackbar();
+  const { updateFlows } = useNodeRed();
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -125,6 +128,17 @@ export default function Layout({ children }) {
           >
             <ListItemIcon>{<DevicesOtherIcon color="primary" />}</ListItemIcon>
             <ListItemText primary={"Devices"} />
+          </ListItem>
+          <ListItem
+            button
+            key={"Flows"}
+            onClick={() => {
+              navigate("/flows");
+              handleDrawerClose();
+            }}
+          >
+            <ListItemIcon>{<InsightsIcon color="primary" />}</ListItemIcon>
+            <ListItemText primary={"Flows"} />
           </ListItem>
         </List>
       </Drawer>
