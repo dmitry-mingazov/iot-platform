@@ -15,13 +15,22 @@ const NodeRedStateContext = props => {
     const [ isNodeRedLoading, setNodeRedLoading ] = useState(true);
     const [ pushedIds, setPushedIds ] = useState({});
 
+    const getInstance = () => {
+        NodeRedService.getInstance().then(instance => {
+            if (instance.url !== nodeRedUrl) {
+                setNodeRedUrl(instance.url);
+            }
+        }).catch(_ => {
+            setNodeRedReady(false);
+            setNodeRedLoading(false);
+        });
+    }
+
     useEffect(() => {
         if (token) {
-            NodeRedService.getInstance().then((instance) => {
-                setNodeRedUrl(instance.url);
-            });
+            getInstance();
             setInterval(() => {
-                NodeRedService.getInstance();
+                getInstance();
             }, getInstanceInterval);
         }
     }, [token]);
@@ -35,16 +44,16 @@ const NodeRedStateContext = props => {
     }, [nodeRedUrl])
 
     const getFlows = (nodeRedUrl) => {
-            NodeRedService.getFlows(nodeRedUrl).then(_flows => {
-                setFlows(_flows);
-                setNodeRedReady(true);
-                setNodeRedLoading(false);
+        NodeRedService.getFlows(nodeRedUrl).then(_flows => {
+            setFlows(_flows);
+            setNodeRedReady(true);
+            setNodeRedLoading(false);
         }).catch(_ => {
             setTimeout(() => {
                 getFlows(nodeRedUrl);
             }, NR_TIMEOUT);
-            });
-        }
+        });
+    }
 
     const updatePushedIds = (deviceId, ids) => {
         const newDeviceIds = pushedIds[deviceId] || {};
