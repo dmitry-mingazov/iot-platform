@@ -4,6 +4,7 @@ import { AuthContext } from "./AuthContext";
 import NodeRedService from "../../services/NodeRedService";
 
 const getInstanceInterval = 10*1000;
+const NR_TIMEOUT = 3000;
 
 const NodeRedContext = createContext();
 const NodeRedStateContext = props => {
@@ -27,13 +28,23 @@ const NodeRedStateContext = props => {
 
     useEffect(() => {
         if (nodeRedUrl) {
+            setTimeout(() => {
+                getFlows(nodeRedUrl);
+            }, NR_TIMEOUT);
+        }
+    }, [nodeRedUrl])
+
+    const getFlows = (nodeRedUrl) => {
             NodeRedService.getFlows(nodeRedUrl).then(_flows => {
                 setFlows(_flows);
                 setNodeRedReady(true);
                 setNodeRedLoading(false);
+        }).catch(_ => {
+            setTimeout(() => {
+                getFlows(nodeRedUrl);
+            }, NR_TIMEOUT);
             });
         }
-    }, [nodeRedUrl])
 
     const updatePushedIds = (deviceId, ids) => {
         const newDeviceIds = pushedIds[deviceId] || {};
