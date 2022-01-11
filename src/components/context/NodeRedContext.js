@@ -23,6 +23,7 @@ const NodeRedStateContext = props => {
         }).catch(_ => {
             setNodeRedReady(false);
             setNodeRedLoading(false);
+            setNodeRedUrl(undefined);
         });
     }
 
