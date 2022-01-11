@@ -8,7 +8,7 @@ import deviceTypes from "../components/data/deviceTypes.json";
 import interfaceTypes from "../components/data/interfaceTypes.json";
 import AddIcon from "@mui/icons-material/Add";
 import { useNavigate } from "react-router";
-import { SnackbarContext } from "../components/context/SnackbarContext";
+import { useSnackbar } from "../components/context/SnackbarContext";
 import DeviceService from "../services/DeviceService";
 import DeviceInformationForm from "../components/DeviceInformationForm";
 import ServiceInfoManager from "../services/ServiceInfoManager";
@@ -56,9 +56,7 @@ function AddDevice() {
       ),
     },
   ]);
-  // const { setSnackbar } = React.useContext(SnackbarContext);
-  const { openSuccessSnackbar, openErrorSnackbar } =
-    React.useContext(SnackbarContext);
+  const { openSuccessSnackbar, openErrorSnackbar } = useSnackbar();
 
   //Add service into the form
   const addService = () => {
