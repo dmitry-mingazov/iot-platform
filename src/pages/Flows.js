@@ -91,7 +91,7 @@ function Flows() {
       .map(({id, flow, info, devices}) => ({
           flow,
           id,
-          comment: info,
+          comment: info ?? 'No description available',
           devices: devicesToStr(devices)
       }));
 
