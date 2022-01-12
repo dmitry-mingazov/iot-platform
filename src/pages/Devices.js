@@ -92,6 +92,9 @@ function Devices() {
           <Button
             variant="contained"
             size="medium"
+            disabled={
+              devices.filter(device => device.exportSelected).length === 0
+            }
             onClick={() => {
               exportToNodered(devices.filter(device => device.exportSelected));
             }}
