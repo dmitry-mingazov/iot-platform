@@ -104,7 +104,7 @@ function Devices() {
             }}
             style={{ marginRight: 12 }}
           >
-            Export to NR
+            Export to Node-RED
           </Button>
           <Button
             variant="contained"
