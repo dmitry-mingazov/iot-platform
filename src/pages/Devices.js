@@ -35,6 +35,10 @@ function Devices() {
     setDevices(devicesToSet);
   };
 
+  const exportToNodered = (devices) => {
+    console.log('Exporting ', devices);
+  };
+
   const exportSelectedOnChange = (deviceId) => {
     const devicesToSet = devices.slice();
     const deviceIndex = devices.findIndex((device) => {
@@ -151,6 +155,9 @@ function Devices() {
                 key={device._id}
                 _id={device._id}
                 deviceName={device.name}
+                exportToNodered={() => {
+                  exportToNodered([device._id]);
+                }}
                 exportSelectMode={exportSelectMode}
                 exportSelected={device.exportSelected}
                 exportSelectedOnChange={() => {

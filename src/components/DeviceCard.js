@@ -35,7 +35,6 @@ const useStyles = makeStyles({
 
 function DeviceCard(props) {
   const classes = useStyles();
-  const navigate = useNavigate();
   const [openInformation, setOpenInformation] = React.useState(false);
   const [deviceInfo, setDeviceInfo] = React.useState(undefined);
   const [open, setOpen] = React.useState(false);
@@ -80,10 +79,6 @@ function DeviceCard(props) {
     });
   };
 
-  const exportToNodered = () => {
-    navigate(`/node-red/export/${props._id}`);
-  };
-
   const menuItems = [
     {
       title: "View information",
@@ -91,7 +86,7 @@ function DeviceCard(props) {
     },
     {
       title: "Export to Node-Red",
-      fn: exportToNodered,
+      fn: props.exportToNodered,
     },
   ];
 
