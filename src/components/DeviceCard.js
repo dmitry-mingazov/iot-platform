@@ -15,6 +15,9 @@ import EmojiObjectsIcon from "@mui/icons-material/EmojiObjects";
 import { useNavigate } from "react-router-dom";
 import DeviceService from "../services/DeviceService";
 import DeviceInfoDialog from "./DeviceInfoDialog";
+import Checkbox from "@mui/material/Checkbox";
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+import RadioButtonUncheckedIcon from "@mui/icons-material/RadioButtonUnchecked";
 
 const useStyles = makeStyles({
   circle: {
@@ -78,8 +81,8 @@ function DeviceCard(props) {
   };
 
   const exportToNodered = () => {
-    navigate(`/node-red/export/${props._id}`)
-  }
+    navigate(`/node-red/export/${props._id}`);
+  };
 
   const menuItems = [
     {
@@ -89,13 +92,31 @@ function DeviceCard(props) {
     {
       title: "Export to Node-Red",
       fn: exportToNodered,
-    }
+    },
   ];
 
   return (
     <div>
       <Card elevation={4} sx={{ maxWidth: 260 }}>
-        <CardActionArea ref={anchorRef} onClick={handleToggle}>
+        <CardActionArea
+          ref={anchorRef}
+          onClick={props.exportSelectMode ? props.exportSelectedOnChange : handleToggle}
+        >
+          {props.exportSelectMode ? (
+            <Checkbox
+              disableRipple
+              checked={props.exportSelected}
+              style={{
+                position: "absolute",
+                left: "78%",
+                right: 0,
+                height: "28%",
+                transform: "scale(1.2)",
+              }}
+              icon={<RadioButtonUncheckedIcon />}
+              checkedIcon={<CheckCircleIcon />}
+            />
+          ) : null}
           <div className={classes.circle}>
             <EmojiObjectsIcon
               fontSize="large"
@@ -115,7 +136,7 @@ function DeviceCard(props) {
         role={undefined}
         placement="bottom"
         transition
-        modifiers={[{ name: "offset", options: { offset: [0, -90] }}]}
+        modifiers={[{ name: "offset", options: { offset: [0, -90] } }]}
       >
         {({ TransitionProps, placement }) => (
           <Grow
