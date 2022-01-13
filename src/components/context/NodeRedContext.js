@@ -2,6 +2,7 @@ import { useContext, useState, createContext, useEffect } from "react";
 import React from "react";
 import { AuthContext } from "./AuthContext";
 import NodeRedService from "../../services/NodeRedService";
+import NodeRedHelper from "../../helpers/NodeRedHelper";
 
 
 const getInstanceInterval = 10*1000;
@@ -94,6 +95,29 @@ const NodeRedStateContext = (props) => {
     });
   };
 
+  const createNewFlow = (label, comment, devices) => {
+    const emptyFlow = NodeRedHelper.createEmptyFlow();
+    // let flowId = 'TEST';
+
+    // const flow = NodeRedHelper.createFlowFromDevices(flowId, devices, comment, getUniqueNodeIds);
+    // console.log(JSON.stringify(flow));
+    // console.log((flow));
+    // return;
+    return NodeRedService.createFlow(nodeRedUrl, emptyFlow)
+      .then(({id}) => {
+        const flowId = id;
+        const flow = NodeRedHelper.createFlowFromDevices(flowId, devices, label, comment, getUniqueNodeIds);
+        console.log(JSON.stringify(flow));
+        return NodeRedService.updateFlow(nodeRedUrl, flowId, flow)
+        .then(_ => {
+          return flowId;
+        });
+      })
+      .catch(error => {
+        console.error('Error in creating the flow');
+      });
+  }
+
   const getUniqueNodeIds = (deviceId, requiredIds) => {
     const _ids = [];
     const usedIds = {};
@@ -123,6 +147,7 @@ const NodeRedStateContext = (props) => {
   const value = {
     nodeRedUrl,
     getUniqueNodeIds,
+    createNewFlow,
     isNodeRedReady,
     isNodeRedLoading,
     flows,

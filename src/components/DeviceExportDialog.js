@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate } from 'react-router-dom';
 import {
   Typography,
   DialogContent,
@@ -10,15 +11,26 @@ import {
   Button,
   Chip
 } from "@mui/material";
+import { useNodeRed } from "./context/NodeRedContext";
 
 function DeviceExportDialog(props) {
+  const  navigate  = useNavigate();
   const [label, setLabel] = useState('');
   const [comment, setComment] = useState('');
+  const [loading, setLoading] = useState(false);
+  const { createNewFlow } = useNodeRed();
 
   const handleExport = () => {
-    console.log('Exporting',props.devicesToExport);
-    console.log('Label', label);
-    console.log('Comment', comment);
+    setLoading(true);
+    createNewFlow(label, comment, props.devicesToExport).then(flowId => {
+      setLoading(false);
+      navigate(`/node-red/${flowId}`);
+    }).catch(err => {
+      // TODO add snackbar here
+      setLoading(false)
+      console.error(err);
+    });
+
   };
 
   const onLabelChange = (event) => {
@@ -60,10 +72,10 @@ function DeviceExportDialog(props) {
         </DialogContent>
         <DialogActions style={{ margin: 10 }}>
           <Button onClick={props.handleClose}>Cancel</Button>
-          {props.loading ? (
+          {loading ? (
             <CircularProgress size={22} style={{marginLeft: 27, marginRight: 27}} />
           ) : (
-            <Button variant="contained" onClick={() => {handleExport();}}>
+            <Button variant="contained" onClick={handleExport}>
               Export
             </Button>
           )}

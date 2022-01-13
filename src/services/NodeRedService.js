@@ -17,5 +17,9 @@ class NodeRedService {
     static async postFlows(nodeRedUrl, flows) {
         return HttpService.post(`${nodeRedUrl}/flows`, flows);
     }
+
+    static async updateFlow(nodeRedUrl, flowId, flow) {
+        return HttpService.put(`${nodeRedUrl}/flow/${flowId}`, flow);
+    }
 }
 export default NodeRedService;
