@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Typography,
   DialogContent,
@@ -12,9 +12,21 @@ import {
 } from "@mui/material";
 
 function DeviceExportDialog(props) {
+  const [label, setLabel] = useState('');
+  const [comment, setComment] = useState('');
+
   const handleExport = () => {
     console.log('Exporting',props.devicesToExport);
+    console.log('Label', label);
+    console.log('Comment', comment);
   };
+
+  const onLabelChange = (event) => {
+    setLabel(event.target.value);
+  };
+  const onCommentChange = (event) => {
+    setComment(event.target.value);
+  }
 
   return (
     <div>
@@ -34,14 +46,14 @@ function DeviceExportDialog(props) {
             id="label"
             label="Flow name"
             fullWidth
-            onChange={(event) => props.onCommentChange(event)}
+            onChange={(event) => onLabelChange(event)}
           />
           <TextField
             margin="normal"
             id="comment"
             label="Description"
             fullWidth
-            onChange={(event) => props.onCommentChange(event)}
+            onChange={(event) => onCommentChange(event)}
             multiline
             rows={3}
           />
