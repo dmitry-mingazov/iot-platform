@@ -163,7 +163,7 @@ function Devices() {
                 _id={device._id}
                 deviceName={device.name}
                 exportToNodered={() => {
-                  exportToNodered([device._id]);
+                  exportToNodered([device]);
                 }}
                 exportSelectMode={exportSelectMode}
                 exportSelected={device.exportSelected}
