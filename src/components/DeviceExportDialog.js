@@ -27,7 +27,7 @@ function DeviceExportDialog(props) {
         <DialogTitle style={{ marginTop: 10, marginLeft: 10 }}>Create new flow</DialogTitle> 
         <DialogContent style={{ marginLeft: 10, marginRight: 10 }}>
           {props.devicesToExport.map(device => (
-            <Chip size="small" style={{ marginRight: 5, marginBottom: 5 }} label={device.name} color="primary"/>
+            <Chip key={device._id} size="small" style={{ marginRight: 5, marginBottom: 5 }} label={device.name} color="primary"/>
           ))}
           <TextField
             margin="normal"
