@@ -10,6 +10,10 @@ class NodeRedService {
         return HttpService.post(`${nodeRedUrl}/flow`, flow);
     }
 
+    static async getFlow(nodeRedUrl, flowId) {
+        return HttpService.get(`${nodeRedUrl}/flow/${flowId}`);
+    }
+
     static async getFlows(nodeRedUrl) {
         return HttpService.get(`${nodeRedUrl}/flows`);
     }
