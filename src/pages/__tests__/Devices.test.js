@@ -11,6 +11,9 @@ import { act } from "react-dom/test-utils";
 
 jest.mock("@auth0/auth0-react");
 jest.mock("../../services/DeviceService");
+jest.mock('../../components/context/NodeRedContext', () => ({
+  useNodeRed: () => ({})
+}));
 
 const isTokenReady = true;
 
