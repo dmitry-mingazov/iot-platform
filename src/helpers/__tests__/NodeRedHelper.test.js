@@ -252,18 +252,8 @@ const bogusWebsocketOutClientDevice = {
 };
 
 describe("NodeRedHelper", () => {
-  test("top level parameters are present", () => {
-    const flow = NodeRedHelper.createFlowFromDevice(bogusDevice, getBogusIds);
-    expect(flow.label).toBe(`${bogusDevice.name} flow`);
-    expect(flow.type).toBe('tab');
-    expect(flow.nodes).toBeDefined();
-    expect(flow.nodes.length).toBeGreaterThanOrEqual(1);
-    
-    expect(flow.configs).toBeDefined();
-    expect(flow.configs.length).toBe(0);
-  });
   test("http in device should have correct parameters", () => {
-    const flow = NodeRedHelper.createFlowFromDevice(bogusHttpInDevice, getBogusIds);
+    const flow = NodeRedHelper.getNodesFromDevice(bogusHttpInDevice, getBogusIds);
     expect(flow.nodes).toBeDefined();
     expect(flow.nodes.filter((node) => node.type !== 'group').length).toBe(1);
     expect(flow.nodes[0]).toBeDefined();
@@ -279,7 +269,7 @@ describe("NodeRedHelper", () => {
     expect(flow.configs.length).toBe(0);
   });
   test("http out (response) device should have correct parameters", () => {
-    const flow = NodeRedHelper.createFlowFromDevice(bogusHttpOutDevice, getBogusIds);
+    const flow = NodeRedHelper.getNodesFromDevice(bogusHttpOutDevice, getBogusIds);
     expect(flow.nodes).toBeDefined();
     expect(flow.nodes.filter((node) => node.type !== 'group').length).toBe(1);
     expect(flow.nodes[0]).toBeDefined();
@@ -292,7 +282,7 @@ describe("NodeRedHelper", () => {
     expect(flow.configs.length).toBe(0);
   });
   test("tcp in (server) device should have correct parameters", () => {
-    const flow = NodeRedHelper.createFlowFromDevice(bogusTcpInServerDevice, getBogusIds);
+    const flow = NodeRedHelper.getNodesFromDevice(bogusTcpInServerDevice, getBogusIds);
     expect(flow.nodes).toBeDefined();
     expect(flow.nodes.filter((node) => node.type !== 'group').length).toBe(1);
     expect(flow.nodes[0]).toBeDefined();
@@ -307,7 +297,7 @@ describe("NodeRedHelper", () => {
     expect(flow.configs.length).toBe(0);
   });
   test("tcp in (client) device should have correct parameters", () => {
-    const flow = NodeRedHelper.createFlowFromDevice(bogusTcpInClientDevice, getBogusIds);
+    const flow = NodeRedHelper.getNodesFromDevice(bogusTcpInClientDevice, getBogusIds);
     expect(flow.nodes).toBeDefined();
     expect(flow.nodes.filter((node) => node.type !== 'group').length).toBe(1);
     expect(flow.nodes[0]).toBeDefined();
@@ -324,7 +314,7 @@ describe("NodeRedHelper", () => {
     expect(flow.configs.length).toBe(0);
   });
   test("tcp out (server) device should have correct parameters", () => {
-    const flow = NodeRedHelper.createFlowFromDevice(bogusTcpOutServerDevice, getBogusIds);
+    const flow = NodeRedHelper.getNodesFromDevice(bogusTcpOutServerDevice, getBogusIds);
     expect(flow.nodes).toBeDefined();
     expect(flow.nodes.filter((node) => node.type !== 'group').length).toBe(1);
     expect(flow.nodes[0]).toBeDefined();
@@ -339,7 +329,7 @@ describe("NodeRedHelper", () => {
     expect(flow.configs.length).toBe(0);
   });
   test("tcp out (client) device should have correct parameters", () => {
-    const flow = NodeRedHelper.createFlowFromDevice(bogusTcpOutClientDevice, getBogusIds);
+    const flow = NodeRedHelper.getNodesFromDevice(bogusTcpOutClientDevice, getBogusIds);
     expect(flow.nodes).toBeDefined();
     expect(flow.nodes.filter((node) => node.type !== 'group').length).toBe(1);
     expect(flow.nodes[0]).toBeDefined();
@@ -356,7 +346,7 @@ describe("NodeRedHelper", () => {
     expect(flow.configs.length).toBe(0);
   });
   test("tcp out (reply) device should have correct parameters", () => {
-    const flow = NodeRedHelper.createFlowFromDevice(bogusTcpOutReplyDevice, getBogusIds);
+    const flow = NodeRedHelper.getNodesFromDevice(bogusTcpOutReplyDevice, getBogusIds);
     expect(flow.nodes).toBeDefined();
     expect(flow.nodes.filter((node) => node.type !== 'group').length).toBe(1);
     expect(flow.nodes[0]).toBeDefined();
@@ -368,7 +358,7 @@ describe("NodeRedHelper", () => {
     expect(flow.configs.length).toBe(0);
   });
   test("udp out device should have correct parameters", () => {
-    const flow = NodeRedHelper.createFlowFromDevice(bogusUdpOutDevice, getBogusIds);
+    const flow = NodeRedHelper.getNodesFromDevice(bogusUdpOutDevice, getBogusIds);
     expect(flow.nodes).toBeDefined();
     expect(flow.nodes.filter((node) => node.type !== 'group').length).toBe(1);
     expect(flow.nodes[0]).toBeDefined();
@@ -385,7 +375,7 @@ describe("NodeRedHelper", () => {
     expect(flow.configs.length).toBe(0);
   });
   test("udp in device should have correct parameters", () => {
-    const flow = NodeRedHelper.createFlowFromDevice(bogusUdpInDevice, getBogusIds);
+    const flow = NodeRedHelper.getNodesFromDevice(bogusUdpInDevice, getBogusIds);
     expect(flow.nodes).toBeDefined();
     expect(flow.nodes.filter((node) => node.type !== 'group').length).toBe(1);
     expect(flow.nodes[0]).toBeDefined();
@@ -400,7 +390,7 @@ describe("NodeRedHelper", () => {
     expect(flow.configs.length).toBe(0);
   });
   test("mqtt in device should have correct parameters", () => {
-    const flow = NodeRedHelper.createFlowFromDevice(bogusMQTTInDevice, getBogusIds);
+    const flow = NodeRedHelper.getNodesFromDevice(bogusMQTTInDevice, getBogusIds);
     expect(flow.nodes).toBeDefined();
     expect(flow.nodes.filter((node) => node.type !== 'group').length).toBe(1);
     expect(flow.nodes[0]).toBeDefined();
@@ -412,7 +402,7 @@ describe("NodeRedHelper", () => {
     expect(flow.nodes[0].qos).toBe('2');
   });
   test("mqtt in broker should have correct parameters", () => {
-    const flow = NodeRedHelper.createFlowFromDevice(bogusMQTTInDevice, getBogusIds);
+    const flow = NodeRedHelper.getNodesFromDevice(bogusMQTTInDevice, getBogusIds);
     expect(flow.configs).toBeDefined();
     expect(flow.configs.length).toBeGreaterThanOrEqual(1);
     expect(flow.configs[0]).toBeDefined();
@@ -426,7 +416,7 @@ describe("NodeRedHelper", () => {
     expect(flow.configs[0].protocolVersion).toBe('5');
   });
   test("mqtt in device and broker should be bound", () => {
-    const flow = NodeRedHelper.createFlowFromDevice(bogusMQTTInDevice, getBogusIds);
+    const flow = NodeRedHelper.getNodesFromDevice(bogusMQTTInDevice, getBogusIds);
     expect(flow.nodes).toBeDefined();
     expect(flow.nodes.length).toBeGreaterThanOrEqual(1);
     expect(flow.nodes[0]).toBeDefined();
@@ -437,7 +427,7 @@ describe("NodeRedHelper", () => {
     expect(flow.configs[0].id).toBe(flow.nodes[0].broker)
   });
   test("mqtt out device should have correct parameters", () => {
-    const flow = NodeRedHelper.createFlowFromDevice(bogusMQTTOutDevice, getBogusIds);
+    const flow = NodeRedHelper.getNodesFromDevice(bogusMQTTOutDevice, getBogusIds);
     expect(flow.nodes).toBeDefined();
     expect(flow.nodes.filter((node) => node.type !== 'group').length).toBe(1);
     expect(flow.nodes[0]).toBeDefined();
@@ -449,7 +439,7 @@ describe("NodeRedHelper", () => {
     expect(flow.nodes[0].qos).toBe('2');
   });
   test("mqtt out broker should have correct parameters", () => {
-    const flow = NodeRedHelper.createFlowFromDevice(bogusMQTTOutDevice, getBogusIds);
+    const flow = NodeRedHelper.getNodesFromDevice(bogusMQTTOutDevice, getBogusIds);
     expect(flow.configs).toBeDefined();
     expect(flow.configs.length).toBe(1);
     expect(flow.configs[0]).toBeDefined();
@@ -463,7 +453,7 @@ describe("NodeRedHelper", () => {
     expect(flow.configs[0].protocolVersion).toBe('5');
   });
   test("mqtt out device and broker should be bound", () => {
-    const flow = NodeRedHelper.createFlowFromDevice(bogusMQTTOutDevice, getBogusIds);
+    const flow = NodeRedHelper.getNodesFromDevice(bogusMQTTOutDevice, getBogusIds);
     expect(flow.nodes).toBeDefined();
     expect(flow.nodes.filter((node) => node.type !== 'group').length).toBe(1);
     expect(flow.nodes[0]).toBeDefined();
@@ -474,7 +464,7 @@ describe("NodeRedHelper", () => {
     expect(flow.configs[0].id).toBe(flow.nodes[0].broker)
   });
   test("websocket server in device should have correct parameters", () => {
-    const flow = NodeRedHelper.createFlowFromDevice(bogusWebsocketInServerDevice, getBogusIds);
+    const flow = NodeRedHelper.getNodesFromDevice(bogusWebsocketInServerDevice, getBogusIds);
     expect(flow.nodes).toBeDefined();
     expect(flow.nodes.filter((node) => node.type !== 'group').length).toBe(1);
     expect(flow.nodes[0]).toBeDefined();
@@ -483,7 +473,7 @@ describe("NodeRedHelper", () => {
     expect(flow.nodes[0].server).toBeDefined();
   });
   test("websocket server in listener should have correct parameters", () => {
-    const flow = NodeRedHelper.createFlowFromDevice(bogusWebsocketInServerDevice, getBogusIds);
+    const flow = NodeRedHelper.getNodesFromDevice(bogusWebsocketInServerDevice, getBogusIds);
     expect(flow.configs).toBeDefined();
     expect(flow.configs.length).toBe(1);
     expect(flow.configs[0]).toBeDefined();
@@ -493,7 +483,7 @@ describe("NodeRedHelper", () => {
     expect(flow.configs[0].path).toBe('inserverpath');
   });
   test("websocket server in device and listener should be bound", () => {
-    const flow = NodeRedHelper.createFlowFromDevice(bogusWebsocketInServerDevice, getBogusIds);
+    const flow = NodeRedHelper.getNodesFromDevice(bogusWebsocketInServerDevice, getBogusIds);
     expect(flow.nodes).toBeDefined();
     expect(flow.nodes.filter((node) => node.type !== 'group').length).toBe(1);
     expect(flow.nodes[0]).toBeDefined();
@@ -504,7 +494,7 @@ describe("NodeRedHelper", () => {
     expect(flow.configs[0].id).toBe(flow.nodes[0].server)
   });
   test("websocket client in device should have correct parameters", () => {
-    const flow = NodeRedHelper.createFlowFromDevice(bogusWebsocketInClientDevice, getBogusIds);
+    const flow = NodeRedHelper.getNodesFromDevice(bogusWebsocketInClientDevice, getBogusIds);
     expect(flow.nodes).toBeDefined();
     expect(flow.nodes.filter((node) => node.type !== 'group').length).toBe(1);
     expect(flow.nodes[0]).toBeDefined();
@@ -513,7 +503,7 @@ describe("NodeRedHelper", () => {
     expect(flow.nodes[0].client).toBeDefined();
   });
   test("websocket client in client should have correct parameters", () => {
-    const flow = NodeRedHelper.createFlowFromDevice(bogusWebsocketInClientDevice, getBogusIds);
+    const flow = NodeRedHelper.getNodesFromDevice(bogusWebsocketInClientDevice, getBogusIds);
     expect(flow.configs).toBeDefined();
     expect(flow.configs.length).toBe(1);
     expect(flow.configs[0]).toBeDefined();
@@ -523,7 +513,7 @@ describe("NodeRedHelper", () => {
     expect(flow.configs[0].path).toBe('inclienturl');
   });
   test("websocket client in device and client should be bound", () => {
-    const flow = NodeRedHelper.createFlowFromDevice(bogusWebsocketInClientDevice, getBogusIds);
+    const flow = NodeRedHelper.getNodesFromDevice(bogusWebsocketInClientDevice, getBogusIds);
     expect(flow.nodes).toBeDefined();
     expect(flow.nodes.filter((node) => node.type !== 'group').length).toBe(1);
     expect(flow.nodes[0]).toBeDefined();
@@ -534,7 +524,7 @@ describe("NodeRedHelper", () => {
     expect(flow.configs[0].id).toBe(flow.nodes[0].client)
   });
   test("websocket server out device should have correct parameters", () => {
-    const flow = NodeRedHelper.createFlowFromDevice(bogusWebsocketOutServerDevice, getBogusIds);
+    const flow = NodeRedHelper.getNodesFromDevice(bogusWebsocketOutServerDevice, getBogusIds);
     expect(flow.nodes).toBeDefined();
     expect(flow.nodes.filter((node) => node.type !== 'group').length).toBe(1);
     expect(flow.nodes[0]).toBeDefined();
@@ -543,7 +533,7 @@ describe("NodeRedHelper", () => {
     expect(flow.nodes[0].server).toBeDefined();
   });
   test("websocket server out listener should have correct parameters", () => {
-    const flow = NodeRedHelper.createFlowFromDevice(bogusWebsocketOutServerDevice, getBogusIds);
+    const flow = NodeRedHelper.getNodesFromDevice(bogusWebsocketOutServerDevice, getBogusIds);
     expect(flow.configs).toBeDefined();
     expect(flow.configs.length).toBe(1);
     expect(flow.configs[0]).toBeDefined();
@@ -553,7 +543,7 @@ describe("NodeRedHelper", () => {
     expect(flow.configs[0].path).toBe('outserverpath');
   });
   test("websocket server out device and listener should be bound", () => {
-    const flow = NodeRedHelper.createFlowFromDevice(bogusWebsocketOutServerDevice, getBogusIds);
+    const flow = NodeRedHelper.getNodesFromDevice(bogusWebsocketOutServerDevice, getBogusIds);
     expect(flow.nodes).toBeDefined();
     expect(flow.nodes.filter((node) => node.type !== 'group').length).toBe(1);
     expect(flow.nodes[0]).toBeDefined();
@@ -564,7 +554,7 @@ describe("NodeRedHelper", () => {
     expect(flow.configs[0].id).toBe(flow.nodes[0].server)
   });
   test("websocket client out device should have correct parameters", () => {
-    const flow = NodeRedHelper.createFlowFromDevice(bogusWebsocketOutClientDevice, getBogusIds);
+    const flow = NodeRedHelper.getNodesFromDevice(bogusWebsocketOutClientDevice, getBogusIds);
     expect(flow.nodes).toBeDefined();
     expect(flow.nodes.filter((node) => node.type !== 'group').length).toBe(1);
     expect(flow.nodes[0]).toBeDefined();
@@ -573,7 +563,7 @@ describe("NodeRedHelper", () => {
     expect(flow.nodes[0].client).toBeDefined();
   });
   test("websocket client out client should have correct parameters", () => {
-    const flow = NodeRedHelper.createFlowFromDevice(bogusWebsocketOutClientDevice, getBogusIds);
+    const flow = NodeRedHelper.getNodesFromDevice(bogusWebsocketOutClientDevice, getBogusIds);
     expect(flow.configs).toBeDefined();
     expect(flow.configs.length).toBe(1);
     expect(flow.configs[0]).toBeDefined();
@@ -583,7 +573,7 @@ describe("NodeRedHelper", () => {
     expect(flow.configs[0].path).toBe('outclienturl');
   });
   test("websocket client out device and client should be bound", () => {
-    const flow = NodeRedHelper.createFlowFromDevice(bogusWebsocketOutClientDevice, getBogusIds);
+    const flow = NodeRedHelper.getNodesFromDevice(bogusWebsocketOutClientDevice, getBogusIds);
     expect(flow.nodes).toBeDefined();
     expect(flow.nodes.filter((node) => node.type !== 'group').length).toBe(1);
     expect(flow.nodes[0]).toBeDefined();
@@ -594,14 +584,14 @@ describe("NodeRedHelper", () => {
     expect(flow.configs[0].id).toBe(flow.nodes[0].client)
   });
   test("group node should be defined", () => {
-    const flow = NodeRedHelper.createFlowFromDevice(bogusDevice, getBogusIds);
+    const flow = NodeRedHelper.getNodesFromDevice(bogusDevice, getBogusIds);
     expect(flow.nodes).toBeDefined();
     const nodes = flow.nodes.filter((node) => node.type === 'group');
     expect(nodes.length).toBe(1);
     expect(nodes[0]).toBeDefined();
   });
   test("group node should have correct parameters", () => {
-    const flow = NodeRedHelper.createFlowFromDevice(bogusDevice, getBogusIds);
+    const flow = NodeRedHelper.getNodesFromDevice(bogusDevice, getBogusIds);
     expect(flow.nodes).toBeDefined();
     const nodes = flow.nodes.filter((node) => node.type === 'group');
     expect(nodes.length).toBe(1);
@@ -612,7 +602,7 @@ describe("NodeRedHelper", () => {
     expect(nodes[0].name).toBe(bogusDevice.name);
   });
   test("group node and service nodes should be bound", () => {
-    const flow = NodeRedHelper.createFlowFromDevice(bogusDevice, getBogusIds);
+    const flow = NodeRedHelper.getNodesFromDevice(bogusDevice, getBogusIds);
     expect(flow.nodes).toBeDefined();
     const nodes = flow.nodes.filter((node) => node.type === 'group');
     expect(nodes.length).toBe(1);

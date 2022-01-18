@@ -114,11 +114,11 @@ class NodeRedHelper {
         const groupNode = createGroupNode(device.name, nodes, getUniqueIds(device._id, 1)[0])
         nodes.push(groupNode);
 
-        return [
+        return {
             nodes,
             configs,
             y
-        ]
+        }
     }
 
     // static updateFlow(flowId, )
@@ -145,26 +145,26 @@ class NodeRedHelper {
 
 
     static createFlowFromDevices(flowId, devices,label, comment, getUniqueIds) {
-        const nodes = [];
-        const configs = [];
-        var y = 100;
+        const _nodes = [];
+        const _configs = [];
+        var _y = 100;
         var x = DEFAULT_X;
 
-        const commentNode = this.createCommentNode(flowId, comment, {x, y});
-        y += Y_OFFSET * 2;
-        nodes.push(commentNode);
+        const commentNode = this.createCommentNode(flowId, comment, {x, _y});
+        _y += Y_OFFSET * 2;
+        _nodes.push(commentNode);
 
         devices.forEach(device => {
-            const [ _nodes, _configs, _y ] = this.getNodesFromDevice(device, getUniqueIds, y);
+            const  { nodes, configs, y } = this.getNodesFromDevice(device, getUniqueIds, _y);
             // to space more each group
-            y = _y + Y_OFFSET;
-            nodes.push(..._nodes);
-            configs.push(..._configs);
+            _y = y + Y_OFFSET;
+            _nodes.push(...nodes);
+            _configs.push(...configs);
         });
         return {
             label,
-            nodes,
-            configs
+            _nodes,
+            _configs
         }
     }
 
