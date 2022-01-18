@@ -76,21 +76,33 @@ const NodeRedStateContext = (props) => {
   };
 
   const updateComment = async (flowId, newComment) => {
-    const flowsToPost = await NodeRedService.getFlows(nodeRedUrl);
-    const commentNodeIndex = flowsToPost.findIndex((element) => {
-      if (element.z && element.type) {
-        return element.z === flowId && element.type === "comment";
-      } else return false;
+    const flowToUpdate = await NodeRedService.getFlow(nodeRedUrl, flowId);
+    let commentNode = flowToUpdate.nodes.find(({id}) => {
+      if (id.match(/[^\|]*\|DESC/)) {
+        return id.split('|')[0] === flowId;
+      }
     });
-
-    if (commentNodeIndex !== -1) {
-      flowsToPost[commentNodeIndex].info = newComment;
+    if (commentNode) {
+      commentNode.info = newComment;
     } else {
-      updateFlows();
-      throw Error();
+      // if commentNode doesn't exist, create a new one
+      commentNode = NodeRedHelper.createCommentNode(flowId, newComment, {x: 120, y: 100});
+      flowToUpdate.nodes.push(commentNode);
+    }
+    // groups aren't fetched by getFlow call, so is needed to retrieve them
+    // separately
+    const _flows = await NodeRedService.getFlows(nodeRedUrl);
+    const groups = _flows.filter(flowObj => {
+      const {z, type} = flowObj;
+      if (type === 'group' && z === flowId) {
+        return true;
+      }
+    });
+    if(groups) {
+      flowToUpdate.nodes.push(...groups);
     }
 
-    return NodeRedService.postFlows(nodeRedUrl, flowsToPost).then((_) => {
+    return NodeRedService.updateFlow(nodeRedUrl, flowId, flowToUpdate).then((_) => {
       updateFlows();
     });
   };
