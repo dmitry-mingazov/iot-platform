@@ -22,7 +22,7 @@ function Devices() {
     });
   };
 
-  const exportSelectAll = () => {
+  const selectAll = () => {
     const devicesToSet = devices.slice();
     devicesToSet.forEach((device) => {
       device.exportSelected = true;
@@ -30,7 +30,7 @@ function Devices() {
     setDevices(devicesToSet);
   };
 
-  const exportDeselectAll = () => {
+  const deselectAll = () => {
     const devicesToSet = devices.slice();
     devicesToSet.forEach((device) => {
       device.exportSelected = false;
@@ -43,13 +43,17 @@ function Devices() {
     setOpenExport(true);
   };
 
-  const exportSelectedOnChange = (deviceId) => {
+  const selectedOnChange = (deviceId) => {
     const devicesToSet = devices.slice();
     const deviceIndex = devices.findIndex((device) => {
       return device._id === deviceId;
     });
-    devicesToSet[deviceIndex].exportSelected =
-      !devices[deviceIndex].exportSelected;
+    const newIsSelected = !devices[deviceIndex].exportSelected;
+    devicesToSet[deviceIndex].exportSelected = newIsSelected;
+    if (devicesToSet.filter(device => device.exportSelected).length === 0) {
+      setExportSelectMode(false);
+    }
+    
     setDevices(devicesToSet);
   };
 
@@ -61,7 +65,7 @@ function Devices() {
             variant="contained"
             size="medium"
             onClick={() => {
-              exportSelectAll();
+              selectAll();
             }}
             style={{ marginRight: 12 }}
           >
@@ -71,7 +75,7 @@ function Devices() {
             variant="contained"
             size="medium"
             onClick={() => {
-              exportDeselectAll();
+              deselectAll();
             }}
           >
             Deselect all
@@ -168,7 +172,7 @@ function Devices() {
                 exportSelectMode={exportSelectMode}
                 exportSelected={device.exportSelected}
                 exportSelectedOnChange={() => {
-                  exportSelectedOnChange(device._id);
+                  selectedOnChange(device._id);
                 }}
               ></DeviceCard>
             </Grid>
