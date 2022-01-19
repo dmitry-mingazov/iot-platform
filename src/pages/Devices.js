@@ -12,7 +12,7 @@ function Devices() {
   const navigate = useNavigate();
   const [devices, setDevices] = useState([]);
   const { isTokenReady } = useContext(AuthContext);
-  const [exportSelectMode, setExportSelectMode] = useState(false);
+  const [isSelectMode, setSelectMode] = useState(false);
   const [openExport, setOpenExport] = useState(false);
   const [devicesToExport, setDevicesToExport] = useState([]);
 
@@ -51,14 +51,14 @@ function Devices() {
     const newIsSelected = !devices[deviceIndex].exportSelected;
     devicesToSet[deviceIndex].exportSelected = newIsSelected;
     if (devicesToSet.filter(device => device.exportSelected).length === 0) {
-      setExportSelectMode(false);
+      setSelectMode(false);
     }
     
     setDevices(devicesToSet);
   };
 
   const displayButtons = () => {
-    if (exportSelectMode) {
+    if (isSelectMode) {
       return [
         <div key={"start"}>
           <Button
@@ -87,7 +87,7 @@ function Devices() {
             size="medium"
             onClick={() => {
               resetSelectedDevices(devices);
-              setExportSelectMode(false);
+              setSelectMode(false);
             }}
             style={{ marginRight: 12 }}
           >
@@ -103,7 +103,7 @@ function Devices() {
               exportToNodered(devices.filter(device => device.exportSelected));
             }}
           >
-            Export
+            Export to Node-RED
           </Button>
         </div>,
       ];
@@ -115,11 +115,11 @@ function Devices() {
             variant="contained"
             size="medium"
             onClick={() => {
-              setExportSelectMode(true);
+              setSelectMode(true);
             }}
             style={{ marginRight: 12 }}
           >
-            Export to Node-RED
+            Select Devices
           </Button>
           <Button
             variant="contained"
@@ -169,7 +169,7 @@ function Devices() {
                 exportToNodered={() => {
                   exportToNodered([device]);
                 }}
-                exportSelectMode={exportSelectMode}
+                exportSelectMode={isSelectMode}
                 exportSelected={device.exportSelected}
                 exportSelectedOnChange={() => {
                   selectedOnChange(device._id);
