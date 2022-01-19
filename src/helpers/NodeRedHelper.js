@@ -72,24 +72,24 @@ const createGroupNode = (deviceName, serviceNodes, groupId) => {
     }
 }
 
+const DEFAULT_X = 120;
+const Y_OFFSET = 45;
+
 class NodeRedHelper {
-    static createFlowFromDevice(device, getUniqueIds) {
-        const label = `${device.name} flow`;
-        const type = 'tab';
+    static getNodesFromDevice(device, getUniqueIds, _y) {
         const nodes = [];
         const configs = [];
-        var y = 120;
-        var x = 120;
+        var x = DEFAULT_X;
+        var y = _y; 
         device.services.forEach(s => {
             const node = {x, y};
-            y += 40;
+            y += Y_OFFSET;
             let configNode = createConfigNode(s.interfaceType);
-            if(configNode) {
+            if (configNode) {
                 configNode.id = getUniqueIds(device._id, 1)[0];
             }
-            // by far http out is the only not matching type
             node.type = s.interfaceType === 'http out' ? 'http response' : s.interfaceType;
-            node.name = device.name;
+            node.name = node.type;
             s.metadata.forEach(m => {
                 let key = mapMetadataTypeToKey(m.metadataType, m.value);
                 let value = m.value;
@@ -100,8 +100,9 @@ class NodeRedHelper {
                     node[key] = value;
                 }
             });
-            if(configNode)
+            if(configNode) {
                 configs.push(configNode)
+            }
             nodes.push(node);
         });
         // add id to each node
@@ -114,10 +115,56 @@ class NodeRedHelper {
         nodes.push(groupNode);
 
         return {
-            label,
-            type,
             nodes,
-            configs
+            configs,
+            y
+        }
+    }
+
+    // static updateFlow(flowId, )
+
+    static createEmptyFlow() {
+        return {
+            nodes: []
+        }
+    }
+
+    static createCommentNode(flowId, comment, {x, y}) {
+        const id = `${flowId}|DESC`;
+        const type = 'comment';
+        const name = 'Flow Description';
+        return {
+            id,
+            x,
+            y,
+            type,
+            name,
+            info: comment
+        }
+    }
+
+
+    static createFlowFromDevices(flowId, devices,label, comment, getUniqueIds) {
+        const _nodes = [];
+        const _configs = [];
+        var _y = 100;
+        var x = DEFAULT_X;
+
+        const commentNode = this.createCommentNode(flowId, comment, {x, _y});
+        _y += Y_OFFSET * 2;
+        _nodes.push(commentNode);
+
+        devices.forEach(device => {
+            const  { nodes, configs, y } = this.getNodesFromDevice(device, getUniqueIds, _y);
+            // to space more each group
+            _y = y + Y_OFFSET;
+            _nodes.push(...nodes);
+            _configs.push(...configs);
+        });
+        return {
+            label,
+            _nodes,
+            _configs
         }
     }
 

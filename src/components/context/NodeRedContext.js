@@ -2,6 +2,7 @@ import { useContext, useState, createContext, useEffect } from "react";
 import React from "react";
 import { AuthContext } from "./AuthContext";
 import NodeRedService from "../../services/NodeRedService";
+import NodeRedHelper from "../../helpers/NodeRedHelper";
 
 
 const getInstanceInterval = 10*1000;
@@ -75,24 +76,59 @@ const NodeRedStateContext = (props) => {
   };
 
   const updateComment = async (flowId, newComment) => {
-    const flowsToPost = await NodeRedService.getFlows(nodeRedUrl);
-    const commentNodeIndex = flowsToPost.findIndex((element) => {
-      if (element.z && element.type) {
-        return element.z === flowId && element.type === "comment";
-      } else return false;
+    const flowToUpdate = await NodeRedService.getFlow(nodeRedUrl, flowId);
+    let commentNode = flowToUpdate.nodes.find(({id}) => {
+      if (id.match(/[^\|]*\|DESC/)) {
+        return id.split('|')[0] === flowId;
+      }
     });
-
-    if (commentNodeIndex !== -1) {
-      flowsToPost[commentNodeIndex].info = newComment;
+    if (commentNode) {
+      commentNode.info = newComment;
     } else {
-      updateFlows();
-      throw Error();
+      // if commentNode doesn't exist, create a new one
+      commentNode = NodeRedHelper.createCommentNode(flowId, newComment, {x: 120, y: 100});
+      flowToUpdate.nodes.push(commentNode);
+    }
+    // groups aren't fetched by getFlow call, so is needed to retrieve them
+    // separately
+    const _flows = await NodeRedService.getFlows(nodeRedUrl);
+    const groups = _flows.filter(flowObj => {
+      const {z, type} = flowObj;
+      if (type === 'group' && z === flowId) {
+        return true;
+      }
+    });
+    if(groups) {
+      flowToUpdate.nodes.push(...groups);
     }
 
-    return NodeRedService.postFlows(nodeRedUrl, flowsToPost).then((_) => {
+    return NodeRedService.updateFlow(nodeRedUrl, flowId, flowToUpdate).then((_) => {
       updateFlows();
     });
   };
+
+  const createNewFlow = (label, comment, devices) => {
+    const emptyFlow = NodeRedHelper.createEmptyFlow();
+    // let flowId = 'TEST';
+
+    // const flow = NodeRedHelper.createFlowFromDevices(flowId, devices, comment, getUniqueNodeIds);
+    // console.log(JSON.stringify(flow));
+    // console.log((flow));
+    // return;
+    return NodeRedService.createFlow(nodeRedUrl, emptyFlow)
+      .then(({id}) => {
+        const flowId = id;
+        const flow = NodeRedHelper.createFlowFromDevices(flowId, devices, label, comment, getUniqueNodeIds);
+        console.log(JSON.stringify(flow));
+        return NodeRedService.updateFlow(nodeRedUrl, flowId, flow)
+        .then(_ => {
+          return flowId;
+        });
+      })
+      .catch(error => {
+        console.error('Error in creating the flow');
+      });
+  }
 
   const getUniqueNodeIds = (deviceId, requiredIds) => {
     const _ids = [];
@@ -123,6 +159,7 @@ const NodeRedStateContext = (props) => {
   const value = {
     nodeRedUrl,
     getUniqueNodeIds,
+    createNewFlow,
     isNodeRedReady,
     isNodeRedLoading,
     flows,

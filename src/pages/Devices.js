@@ -5,6 +5,7 @@ import DeviceService from "../services/DeviceService";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import DeviceCard from "../components/DeviceCard";
+import DeviceExportDialog from "../components/DeviceExportDialog";
 import { AuthContext } from "../components/context/AuthContext";
 
 function Devices() {
@@ -12,6 +13,8 @@ function Devices() {
   const [devices, setDevices] = useState([]);
   const { isTokenReady } = useContext(AuthContext);
   const [exportSelectMode, setExportSelectMode] = useState(false);
+  const [openExport, setOpenExport] = useState(false);
+  const [devicesToExport, setDevicesToExport] = useState([]);
 
   const resetSelectedDevices = (devices) => {
     devices.forEach((device) => {
@@ -33,6 +36,11 @@ function Devices() {
       device.exportSelected = false;
     });
     setDevices(devicesToSet);
+  };
+
+  const exportToNodered = (devices) => {
+    setDevicesToExport(devices);
+    setOpenExport(true);
   };
 
   const exportSelectedOnChange = (deviceId) => {
@@ -84,8 +92,11 @@ function Devices() {
           <Button
             variant="contained"
             size="medium"
+            disabled={
+              devices.filter(device => device.exportSelected).length === 0
+            }
             onClick={() => {
-              console.log("Not implemented yet");
+              exportToNodered(devices.filter(device => device.exportSelected));
             }}
           >
             Export
@@ -151,6 +162,9 @@ function Devices() {
                 key={device._id}
                 _id={device._id}
                 deviceName={device.name}
+                exportToNodered={() => {
+                  exportToNodered([device]);
+                }}
                 exportSelectMode={exportSelectMode}
                 exportSelected={device.exportSelected}
                 exportSelectedOnChange={() => {
@@ -161,6 +175,13 @@ function Devices() {
           ))}
         </Grid>
       </Box>
+      <DeviceExportDialog
+        openExport={openExport}
+        devicesToExport={devicesToExport}
+        handleClose={() => {
+          setOpenExport(false);
+        }}
+      />
     </div>
   );
 }

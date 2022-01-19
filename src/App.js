@@ -44,7 +44,7 @@ export default function App() {
                   </RequireAuth>
                 } 
               />
-              <Route path="/node-red/:action/:deviceId" 
+              <Route path="/node-red/:flowId" 
                 element={
                   <RequireAuth>
                     <NodeRed />

@@ -6,6 +6,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import FlowEditDialog from "./FlowEditDialog";
 import { useNodeRed } from "../components/context/NodeRedContext";
 import { useSnackbar } from "../components/context/SnackbarContext";
+import { useNavigate } from 'react-router-dom';
 
 export default function FlowsTable(props) {
   const [openEdit, setOpenEdit] = useState(false);
@@ -14,6 +15,7 @@ export default function FlowsTable(props) {
   const { updateComment } = useNodeRed();
   const [loading, setLoading] = useState(false);
   const { openSuccessSnackbar, openErrorSnackbar } = useSnackbar();
+  const navigate = useNavigate();
 
   const handleOpenEdit = (flowId, comment) => {
     setCurrentFlowId(flowId);
@@ -55,7 +57,8 @@ export default function FlowsTable(props) {
         <IconButton
           aria-label="export"
           onClick={() => {
-            console.log("Not yet implemented.");
+            // console.log("Not yet implemented.");
+            navigate(`/node-red/${params.row.id}`)
           }}
         >
           <OpenInNewIcon color="primary" />
