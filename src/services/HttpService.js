@@ -11,6 +11,16 @@ export default class HttpService {
     });
   }
 
+  static async getWithParams(url, params) {
+    return axios.get(url, {params}).then((response) => {
+      if (response.status < 300) {
+        return response.data;
+      } else {
+        throw new Error(`GET api call returned status code ${response.status}`);
+      }
+    })
+  }
+
   static async post(url, body) {
     return axios.post(url, body)
       .then(response => {
