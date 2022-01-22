@@ -6,6 +6,7 @@ import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import DeviceCard from "../components/DeviceCard";
 import DeviceExportDialog from "../components/DeviceExportDialog";
+import { DownloadDialog, extensions } from "../components/DownloadDialog";
 import { AuthContext } from "../components/context/AuthContext";
 
 function Devices() {
@@ -14,6 +15,7 @@ function Devices() {
   const { isTokenReady } = useContext(AuthContext);
   const [isSelectMode, setSelectMode] = useState(false);
   const [openExport, setOpenExport] = useState(false);
+  const [isOpenDownload, setOpenDownload] = useState(false);
   const [devicesToExport, setDevicesToExport] = useState([]);
 
   const resetSelectedDevices = (devices) => {
@@ -42,6 +44,11 @@ function Devices() {
     setDevicesToExport(devices);
     setOpenExport(true);
   };
+
+  const download = (devices) => {
+    setDevicesToExport(devices);
+    setOpenDownload(true);
+  }
 
   const selectedOnChange = (deviceId) => {
     const devicesToSet = devices.slice();
@@ -102,8 +109,21 @@ function Devices() {
             onClick={() => {
               exportToNodered(devices.filter(device => device.exportSelected));
             }}
+            style={{ marginRight: 12 }}
           >
             Export to Node-RED
+          </Button>
+          <Button
+            variant="contained"
+            size="medium"
+            disabled={
+              devices.filter(device => device.exportSelected).length === 0
+            }
+            onClick={() => {
+              download(devices.filter(device => device.exportSelected));
+            }}
+          >
+            Export
           </Button>
         </div>,
       ];
@@ -184,6 +204,14 @@ function Devices() {
         devicesToExport={devicesToExport}
         handleClose={() => {
           setOpenExport(false);
+        }}
+      />
+      <DownloadDialog
+        openDownload={isOpenDownload}
+        devices={devicesToExport}
+        extension={extensions.JSON}
+        handleClose={() => {
+          setOpenDownload(false);
         }}
       />
     </div>
