@@ -5,6 +5,7 @@ import { CreateDeviceDto } from './dto/create-device.dto';
 import { ConfigService } from '@nestjs/config';
 import { AuthGuard } from '@nestjs/passport';
 import { AuthUserId } from './decorators/user.decorator';
+import OntologyConverter from './helpers/ontologyconverter';
 
 @Controller('/api')
 export class DevicesController {
@@ -43,5 +44,13 @@ export class DevicesController {
     return this.devicesService.createMany(
       dtos.map((dto) => ({ ...dto, userId })),
     );
+  }
+
+  @Get('/device/turtle/:id')
+  @UseGuards(AuthGuard('jwt'))
+  findOneToturtle(@Param('id') id: string): Promise<string> {
+    return this.devicesService.findOne(id).then((res) => {
+      return OntologyConverter.deviceToOntology(res);
+    });
   }
 }
