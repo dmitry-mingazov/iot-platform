@@ -10,18 +10,16 @@ services:
       - spm-tld-db:/data/db
 # Backend service - NestJS
   nestjs:
-    image: node:alpine
-    command: sh -c "npm install && npm run start"
-    working_dir: /app
+    build: .
     depends_on:
       - mongo
     ports:
       - "3000:3000"
     volumes:
-      - .:/app
-      - spm-tld-nestjsnm:/app/node_modules
+      - ./src:/app/src
+      - ./package.json:/app/package.json
+      - ./package-lock.json:/app/package-lock.json
     environment:
       - MONGO_URL=mongodb://mongo # url of mongdb inside the docker network
 volumes:
   spm-tld-db:
-  spm-tld-nestjsnm:
