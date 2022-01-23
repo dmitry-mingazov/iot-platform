@@ -15,14 +15,29 @@ const UploadDialog = ({
 }) => {
   const fileInput = React.createRef();
   const [loading, setLoading] = React.useState(false);
-  const [filename, setFilename] = React.useState('');
+  const [file, setFile] = React.useState(undefined);
+  const [devices, setDevices] = React.useState([]);
+  const [isFileValid, setFileValid] = React.useState(true);
 
   const handleImport = () => {
-      console.log(filename);
   }
 
-  const onChange = () => {
-    setFilename(fileInput?.current.files[0].name);
+  const onChange = (e) => {
+    console.log(e);
+    const _file = fileInput?.current.files[0];
+    setFile(_file);
+    const reader = new FileReader();
+      reader.onload = async (e) => {
+        const rawText = e.target.result;
+        try {
+          const _devices = JSON.parse(rawText);
+          setFileValid(true);
+          setDevices(_devices);
+        } catch (err) {
+          setFileValid(false);
+        }
+      }
+      reader.readAsText(_file);
   }
 
   return (
@@ -36,7 +51,7 @@ const UploadDialog = ({
         <DialogTitle style={{ marginTop: 10, marginLeft: 10 }}>Import Device</DialogTitle> 
         <DialogContent style={{ marginLeft: 10, marginRight: 10 }}>
           <div style={{border: "1px solid grey", padding: 8, borderRadius: 5, display: 'flex', justifyContent: 'space-between', flexDirection: 'row'}}>
-            <Typography sx={{display: 'flex', alignItems: 'center'}}>{filename ? `${filename}` :  'No file chosen'}</Typography>
+            <Typography sx={{display: 'flex', alignItems: 'center'}}>{file ? file.name :  'No file chosen'}</Typography>
             <Button
               variant="contained"
               size="small"
@@ -46,8 +61,9 @@ const UploadDialog = ({
               Choose a File
               <input
                 type="file"
+                accept=".json"
                 ref={fileInput}
-                onChange={() => onChange()}
+                onChange={onChange}
                 hidden
               />
             </Button>
@@ -58,7 +74,11 @@ const UploadDialog = ({
           {loading ? (
             <CircularProgress size={22} style={{marginLeft: 27, marginRight: 27}} />
           ) : (
-            <Button variant="contained" onClick={handleImport}>
+            <Button 
+              variant="contained" 
+              onClick={handleImport} 
+              disabled={!isFileValid || !file}
+            >
               Import
             </Button>
           )}
