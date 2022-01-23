@@ -48,7 +48,7 @@ function Devices() {
     setOpenExport(true);
   };
 
-  const downloadToJSON = (devices) => {
+  const exportToJSON = (devices) => {
     setDevicesToExport(devices);
     setDownloadExtension("JSON");
     setOpenDownload(true);
@@ -131,7 +131,7 @@ function Devices() {
               devices.filter(device => device.exportSelected).length === 0
             }
             onClick={() => {
-              downloadToJSON(devices.filter(device => device.exportSelected));
+              exportToJSON(devices.filter(device => device.exportSelected));
             }}
           >
             Export
@@ -213,6 +213,9 @@ function Devices() {
                 deviceName={device.name}
                 exportToNodered={() => {
                   exportToNodered([device]);
+                }}
+                exportToJSON={() => {
+                  exportToJSON([device]);
                 }}
                 exportToTTL={() => {
                   exportToTTL([device]);
