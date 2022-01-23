@@ -8,6 +8,8 @@ import {
   Button,
   Typography
 } from "@mui/material";
+import DeviceService from "../services/DeviceService";
+import { useSnackbar } from "./context/SnackbarContext";
 
 const UploadDialog = ({
   openUpload,
@@ -18,8 +20,18 @@ const UploadDialog = ({
   const [file, setFile] = React.useState(undefined);
   const [devices, setDevices] = React.useState([]);
   const [isFileValid, setFileValid] = React.useState(true);
+  const {openSuccessSnackbar, openErrorSnackbar } = useSnackbar();
 
   const handleImport = () => {
+    setLoading(true);
+    DeviceService.createDevices(devices)
+      .then(_ => {
+        openSuccessSnackbar('Devices imported successfully');
+        setLoading(false);
+      }).catch(_ => {
+        openErrorSnackbar('Something went wrong');
+        setLoading(false);
+      })
   }
 
   const onChange = (e) => {
