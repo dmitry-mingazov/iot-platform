@@ -60,7 +60,7 @@ describe("DeviceCard component", () => {
   test("opens menu correctly when clicked", () => {
     renderComponent();
     fireEvent.click(screen.getByRole("button"));
-    expect(screen.getAllByRole("menuitem").length).toBe(3);
+    expect(screen.getAllByRole("menuitem").length).toBe(5);
   });
 
   test("opens information dialog", async () => {
