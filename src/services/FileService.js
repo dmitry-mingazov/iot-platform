@@ -10,7 +10,12 @@ class FileService {
         const params = {ids: ids.join()};
         return HttpService.getWithParams(`${FileService.baseUrlDevices}`, params)
             .then(devices => {
-                const json = JSON.stringify(devices, null, 2);
+                const _devices = [...devices];
+                // we want to remove _id from devices before exporting them
+                _devices.forEach(device => {
+                    delete device._id;
+                })
+                const json = JSON.stringify(_devices, null, 2);
                 const blob = new Blob([json], {type: 'application/json'});
                 FileService.downloadBlob(blob, filename);
             });
