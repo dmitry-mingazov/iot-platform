@@ -17,6 +17,7 @@ function Devices() {
   const [openExport, setOpenExport] = useState(false);
   const [isOpenDownload, setOpenDownload] = useState(false);
   const [devicesToExport, setDevicesToExport] = useState([]);
+  const [downloadExtension, setDownloadExtension] = useState('');
 
   const resetSelectedDevices = (devices) => {
     devices.forEach((device) => {
@@ -45,8 +46,16 @@ function Devices() {
     setOpenExport(true);
   };
 
-  const download = (devices) => {
+  const downloadToJSON = (devices) => {
     setDevicesToExport(devices);
+    setDownloadExtension("JSON");
+    setOpenDownload(true);
+  }
+
+  const exportToTTL = (devices) => {
+    setDevicesToExport(devices);
+    setDownloadExtension("TURTLE");
+
     setOpenDownload(true);
   }
 
@@ -120,7 +129,7 @@ function Devices() {
               devices.filter(device => device.exportSelected).length === 0
             }
             onClick={() => {
-              download(devices.filter(device => device.exportSelected));
+              downloadToJSON(devices.filter(device => device.exportSelected));
             }}
           >
             Export
@@ -189,6 +198,9 @@ function Devices() {
                 exportToNodered={() => {
                   exportToNodered([device]);
                 }}
+                exportToTTL={() => {
+                  exportToTTL([device]);
+                }}
                 exportSelectMode={isSelectMode}
                 exportSelected={device.exportSelected}
                 exportSelectedOnChange={() => {
@@ -209,7 +221,7 @@ function Devices() {
       <DownloadDialog
         openDownload={isOpenDownload}
         devices={devicesToExport}
-        extension={extensions.JSON}
+        extension={downloadExtension}
         handleClose={() => {
           setOpenDownload(false);
         }}

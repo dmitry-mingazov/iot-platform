@@ -13,8 +13,8 @@ import {
 import FileService from "../services/FileService";
 
 const extensions = {
-  JSON: '.json',
-  TURTLE: '.ttl'
+  JSON: {name: '.json', fn: FileService.getDevicesFile},
+  TURTLE: {name: '.ttl', fn: FileService.getDevicesTurtleFile}
 }
 
 const DownloadDialog = ({
@@ -27,13 +27,17 @@ const DownloadDialog = ({
   const [loading, setLoading] = useState(false);
   const [filenameError, setFilenameError] = useState(false);
 
+  const getDevices = extensions[extension]?.fn;
+  const extensionName = extensions[extension]?.name;
+
   const handleDownload = () => {
     if (filename.length === 0) {
       setFilenameError(true);
       return;
     } 
     setLoading(true);
-    FileService.getDevicesFile(filename + extension, devices).then(_ => {
+    getDevices(filename + extensionName, devices).then(_ => {
+    // FileService.getDevicesFile(filename + extension.name, devices).then(_ => {
       setLoading(false);
       setFilename('');
       handleClose();
@@ -73,7 +77,7 @@ const DownloadDialog = ({
             fullWidth
             onChange={(event) => onFilenameChange(event)}
             InputProps={{
-                endAdornment: <InputAdornment position="end">{extension}</InputAdornment>
+                endAdornment: <InputAdornment position="end">{extensionName}</InputAdornment>
             }}
           />
         </DialogContent>
