@@ -13,7 +13,8 @@ import { useSnackbar } from "./context/SnackbarContext";
 
 const UploadDialog = ({
   openUpload,
-  handleClose
+  handleClose,
+  refreshDevices
 }) => {
   const fileInput = React.createRef();
   const [loading, setLoading] = React.useState(false);
@@ -26,8 +27,15 @@ const UploadDialog = ({
     setLoading(true);
     DeviceService.createDevices(devices)
       .then(_ => {
-        openSuccessSnackbar('Devices imported successfully');
-        setLoading(false);
+        refreshDevices().then(_ => {
+          openSuccessSnackbar('Devices imported successfully');
+        }).catch(_ => {
+          openErrorSnackbar('Something went wrong');
+        }).finally(_ => {
+          setFile(undefined);
+          setLoading(false);
+          handleClose();
+        });
       }).catch(_ => {
         openErrorSnackbar('Something went wrong');
         setLoading(false);
@@ -60,7 +68,7 @@ const UploadDialog = ({
         open={openUpload}
         fullWidth
       >
-        <DialogTitle style={{ marginTop: 10, marginLeft: 10 }}>Import Device</DialogTitle> 
+        <DialogTitle style={{ marginTop: 10, marginLeft: 10 }}>Import devices</DialogTitle> 
         <DialogContent style={{ marginLeft: 10, marginRight: 10 }}>
           <div style={{border: "1px solid grey", padding: 8, borderRadius: 5, display: 'flex', justifyContent: 'space-between', flexDirection: 'row'}}>
             <Typography sx={{display: 'flex', alignItems: 'center'}}>{file ? file.name :  'No file chosen'}</Typography>

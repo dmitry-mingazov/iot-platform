@@ -169,20 +169,24 @@ function Devices() {
               setOpenUpload(true);
             }}
           >
-            Import Device
+            Import devices
           </Button>
         </div>,
       ];
     }
   };
 
-  // will run only on first render
-  useEffect(() => {
-    if (isTokenReady) {
-      DeviceService.getDevices().then((dvs) => {
+  const getDevices = () => {
+      return DeviceService.getDevices().then((dvs) => {
         resetSelectedDevices(dvs);
         setDevices(dvs);
       });
+  }
+
+  // will run only on first render
+  useEffect(() => {
+    if (isTokenReady) {
+      getDevices();
     }
   }, [isTokenReady]);
 
@@ -240,6 +244,7 @@ function Devices() {
       />
       <UploadDialog
         openUpload={isOpenUpload}
+        refreshDevices={getDevices}
         handleClose={() => {
           setOpenUpload(false);
         }}
