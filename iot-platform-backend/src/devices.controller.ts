@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post, UseGuards, } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Query, UseGuards, } from '@nestjs/common';
 import { Device } from './schemas/device.schema';
 import { DevicesService } from './devices.service';
 import { CreateDeviceDto } from './dto/create-device.dto';
@@ -11,13 +11,21 @@ import OntologyConverter from './helpers/ontologyconverter';
 export class DevicesController {
   constructor(
     private readonly devicesService: DevicesService,
-    private readonly configService: ConfigService,
   ) {}
 
   @Get('/devices')
   @UseGuards(AuthGuard('jwt'))
-  findAll(@AuthUserId() userId: string): Promise<Device[]> {
-    return this.devicesService.findAllById(userId);
+  findAll(@AuthUserId() userId: string, @Query() query: any): Promise<Device[]> {
+    if (!query.ids) {
+      return this.devicesService.findAllByUserId(userId);
+    } else {
+      const ids: string[] = query.ids.split(',');
+      return this.findAllByIds(userId, ids);
+    }
+  }
+
+  async findAllByIds(userId: string, ids: string[]): Promise<Device[]>{
+    return this.devicesService.findAllByIds(userId, ids);
   }
 
   @Get('/device/:id')

@@ -27,7 +27,12 @@ export class DevicesService {
     return this.deviceModel.find().exec();
   }
 
-  async findAllById(userId: string): Promise<Device[]> {
+  async findAllByUserId(userId: string): Promise<Device[]> {
     return this.deviceModel.find({userId}).exec();
   }
+
+  async findAllByIds(userId: string, ids: string[]): Promise<Device[]> {
+    return this.deviceModel.find({_id: ids, userId});
+  }
+
 }
