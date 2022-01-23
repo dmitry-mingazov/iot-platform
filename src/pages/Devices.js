@@ -8,6 +8,7 @@ import DeviceCard from "../components/DeviceCard";
 import DeviceExportDialog from "../components/DeviceExportDialog";
 import { DownloadDialog, extensions } from "../components/DownloadDialog";
 import { AuthContext } from "../components/context/AuthContext";
+import UploadDialog from "../components/UploadDialog";
 
 function Devices() {
   const navigate = useNavigate();
@@ -16,6 +17,7 @@ function Devices() {
   const [isSelectMode, setSelectMode] = useState(false);
   const [openExport, setOpenExport] = useState(false);
   const [isOpenDownload, setOpenDownload] = useState(false);
+  const [isOpenUpload, setOpenUpload] = useState(false);
   const [devicesToExport, setDevicesToExport] = useState([]);
   const [downloadExtension, setDownloadExtension] = useState('');
 
@@ -156,8 +158,18 @@ function Devices() {
             onClick={() => {
               navigate("/add-device-form");
             }}
+            style={{ marginRight: 12 }}
           >
             Add device
+          </Button>
+          <Button
+            variant="contained"
+            size="medium"
+            onClick={() => {
+              setOpenUpload(true);
+            }}
+          >
+            Import Device
           </Button>
         </div>,
       ];
@@ -224,6 +236,12 @@ function Devices() {
         extension={downloadExtension}
         handleClose={() => {
           setOpenDownload(false);
+        }}
+      />
+      <UploadDialog
+        openUpload={isOpenUpload}
+        handleClose={() => {
+          setOpenUpload(false);
         }}
       />
     </div>

@@ -1,0 +1,71 @@
+import React from "react";
+import {
+  DialogContent,
+  DialogTitle,
+  Dialog,
+  CircularProgress,
+  DialogActions,
+  Button,
+  Typography
+} from "@mui/material";
+
+const UploadDialog = ({
+  openUpload,
+  handleClose
+}) => {
+  const fileInput = React.createRef();
+  const [loading, setLoading] = React.useState(false);
+  const [filename, setFilename] = React.useState('');
+
+  const handleImport = () => {
+      console.log(filename);
+  }
+
+  const onChange = () => {
+    setFilename(fileInput?.current.files[0].name);
+  }
+
+  return (
+    <div>
+      <Dialog
+        onClose={handleClose}
+        aria-labelledby="customized-dialog-title"
+        open={openUpload}
+        fullWidth
+      >
+        <DialogTitle style={{ marginTop: 10, marginLeft: 10 }}>Import Device</DialogTitle> 
+        <DialogContent style={{ marginLeft: 10, marginRight: 10 }}>
+          <div style={{border: "1px solid grey", padding: 8, borderRadius: 5, display: 'flex', justifyContent: 'space-between', flexDirection: 'row'}}>
+            <Typography sx={{display: 'flex', alignItems: 'center'}}>{filename ? `${filename}` :  'No file chosen'}</Typography>
+            <Button
+              variant="contained"
+              size="small"
+              component="label"
+              style={{marginLeft: 10}}
+            >
+              Choose a File
+              <input
+                type="file"
+                ref={fileInput}
+                onChange={() => onChange()}
+                hidden
+              />
+            </Button>
+          </div>
+        </DialogContent>
+        <DialogActions style={{ margin: 10 }}>
+          <Button onClick={handleClose}>Cancel</Button>
+          {loading ? (
+            <CircularProgress size={22} style={{marginLeft: 27, marginRight: 27}} />
+          ) : (
+            <Button variant="contained" onClick={handleImport}>
+              Import
+            </Button>
+          )}
+        </DialogActions>
+      </Dialog>
+    </div>
+  );
+}
+
+export default UploadDialog;
