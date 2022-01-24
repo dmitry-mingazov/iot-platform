@@ -88,6 +88,14 @@ function DeviceCard(props) {
       title: "Export to Node-Red",
       fn: props.exportToNodered,
     },
+    {
+      title: "Export to JSON",
+      fn: props.exportToJSON
+    },
+    {
+      title: "Export to TTL",
+      fn: props.exportToTTL
+    }
   ];
 
   return (

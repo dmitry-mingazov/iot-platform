@@ -6,15 +6,20 @@ import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import DeviceCard from "../components/DeviceCard";
 import DeviceExportDialog from "../components/DeviceExportDialog";
+import { DownloadDialog, extensions } from "../components/DownloadDialog";
 import { AuthContext } from "../components/context/AuthContext";
+import UploadDialog from "../components/UploadDialog";
 
 function Devices() {
   const navigate = useNavigate();
   const [devices, setDevices] = useState([]);
   const { isTokenReady } = useContext(AuthContext);
-  const [exportSelectMode, setExportSelectMode] = useState(false);
+  const [isSelectMode, setSelectMode] = useState(false);
   const [openExport, setOpenExport] = useState(false);
+  const [isOpenDownload, setOpenDownload] = useState(false);
+  const [isOpenUpload, setOpenUpload] = useState(false);
   const [devicesToExport, setDevicesToExport] = useState([]);
+  const [downloadExtension, setDownloadExtension] = useState('');
 
   const resetSelectedDevices = (devices) => {
     devices.forEach((device) => {
@@ -22,7 +27,7 @@ function Devices() {
     });
   };
 
-  const exportSelectAll = () => {
+  const selectAll = () => {
     const devicesToSet = devices.slice();
     devicesToSet.forEach((device) => {
       device.exportSelected = true;
@@ -30,7 +35,7 @@ function Devices() {
     setDevices(devicesToSet);
   };
 
-  const exportDeselectAll = () => {
+  const deselectAll = () => {
     const devicesToSet = devices.slice();
     devicesToSet.forEach((device) => {
       device.exportSelected = false;
@@ -43,25 +48,42 @@ function Devices() {
     setOpenExport(true);
   };
 
-  const exportSelectedOnChange = (deviceId) => {
+  const exportToJSON = (devices) => {
+    setDevicesToExport(devices);
+    setDownloadExtension("JSON");
+    setOpenDownload(true);
+  }
+
+  const exportToTTL = (devices) => {
+    setDevicesToExport(devices);
+    setDownloadExtension("TURTLE");
+
+    setOpenDownload(true);
+  }
+
+  const selectedOnChange = (deviceId) => {
     const devicesToSet = devices.slice();
     const deviceIndex = devices.findIndex((device) => {
       return device._id === deviceId;
     });
-    devicesToSet[deviceIndex].exportSelected =
-      !devices[deviceIndex].exportSelected;
+    const newIsSelected = !devices[deviceIndex].exportSelected;
+    devicesToSet[deviceIndex].exportSelected = newIsSelected;
+    if (devicesToSet.filter(device => device.exportSelected).length === 0) {
+      setSelectMode(false);
+    }
+    
     setDevices(devicesToSet);
   };
 
   const displayButtons = () => {
-    if (exportSelectMode) {
+    if (isSelectMode) {
       return [
         <div key={"start"}>
           <Button
             variant="contained"
             size="medium"
             onClick={() => {
-              exportSelectAll();
+              selectAll();
             }}
             style={{ marginRight: 12 }}
           >
@@ -71,7 +93,7 @@ function Devices() {
             variant="contained"
             size="medium"
             onClick={() => {
-              exportDeselectAll();
+              deselectAll();
             }}
           >
             Deselect all
@@ -83,7 +105,7 @@ function Devices() {
             size="medium"
             onClick={() => {
               resetSelectedDevices(devices);
-              setExportSelectMode(false);
+              setSelectMode(false);
             }}
             style={{ marginRight: 12 }}
           >
@@ -98,6 +120,19 @@ function Devices() {
             onClick={() => {
               exportToNodered(devices.filter(device => device.exportSelected));
             }}
+            style={{ marginRight: 12 }}
+          >
+            Export to Node-RED
+          </Button>
+          <Button
+            variant="contained"
+            size="medium"
+            disabled={
+              devices.filter(device => device.exportSelected).length === 0
+            }
+            onClick={() => {
+              exportToJSON(devices.filter(device => device.exportSelected));
+            }}
           >
             Export
           </Button>
@@ -111,11 +146,11 @@ function Devices() {
             variant="contained"
             size="medium"
             onClick={() => {
-              setExportSelectMode(true);
+              setSelectMode(true);
             }}
             style={{ marginRight: 12 }}
           >
-            Export to Node-RED
+            Select Devices
           </Button>
           <Button
             variant="contained"
@@ -123,21 +158,35 @@ function Devices() {
             onClick={() => {
               navigate("/add-device-form");
             }}
+            style={{ marginRight: 12 }}
           >
             Add device
+          </Button>
+          <Button
+            variant="contained"
+            size="medium"
+            onClick={() => {
+              setOpenUpload(true);
+            }}
+          >
+            Import devices
           </Button>
         </div>,
       ];
     }
   };
 
-  // will run only on first render
-  useEffect(() => {
-    if (isTokenReady) {
-      DeviceService.getDevices().then((dvs) => {
+  const getDevices = () => {
+      return DeviceService.getDevices().then((dvs) => {
         resetSelectedDevices(dvs);
         setDevices(dvs);
       });
+  }
+
+  // will run only on first render
+  useEffect(() => {
+    if (isTokenReady) {
+      getDevices();
     }
   }, [isTokenReady]);
 
@@ -165,10 +214,16 @@ function Devices() {
                 exportToNodered={() => {
                   exportToNodered([device]);
                 }}
-                exportSelectMode={exportSelectMode}
+                exportToJSON={() => {
+                  exportToJSON([device]);
+                }}
+                exportToTTL={() => {
+                  exportToTTL([device]);
+                }}
+                exportSelectMode={isSelectMode}
                 exportSelected={device.exportSelected}
                 exportSelectedOnChange={() => {
-                  exportSelectedOnChange(device._id);
+                  selectedOnChange(device._id);
                 }}
               ></DeviceCard>
             </Grid>
@@ -180,6 +235,21 @@ function Devices() {
         devicesToExport={devicesToExport}
         handleClose={() => {
           setOpenExport(false);
+        }}
+      />
+      <DownloadDialog
+        openDownload={isOpenDownload}
+        devices={devicesToExport}
+        extension={downloadExtension}
+        handleClose={() => {
+          setOpenDownload(false);
+        }}
+      />
+      <UploadDialog
+        openUpload={isOpenUpload}
+        refreshDevices={getDevices}
+        handleClose={() => {
+          setOpenUpload(false);
         }}
       />
     </div>

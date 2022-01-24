@@ -14,6 +14,9 @@ jest.mock("../../services/DeviceService");
 jest.mock('../../components/context/NodeRedContext', () => ({
   useNodeRed: () => ({})
 }));
+jest.mock('../../components/context/SnackbarContext', () => ({
+  useSnackbar: () => ({})
+}));
 
 const isTokenReady = true;
 
