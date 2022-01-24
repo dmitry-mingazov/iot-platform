@@ -41,11 +41,11 @@ const Main = styled("main", { shouldForwardProp: (prop) => prop !== "open" })(
     }),
     marginLeft: `-${drawerWidth}px`,
     ...(open && {
-      minWidth: `calc(99.99vw - ${drawerWidth}px)`,
-      marginLeft: 0, 
+      minWidth: `calc(99.99vw - ${drawerWidth}px - ${scrollbarWidth}px)`, 
+      marginLeft: 0,
       transition: theme.transitions.create(["margin", "minWidth"], {
-        easing: theme.transitions.easing.easeOut,
-        duration: 0,
+        easing:  'cubic-bezier(0.3, 1, 1, 1)',
+        duration: 320,
       }),
     }),
   })
