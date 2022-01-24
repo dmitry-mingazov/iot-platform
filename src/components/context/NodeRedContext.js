@@ -164,6 +164,7 @@ const NodeRedStateContext = (props) => {
     flows,
     updateComment,
     updateFlows,
+    nodeRedDashboardURL: nodeRedUrl + '/ui'
   };
 
   return (

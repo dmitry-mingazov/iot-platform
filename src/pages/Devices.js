@@ -11,10 +11,12 @@ import { DownloadDialog, extensions } from "../components/DownloadDialog";
 import { AuthContext } from "../components/context/AuthContext";
 import UploadDialog from "../components/UploadDialog";
 import noDevicesImage from "../assets/images/no-devices.png";
+import { useNodeRed } from "../components/context/NodeRedContext";
 
 function Devices() {
   const navigate = useNavigate();
   const [devices, setDevices] = useState([]);
+  const { nodeRedDashboardURL } = useNodeRed();
   const { isTokenReady } = useContext(AuthContext);
   const [isSelectMode, setSelectMode] = useState(false);
   const [openExport, setOpenExport] = useState(false);
@@ -145,7 +147,17 @@ function Devices() {
       ];
     } else {
       return [
-        <div key={"start"}></div>,
+        <div key={"start"}>
+          <Button 
+            variant="contained"
+            size="medium"
+            onClick={() => {
+              window.open(nodeRedDashboardURL, "_blank");
+            }}
+          >
+              Open Dashboard
+          </Button>
+        </div>,
         <div key={"end"}>
           <Button
             disabled={devices.length === 0}
