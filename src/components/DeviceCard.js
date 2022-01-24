@@ -39,7 +39,6 @@ function DeviceCard(props) {
   const [deviceInfo, setDeviceInfo] = React.useState(undefined);
   const [open, setOpen] = React.useState(false);
   const anchorRef = React.useRef(null);
-  const prevOpen = React.useRef(open);
 
   //Popper menu management
   const handleToggle = () => {
@@ -63,14 +62,6 @@ function DeviceCard(props) {
       setOpen(false);
     }
   }
-
-  //Popper menu management
-  React.useEffect(() => {
-    if (prevOpen.current === true && open === false) {
-      anchorRef.current.focus();
-    }
-    prevOpen.current = open;
-  }, [open]);
 
   const openInfo = () => {
     DeviceService.getDevice(props._id).then((dv) => {
