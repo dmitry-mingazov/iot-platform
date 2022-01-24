@@ -186,6 +186,8 @@ function Devices() {
     return DeviceService.getDevices().then((dvs) => {
       if (dvs.length === 0) {
         setNoDevices(true);
+      } else if (noDevices) {
+        setNoDevices(false);
       }
       resetSelectedDevices(dvs);
       setDevices(dvs);
