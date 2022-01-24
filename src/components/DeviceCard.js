@@ -76,7 +76,7 @@ function DeviceCard(props) {
       fn: openInfo,
     },
     {
-      title: "Export to Node-Red",
+      title: "Import to Node-Red",
       fn: props.exportToNodered,
     },
     {

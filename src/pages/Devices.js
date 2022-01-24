@@ -127,7 +127,7 @@ function Devices() {
             }}
             style={{ marginRight: 12 }}
           >
-            Export to Node-RED
+            Import to Node-RED
           </Button>
           <Button
             variant="contained"
