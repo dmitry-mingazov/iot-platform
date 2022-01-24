@@ -15,7 +15,7 @@ import ListItem from "@mui/material/ListItem";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import DevicesOtherIcon from "@mui/icons-material/DevicesOther";
-import InsightsIcon from '@mui/icons-material/Insights';
+import InsightsIcon from "@mui/icons-material/Insights";
 import CloseIcon from "@mui/icons-material/Close";
 import Logout from "./Logout";
 import Snackbar from "@mui/material/Snackbar";
@@ -144,29 +144,37 @@ export default function Layout({ children }) {
       </Drawer>
       <Stack>
         <AppBar position="fixed" open={open} color="primary">
-          <Toolbar>
-            <IconButton
-              color="inherit"
-              aria-label="open drawer"
-              onClick={handleDrawerOpen}
-              edge="start"
-              sx={{ mr: 2, ...(open && { display: "none" }) }}
-            >
-              <MenuIcon />
-            </IconButton>
-            <Typography
-              variant="h6"
-              noWrap
-              component="div"
-              onClick={() => {
-                navigate("/");
-              }}
-              sx={{ flexGrow: 1, "&:hover": { cursor: "pointer" } }}
-            >
-              IoT Platform
-            </Typography>
-            <NRInstanceStatus />
-            <Logout />
+          <Toolbar sx={{ display: "flex", justifyContent: "space-between" }}>
+            <div style={{ display: "flex", flexDirection: "row" }}>
+              <IconButton
+                color="inherit"
+                aria-label="open drawer"
+                onClick={handleDrawerOpen}
+                edge="start"
+                sx={{ mr: 2, ...(open && { display: "none" }) }}
+              >
+                <MenuIcon />
+              </IconButton>
+              <Typography
+                variant="h6"
+                noWrap
+                component="div"
+                onClick={() => {
+                  navigate("/");
+                }}
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  "&:hover": { cursor: "pointer" },
+                }}
+              >
+                IoT Platform
+              </Typography>
+            </div>
+            <div style={{ display: "flex", flexDirection: "row" }}>
+              <NRInstanceStatus />
+              <Logout />
+            </div>
           </Toolbar>
         </AppBar>
         <Main open={open}>
