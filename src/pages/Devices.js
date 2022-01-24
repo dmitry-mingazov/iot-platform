@@ -227,8 +227,8 @@ function Devices() {
             src={noDevicesImage}
             alt="No devices available"
             style={{
-              width: "40%",
-              height: "40%",
+              width: `${window.innerWidth}`,
+              height: "60vh",
               opacity: 0.7,
             }}
           />
