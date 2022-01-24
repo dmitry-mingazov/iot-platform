@@ -183,15 +183,19 @@ function Devices() {
   };
 
   const getDevices = () => {
-    return DeviceService.getDevices().then((dvs) => {
-      if (dvs.length === 0) {
+    return DeviceService.getDevices()
+      .then((dvs) => {
+        if (dvs.length === 0) {
+          setNoDevices(true);
+        } else if (noDevices) {
+          setNoDevices(false);
+        }
+        resetSelectedDevices(dvs);
+        setDevices(dvs);
+      })
+      .catch(() => {
         setNoDevices(true);
-      } else if (noDevices) {
-        setNoDevices(false);
-      }
-      resetSelectedDevices(dvs);
-      setDevices(dvs);
-    });
+      });
   };
 
   // will run only on first render
