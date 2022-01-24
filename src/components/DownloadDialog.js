@@ -63,7 +63,7 @@ const DownloadDialog = ({
         open={openDownload}
         fullWidth
       >
-        <DialogTitle style={{ marginTop: 10, marginLeft: 10 }}>Export Devices</DialogTitle> 
+        <DialogTitle style={{ marginTop: 10, marginLeft: 10 }}>Export devices</DialogTitle> 
         <DialogContent style={{ marginLeft: 10, marginRight: 10 }}>
           {devices.map(device => (
             <Chip key={device._id} size="small" style={{ marginRight: 5, marginBottom: 5 }} label={device.name} color="primary"/>
