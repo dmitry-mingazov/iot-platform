@@ -4,11 +4,13 @@ import { useNavigate } from "react-router";
 import DeviceService from "../services/DeviceService";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
+import Typography from "@mui/material/Typography";
 import DeviceCard from "../components/DeviceCard";
 import DeviceExportDialog from "../components/DeviceExportDialog";
 import { DownloadDialog, extensions } from "../components/DownloadDialog";
 import { AuthContext } from "../components/context/AuthContext";
 import UploadDialog from "../components/UploadDialog";
+import noDevicesImage from "../assets/images/no-devices.png";
 
 function Devices() {
   const navigate = useNavigate();
@@ -19,7 +21,8 @@ function Devices() {
   const [isOpenDownload, setOpenDownload] = useState(false);
   const [isOpenUpload, setOpenUpload] = useState(false);
   const [devicesToExport, setDevicesToExport] = useState([]);
-  const [downloadExtension, setDownloadExtension] = useState('');
+  const [downloadExtension, setDownloadExtension] = useState("");
+  const [noDevices, setNoDevices] = useState(false);
 
   const resetSelectedDevices = (devices) => {
     devices.forEach((device) => {
@@ -52,14 +55,14 @@ function Devices() {
     setDevicesToExport(devices);
     setDownloadExtension("JSON");
     setOpenDownload(true);
-  }
+  };
 
   const exportToTTL = (devices) => {
     setDevicesToExport(devices);
     setDownloadExtension("TURTLE");
 
     setOpenDownload(true);
-  }
+  };
 
   const selectedOnChange = (deviceId) => {
     const devicesToSet = devices.slice();
@@ -68,10 +71,10 @@ function Devices() {
     });
     const newIsSelected = !devices[deviceIndex].exportSelected;
     devicesToSet[deviceIndex].exportSelected = newIsSelected;
-    if (devicesToSet.filter(device => device.exportSelected).length === 0) {
+    if (devicesToSet.filter((device) => device.exportSelected).length === 0) {
       setSelectMode(false);
     }
-    
+
     setDevices(devicesToSet);
   };
 
@@ -115,10 +118,12 @@ function Devices() {
             variant="contained"
             size="medium"
             disabled={
-              devices.filter(device => device.exportSelected).length === 0
+              devices.filter((device) => device.exportSelected).length === 0
             }
             onClick={() => {
-              exportToNodered(devices.filter(device => device.exportSelected));
+              exportToNodered(
+                devices.filter((device) => device.exportSelected)
+              );
             }}
             style={{ marginRight: 12 }}
           >
@@ -128,10 +133,10 @@ function Devices() {
             variant="contained"
             size="medium"
             disabled={
-              devices.filter(device => device.exportSelected).length === 0
+              devices.filter((device) => device.exportSelected).length === 0
             }
             onClick={() => {
-              exportToJSON(devices.filter(device => device.exportSelected));
+              exportToJSON(devices.filter((device) => device.exportSelected));
             }}
           >
             Export
@@ -143,6 +148,7 @@ function Devices() {
         <div key={"start"}></div>,
         <div key={"end"}>
           <Button
+            disabled={devices.length === 0}
             variant="contained"
             size="medium"
             onClick={() => {
@@ -177,11 +183,14 @@ function Devices() {
   };
 
   const getDevices = () => {
-      return DeviceService.getDevices().then((dvs) => {
-        resetSelectedDevices(dvs);
-        setDevices(dvs);
-      });
-  }
+    return DeviceService.getDevices().then((dvs) => {
+      if (dvs.length === 0) {
+        setNoDevices(true);
+      }
+      resetSelectedDevices(dvs);
+      setDevices(dvs);
+    });
+  };
 
   // will run only on first render
   useEffect(() => {
@@ -199,37 +208,61 @@ function Devices() {
       >
         {displayButtons()}
       </Stack>
-      <Box mt={6} ml={8} mr={8} mb={6}>
-        <Grid
-          container
-          spacing={{ xs: 4, md: 6 }}
-          columns={{ xs: 4, sm: 12, md: 20 }}
+      {noDevices ? (
+        <Box
+          alignItems="center"
+          justifyContent="center"
+          display="flex"
+          minHeight="100%"
+          paddingTop={7}
+          flexDirection="column"
         >
-          {devices.map((device) => (
-            <Grid key={device._id} item xs={2} sm={4} md={4} align="center">
-              <DeviceCard
-                key={device._id}
-                _id={device._id}
-                deviceName={device.name}
-                exportToNodered={() => {
-                  exportToNodered([device]);
-                }}
-                exportToJSON={() => {
-                  exportToJSON([device]);
-                }}
-                exportToTTL={() => {
-                  exportToTTL([device]);
-                }}
-                exportSelectMode={isSelectMode}
-                exportSelected={device.exportSelected}
-                exportSelectedOnChange={() => {
-                  selectedOnChange(device._id);
-                }}
-              ></DeviceCard>
-            </Grid>
-          ))}
-        </Grid>
-      </Box>
+          <img
+            src={noDevicesImage}
+            alt="No devices available"
+            style={{
+              width: "40%",
+              height: "40%",
+              opacity: 0.7,
+            }}
+          />
+          <Typography variant="h5" sx={{ opacity: 0.7 }}>
+            No devices available.
+          </Typography>
+        </Box>
+      ) : (
+        <Box mt={6} ml={8} mr={8} mb={6}>
+          <Grid
+            container
+            spacing={{ xs: 4, md: 6 }}
+            columns={{ xs: 4, sm: 12, md: 20 }}
+          >
+            {devices.map((device) => (
+              <Grid key={device._id} item xs={2} sm={4} md={4} align="center">
+                <DeviceCard
+                  key={device._id}
+                  _id={device._id}
+                  deviceName={device.name}
+                  exportToNodered={() => {
+                    exportToNodered([device]);
+                  }}
+                  exportToJSON={() => {
+                    exportToJSON([device]);
+                  }}
+                  exportToTTL={() => {
+                    exportToTTL([device]);
+                  }}
+                  exportSelectMode={isSelectMode}
+                  exportSelected={device.exportSelected}
+                  exportSelectedOnChange={() => {
+                    selectedOnChange(device._id);
+                  }}
+                ></DeviceCard>
+              </Grid>
+            ))}
+          </Grid>
+        </Box>
+      )}
       <DeviceExportDialog
         openExport={openExport}
         devicesToExport={devicesToExport}
