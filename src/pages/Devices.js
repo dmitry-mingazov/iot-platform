@@ -11,6 +11,7 @@ import { DownloadDialog, extensions } from "../components/DownloadDialog";
 import { AuthContext } from "../components/context/AuthContext";
 import UploadDialog from "../components/UploadDialog";
 import noDevicesImage from "../assets/images/no-devices.png";
+import DeviceDeleteDialog from "../components/DeviceDeleteDialog";
 
 function Devices() {
   const navigate = useNavigate();
@@ -23,6 +24,7 @@ function Devices() {
   const [devicesToExport, setDevicesToExport] = useState([]);
   const [downloadExtension, setDownloadExtension] = useState("");
   const [noDevices, setNoDevices] = useState(false);
+  const [isOpenDelete, setOpenDelete] = useState(false);
 
   const resetSelectedDevices = (devices) => {
     devices.forEach((device) => {
@@ -60,8 +62,12 @@ function Devices() {
   const exportToTTL = (devices) => {
     setDevicesToExport(devices);
     setDownloadExtension("TURTLE");
-
     setOpenDownload(true);
+  };
+
+  const deleteDevice = (devices) => {
+    setDevicesToExport(devices);
+    setOpenDelete(true);
   };
 
   const selectedOnChange = (deviceId) => {
@@ -252,6 +258,9 @@ function Devices() {
                   exportToTTL={() => {
                     exportToTTL([device]);
                   }}
+                  deleteDevice={() => {
+                    deleteDevice([device]);
+                  }}
                   exportSelectMode={isSelectMode}
                   exportSelected={device.exportSelected}
                   exportSelectedOnChange={() => {
@@ -283,6 +292,14 @@ function Devices() {
         refreshDevices={getDevices}
         handleClose={() => {
           setOpenUpload(false);
+        }}
+      />
+      <DeviceDeleteDialog
+        openDelete={isOpenDelete}
+        devicesToDelete={devicesToExport}
+        refreshDevices={getDevices}
+        handleClose={() => {
+          setOpenDelete(false);
         }}
       />
     </div>
