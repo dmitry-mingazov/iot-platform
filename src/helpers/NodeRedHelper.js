@@ -150,7 +150,7 @@ class NodeRedHelper {
         var _y = 100;
         var x = DEFAULT_X;
 
-        const commentNode = this.createCommentNode(flowId, comment, {x, _y});
+        const commentNode = this.createCommentNode(flowId, comment, {x, y: _y});
         _y += Y_OFFSET * 2;
         _nodes.push(commentNode);
 
@@ -163,8 +163,8 @@ class NodeRedHelper {
         });
         return {
             label,
-            _nodes,
-            _configs
+            nodes: _nodes,
+            configs: _configs
         }
     }
 

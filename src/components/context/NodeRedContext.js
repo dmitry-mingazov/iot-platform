@@ -119,7 +119,6 @@ const NodeRedStateContext = (props) => {
       .then(({id}) => {
         const flowId = id;
         const flow = NodeRedHelper.createFlowFromDevices(flowId, devices, label, comment, getUniqueNodeIds);
-        console.log(JSON.stringify(flow));
         return NodeRedService.updateFlow(nodeRedUrl, flowId, flow)
         .then(_ => {
           return flowId;
