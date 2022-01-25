@@ -44,6 +44,18 @@ const createUINode = (uiGroupId) => {
 
 }
 
+const createHttpResponseNode = (id, {x, y}) => {
+    const name = 'response';
+    const type = 'http response';
+    return {
+        id,
+        type,
+        name,
+        x,
+        y
+    }
+}
+
 const mappedMetadata = {
     'status': 'statusCode',
     'typeIn': 'server',
@@ -114,7 +126,8 @@ class NodeRedHelper {
     static getNodesFromDevice(device, getUniqueIds, _y, uiTabId) {
         const nodes = [];
         const configs = [];
-        const uiNodes = [];
+        // i.e. ui nodes or http response for http in 
+        const extraNodes = [];
         var x = DEFAULT_X;
         var y = _y; 
 
@@ -122,6 +135,7 @@ class NodeRedHelper {
 
         device.services.forEach(s => {
             const node = {x, y};
+            const wires = [];
             y += Y_OFFSET;
 
             let configNode = createConfigNode(s.interfaceType);
@@ -139,18 +153,35 @@ class NodeRedHelper {
                 let id = getUniqueIds(device._id, 1)[0];
                 let uiNode = {
                     id,
-                    x: node.x + X_OFFSET,
+                    x: node.x + X_OFFSET * 2,
                     y: node.y,
                     ...createUINode(uiGroup.id)
                 }
-                node.wires = [
-                    [id]
-                ]
-                uiNodes.push(uiNode);
+                // node.wires = [
+                    // [id]
+                // ]
+                wires.push([id]);
+                extraNodes.push(uiNode);
             }
 
             node.type = s.interfaceType === 'http out' ? 'http response' : s.interfaceType;
             node.name = node.type;
+
+            // console.log(node.name);
+            // console.log(node.type)
+            // console.log(node);
+            if (node.type == 'http in') {
+                console.log('Adding extra node...');
+                const id = getUniqueIds(device._id, 1)[0];
+                const httpResponse = createHttpResponseNode(id, {x: x + X_OFFSET, y: node.y});
+                console.log(httpResponse);
+                // node.wires = [
+                //     [id]
+                // ]
+                wires.push([id]);
+                extraNodes.push(httpResponse);
+            }
+
             s.metadata.forEach(m => {
                 let key = mapMetadataTypeToKey(m.metadataType, m.value);
                 let value = m.value;
@@ -164,6 +195,10 @@ class NodeRedHelper {
             if(configNode) {
                 configs.push(configNode)
             }
+            node.wires = [
+                [...wires]
+            ]
+            console.log(node);
             nodes.push(node);
         });
         // add id to each node
@@ -175,7 +210,7 @@ class NodeRedHelper {
         const groupNode = createGroupNode(device.name, nodes, getUniqueIds(device._id, 1)[0])
         nodes.push(groupNode);
 
-        nodes.push(...uiNodes);
+        nodes.push(...extraNodes);
 
         return {
             nodes,

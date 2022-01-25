@@ -255,14 +255,13 @@ describe("NodeRedHelper", () => {
   test("http in device should have correct parameters", () => {
     const flow = NodeRedHelper.getNodesFromDevice(bogusHttpInDevice, getBogusIds);
     expect(flow.nodes).toBeDefined();
-    expect(flow.nodes.filter((node) => node.type !== 'group').length).toBe(2);
-    expect(flow.nodes[0]).toBeDefined();
-    expect(flow.nodes[0].type).toBeDefined();
-    expect(flow.nodes[0].type).toBe('http in');
-    expect(flow.nodes[0].url).toBeDefined();
-    expect(flow.nodes[0].url).toBe('http in url');
-    expect(flow.nodes[0].method).toBeDefined();
-    expect(flow.nodes[0].method).toBe('GET');
+    expect(flow.nodes.filter((node) => node.type !== 'group').length).toBe(3);
+    const httpIn = flow.nodes.find(({type}) => type === 'http in');
+    expect(httpIn).toBeDefined();
+    expect(httpIn.url).toBeDefined();
+    expect(httpIn.url).toBe('http in url');
+    expect(httpIn.method).toBeDefined();
+    expect(httpIn.method).toBe('GET');
     
     expect(flow.configs).toBeDefined();    
     expect(flow.nodes.length).toBeGreaterThanOrEqual(1);
