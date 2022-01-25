@@ -22,18 +22,21 @@ function DeviceDeleteDialog(props) {
     props.devicesToDelete.forEach((device) => {
       deviceIds.push(device._id);
     });
-    console.log(deviceIds);
     DeviceService.deleteDevices(deviceIds)
       .then((_) => {
         setLoading(false);
-        props.handleClose();
-        openSuccessSnackbar("Device deleted successfully");
+        openSuccessSnackbar("Devices deleted successfully");
         props.refreshDevices();
       })
       .catch((_) => {
         setLoading(false);
-        props.handleClose();
         openErrorSnackbar("Something went wrong!");
+      })
+      .finally((_) => {
+        if (props.isSelectMode) {
+          props.setSelectMode(false);
+        }
+        props.handleClose();
       });
   };
 
