@@ -12,6 +12,7 @@ import { AuthContext } from "../components/context/AuthContext";
 import UploadDialog from "../components/UploadDialog";
 import noDevicesImage from "../assets/images/no-devices.png";
 import DeviceDeleteDialog from "../components/DeviceDeleteDialog";
+import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 
 function Devices() {
   const navigate = useNavigate();
@@ -65,7 +66,7 @@ function Devices() {
     setOpenDownload(true);
   };
 
-  const deleteDevice = (devices) => {
+  const deleteDevices = (devices) => {
     setDevicesToExport(devices);
     setOpenDelete(true);
   };
@@ -144,8 +145,22 @@ function Devices() {
             onClick={() => {
               exportToJSON(devices.filter((device) => device.exportSelected));
             }}
+            style={{ marginRight: 12 }}
           >
             Export
+          </Button>
+          <Button
+            variant="contained"
+            size="medium"
+            disabled={
+              devices.filter((device) => device.exportSelected).length === 0
+            }
+            onClick={() => {
+              deleteDevices(devices.filter((device) => device.exportSelected));
+            }}
+            endIcon={<DeleteOutlineIcon />}
+          >
+            Delete
           </Button>
         </div>,
       ];
@@ -259,7 +274,7 @@ function Devices() {
                     exportToTTL([device]);
                   }}
                   deleteDevice={() => {
-                    deleteDevice([device]);
+                    deleteDevices([device]);
                   }}
                   exportSelectMode={isSelectMode}
                   exportSelected={device.exportSelected}
@@ -298,6 +313,8 @@ function Devices() {
         openDelete={isOpenDelete}
         devicesToDelete={devicesToExport}
         refreshDevices={getDevices}
+        isSelectMode={isSelectMode}
+        setSelectMode={setSelectMode}
         handleClose={() => {
           setOpenDelete(false);
         }}
