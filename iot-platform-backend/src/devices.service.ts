@@ -23,16 +23,37 @@ export class DevicesService {
     return this.deviceModel.findById(id).exec();
   }
 
+  async deleteOne(id: string): Promise<any> {
+    return this.deviceModel
+      .deleteOne({ _id: id })
+      .exec()
+      .then((res) => {
+        return {
+          acknowledged: res.acknowledged,
+        };
+      });
+  }
+
+  async deleteMany(ids: string[]): Promise<any> {
+    return this.deviceModel
+      .deleteMany({ _id: { $in: ids } })
+      .exec()
+      .then((res) => {
+        return {
+          acknowledged: res.acknowledged,
+        };
+      });
+  }
+
   async findAll(): Promise<Device[]> {
     return this.deviceModel.find().exec();
   }
 
   async findAllByUserId(userId: string): Promise<Device[]> {
-    return this.deviceModel.find({userId}).exec();
+    return this.deviceModel.find({ userId }).exec();
   }
 
   async findAllByIds(userId: string, ids: string[]): Promise<Device[]> {
-    return this.deviceModel.find({_id: ids, userId});
+    return this.deviceModel.find({ _id: ids, userId });
   }
-
 }

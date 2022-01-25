@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post, Query, UseGuards, } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Query, UseGuards, } from '@nestjs/common';
 import { Device } from './schemas/device.schema';
 import { DevicesService } from './devices.service';
 import { CreateDeviceDto } from './dto/create-device.dto';
@@ -32,6 +32,18 @@ export class DevicesController {
   @UseGuards(AuthGuard('jwt'))
   findOne(@Param('id') id: string): Promise<Device> {
     return this.devicesService.findOne(id);
+  }
+
+  @Delete('/device/:id')
+  @UseGuards(AuthGuard('jwt'))
+  deleteOne(@Param('id') id: string): Promise<Device> {
+    return this.devicesService.deleteOne(id);
+  }
+
+  @Delete('/devices')
+  @UseGuards(AuthGuard('jwt'))
+  deleteMany(@Body() ids: string[]): Promise<Device> {
+    return this.devicesService.deleteMany(ids);
   }
 
   @Post('/device')
