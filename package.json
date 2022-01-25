@@ -25,6 +25,7 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
+    "test:all": "react-scripts test --watchAll",
     "test:coverage": "npm test -- --env=jsdom --coverage",
     "test:ci": "cross-env CI=true react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
