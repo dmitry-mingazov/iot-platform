@@ -1,0 +1,10 @@
+[
+  {
+    "value": "websocket-listener",
+    "label": "Server"
+  },
+  {
+    "value": "websocket-client",
+    "label": "Client"
+  }
+]

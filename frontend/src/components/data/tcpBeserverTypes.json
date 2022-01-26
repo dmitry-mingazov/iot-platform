@@ -1,0 +1,14 @@
+[
+  {
+    "value": "server",
+    "label": "Server"
+  },
+  {
+    "value": "client",
+    "label": "Client"
+  },
+  {
+    "value": "reply",
+    "label": "Reply"
+  }
+]
