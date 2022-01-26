@@ -12,6 +12,8 @@ import { AuthContext } from "../components/context/AuthContext";
 import UploadDialog from "../components/UploadDialog";
 import noDevicesImage from "../assets/images/no-devices.png";
 import { useNodeRed } from "../components/context/NodeRedContext";
+import DeviceDeleteDialog from "../components/DeviceDeleteDialog";
+import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 
 function Devices() {
   const navigate = useNavigate();
@@ -25,6 +27,7 @@ function Devices() {
   const [devicesToExport, setDevicesToExport] = useState([]);
   const [downloadExtension, setDownloadExtension] = useState("");
   const [noDevices, setNoDevices] = useState(false);
+  const [isOpenDelete, setOpenDelete] = useState(false);
 
   const resetSelectedDevices = (devices) => {
     devices.forEach((device) => {
@@ -62,8 +65,12 @@ function Devices() {
   const exportToTTL = (devices) => {
     setDevicesToExport(devices);
     setDownloadExtension("TURTLE");
-
     setOpenDownload(true);
+  };
+
+  const deleteDevices = (devices) => {
+    setDevicesToExport(devices);
+    setOpenDelete(true);
   };
 
   const selectedOnChange = (deviceId) => {
@@ -140,8 +147,22 @@ function Devices() {
             onClick={() => {
               exportToJSON(devices.filter((device) => device.exportSelected));
             }}
+            style={{ marginRight: 12 }}
           >
             Export
+          </Button>
+          <Button
+            variant="contained"
+            size="medium"
+            disabled={
+              devices.filter((device) => device.exportSelected).length === 0
+            }
+            onClick={() => {
+              deleteDevices(devices.filter((device) => device.exportSelected));
+            }}
+            endIcon={<DeleteOutlineIcon />}
+          >
+            Delete
           </Button>
         </div>,
       ];
@@ -264,6 +285,9 @@ function Devices() {
                   exportToTTL={() => {
                     exportToTTL([device]);
                   }}
+                  deleteDevice={() => {
+                    deleteDevices([device]);
+                  }}
                   exportSelectMode={isSelectMode}
                   exportSelected={device.exportSelected}
                   exportSelectedOnChange={() => {
@@ -295,6 +319,16 @@ function Devices() {
         refreshDevices={getDevices}
         handleClose={() => {
           setOpenUpload(false);
+        }}
+      />
+      <DeviceDeleteDialog
+        openDelete={isOpenDelete}
+        devicesToDelete={devicesToExport}
+        refreshDevices={getDevices}
+        isSelectMode={isSelectMode}
+        setSelectMode={setSelectMode}
+        handleClose={() => {
+          setOpenDelete(false);
         }}
       />
     </div>

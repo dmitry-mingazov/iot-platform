@@ -16,5 +16,11 @@ class DeviceService {
     static async getDevice(id) {
         return HttpService.get(`${DeviceService.baseUrl}/${id}`);
     }
+    static async deleteDevice(id) {
+        return HttpService.del(`${DeviceService.baseUrl}/${id}`);
+    }
+    static async deleteDevices(ids) {
+        return HttpService.delWithBody(DeviceService.baseUrl+"s", ids);
+    }
 }
 export default DeviceService;

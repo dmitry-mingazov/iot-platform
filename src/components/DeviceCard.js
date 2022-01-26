@@ -9,7 +9,13 @@ import {
 } from "@mui/material";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
-import { Typography, CardActionArea, Divider } from "@mui/material";
+import {
+  Typography,
+  CardActionArea,
+  Divider,
+  ListItemIcon,
+  ListItemText,
+} from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import EmojiObjectsIcon from "@mui/icons-material/EmojiObjects";
 import { useNavigate } from "react-router-dom";
@@ -18,6 +24,7 @@ import DeviceInfoDialog from "./DeviceInfoDialog";
 import Checkbox from "@mui/material/Checkbox";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import RadioButtonUncheckedIcon from "@mui/icons-material/RadioButtonUnchecked";
+import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 
 const useStyles = makeStyles({
   circle: {
@@ -81,12 +88,17 @@ function DeviceCard(props) {
     },
     {
       title: "Export to JSON",
-      fn: props.exportToJSON
+      fn: props.exportToJSON,
     },
     {
       title: "Export to TTL",
-      fn: props.exportToTTL
-    }
+      fn: props.exportToTTL,
+    },
+    {
+      title: "Delete device",
+      fn: props.deleteDevice,
+      icon: <DeleteOutlineIcon color="primary" />,
+    },
   ];
 
   return (
@@ -94,7 +106,9 @@ function DeviceCard(props) {
       <Card elevation={4} sx={{ maxWidth: 260 }}>
         <CardActionArea
           ref={anchorRef}
-          onClick={props.exportSelectMode ? props.exportSelectedOnChange : handleToggle}
+          onClick={
+            props.exportSelectMode ? props.exportSelectedOnChange : handleToggle
+          }
         >
           {props.exportSelectMode ? (
             <Checkbox
@@ -163,7 +177,8 @@ function DeviceCard(props) {
                       key={item.title}
                       value={item.title}
                     >
-                      {item.title}
+                      <ListItemText>{item.title}</ListItemText>
+                      <ListItemIcon>{item.icon}</ListItemIcon>
                     </MenuItem>
                   ))}
                 </MenuList>
