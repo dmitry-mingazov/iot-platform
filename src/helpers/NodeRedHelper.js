@@ -31,13 +31,13 @@ const canBeLinkedToUI = (interfaceType) => {
 
 const createUINode = (uiGroupId) => {
     const type = "ui_text";
-    const label = "test_label";
     const group = uiGroupId;
     const format = "{{msg.payload}}"
+    const name = 'text';
 
     return {
         type,
-        label,
+        name,
         format,
         group,
     }
@@ -147,19 +147,17 @@ class NodeRedHelper {
                 if (!uiGroup) {
                     const idUiGroup = getUniqueIds(device._id, 1)[0];
                     uiGroup = createUiGroup(device, uiTabId, idUiGroup);
-                    console.log('UiGroup', uiGroup);
                     configs.push(uiGroup);
                 }
                 let id = getUniqueIds(device._id, 1)[0];
+                let label = s.interfaceType;
                 let uiNode = {
                     id,
+                    label,
                     x: node.x + X_OFFSET * 2,
                     y: node.y,
                     ...createUINode(uiGroup.id)
                 }
-                // node.wires = [
-                    // [id]
-                // ]
                 wires.push([id]);
                 extraNodes.push(uiNode);
             }
@@ -167,17 +165,9 @@ class NodeRedHelper {
             node.type = s.interfaceType === 'http out' ? 'http response' : s.interfaceType;
             node.name = node.type;
 
-            // console.log(node.name);
-            // console.log(node.type)
-            // console.log(node);
             if (node.type == 'http in') {
-                console.log('Adding extra node...');
                 const id = getUniqueIds(device._id, 1)[0];
                 const httpResponse = createHttpResponseNode(id, {x: x + X_OFFSET, y: node.y});
-                console.log(httpResponse);
-                // node.wires = [
-                //     [id]
-                // ]
                 wires.push([id]);
                 extraNodes.push(httpResponse);
             }
@@ -198,7 +188,6 @@ class NodeRedHelper {
             node.wires = [
                 [...wires]
             ]
-            console.log(node);
             nodes.push(node);
         });
         // add id to each node
