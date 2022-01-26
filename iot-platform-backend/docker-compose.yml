@@ -1,0 +1,25 @@
+version: '3.7'
+services:
+# Database - MongoDB
+  mongo:
+    image: mongo:latest
+    ports:
+      - "27017:27017"
+    volumes:
+      - ../db/mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
+      - spm-tld-db:/data/db
+# Backend service - NestJS
+  nestjs:
+    build: .
+    depends_on:
+      - mongo
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./src:/app/src
+      - ./package.json:/app/package.json
+      - ./package-lock.json:/app/package-lock.json
+    environment:
+      - MONGO_URL=mongodb://mongo # url of mongdb inside the docker network
+volumes:
+  spm-tld-db:

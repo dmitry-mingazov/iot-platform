@@ -1,0 +1,4 @@
+users/
+node_modules/
+.env
+public.pem
