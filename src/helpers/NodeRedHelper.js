@@ -11,6 +11,51 @@ const createConfigNode = (interfaceType) => {
     }
 };
 
+const createUiGroup = (device, uiTabId, id) => {
+    const type = 'ui_group';
+    const name = device.name;
+    const tab = uiTabId;
+    const width = '5'
+    return {
+        type,
+        name,
+        tab,
+        width,
+        id
+    }
+}
+
+const canBeLinkedToUI = (interfaceType) => {
+    return interfaceType.match(/in$/) || interfaceType.match(/listener$/);
+}
+
+const createUINode = (uiGroupId) => {
+    const type = "ui_text";
+    const group = uiGroupId;
+    const format = "{{msg.payload}}"
+    const name = 'text';
+
+    return {
+        type,
+        name,
+        format,
+        group,
+    }
+
+}
+
+const createHttpResponseNode = (id, {x, y}) => {
+    const name = 'response';
+    const type = 'http response';
+    return {
+        id,
+        type,
+        name,
+        x,
+        y
+    }
+}
+
 const mappedMetadata = {
     'status': 'statusCode',
     'typeIn': 'server',
@@ -73,23 +118,60 @@ const createGroupNode = (deviceName, serviceNodes, groupId) => {
 }
 
 const DEFAULT_X = 120;
+const X_OFFSET = 170;
 const Y_OFFSET = 45;
 
+
 class NodeRedHelper {
-    static getNodesFromDevice(device, getUniqueIds, _y) {
+    static getNodesFromDevice(device, getUniqueIds, _y, uiTabId) {
         const nodes = [];
         const configs = [];
+        // i.e. ui nodes or http response for http in 
+        const extraNodes = [];
         var x = DEFAULT_X;
         var y = _y; 
+
+        let uiGroup;
+
         device.services.forEach(s => {
             const node = {x, y};
+            const wires = [];
             y += Y_OFFSET;
+
             let configNode = createConfigNode(s.interfaceType);
             if (configNode) {
                 configNode.id = getUniqueIds(device._id, 1)[0];
             }
+
+            if (canBeLinkedToUI(s.interfaceType)) {
+                if (!uiGroup) {
+                    const idUiGroup = getUniqueIds(device._id, 1)[0];
+                    uiGroup = createUiGroup(device, uiTabId, idUiGroup);
+                    configs.push(uiGroup);
+                }
+                let id = getUniqueIds(device._id, 1)[0];
+                let label = s.interfaceType;
+                let uiNode = {
+                    id,
+                    label,
+                    x: node.x + X_OFFSET * 2,
+                    y: node.y,
+                    ...createUINode(uiGroup.id)
+                }
+                wires.push([id]);
+                extraNodes.push(uiNode);
+            }
+
             node.type = s.interfaceType === 'http out' ? 'http response' : s.interfaceType;
             node.name = node.type;
+
+            if (node.type == 'http in') {
+                const id = getUniqueIds(device._id, 1)[0];
+                const httpResponse = createHttpResponseNode(id, {x: x + X_OFFSET, y: node.y});
+                wires.push([id]);
+                extraNodes.push(httpResponse);
+            }
+
             s.metadata.forEach(m => {
                 let key = mapMetadataTypeToKey(m.metadataType, m.value);
                 let value = m.value;
@@ -103,6 +185,9 @@ class NodeRedHelper {
             if(configNode) {
                 configs.push(configNode)
             }
+            node.wires = [
+                [...wires]
+            ]
             nodes.push(node);
         });
         // add id to each node
@@ -113,6 +198,8 @@ class NodeRedHelper {
 
         const groupNode = createGroupNode(device.name, nodes, getUniqueIds(device._id, 1)[0])
         nodes.push(groupNode);
+
+        nodes.push(...extraNodes);
 
         return {
             nodes,
@@ -126,6 +213,18 @@ class NodeRedHelper {
     static createEmptyFlow() {
         return {
             nodes: []
+        }
+    }
+
+    static createUiTab(id) {
+        const type = 'ui_tab';
+        const name = 'Home';
+        const icon = 'dashboard';
+        return {
+            id,
+            type,
+            name,
+            icon
         }
     }
 
@@ -143,8 +242,7 @@ class NodeRedHelper {
         }
     }
 
-
-    static createFlowFromDevices(flowId, devices,label, comment, getUniqueIds) {
+    static createFlowFromDevices(flowId, devices,label, comment, getUniqueIds, uiTabId) {
         const _nodes = [];
         const _configs = [];
         var _y = 100;
@@ -155,7 +253,7 @@ class NodeRedHelper {
         _nodes.push(commentNode);
 
         devices.forEach(device => {
-            const  { nodes, configs, y } = this.getNodesFromDevice(device, getUniqueIds, _y);
+            const  { nodes, configs, y } = this.getNodesFromDevice(device, getUniqueIds, _y, uiTabId);
             // to space more each group
             _y = y + Y_OFFSET;
             _nodes.push(...nodes);

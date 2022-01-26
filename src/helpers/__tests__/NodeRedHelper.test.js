@@ -255,18 +255,16 @@ describe("NodeRedHelper", () => {
   test("http in device should have correct parameters", () => {
     const flow = NodeRedHelper.getNodesFromDevice(bogusHttpInDevice, getBogusIds);
     expect(flow.nodes).toBeDefined();
-    expect(flow.nodes.filter((node) => node.type !== 'group').length).toBe(1);
-    expect(flow.nodes[0]).toBeDefined();
-    expect(flow.nodes[0].type).toBeDefined();
-    expect(flow.nodes[0].type).toBe('http in');
-    expect(flow.nodes[0].url).toBeDefined();
-    expect(flow.nodes[0].url).toBe('http in url');
-    expect(flow.nodes[0].method).toBeDefined();
-    expect(flow.nodes[0].method).toBe('GET');
+    expect(flow.nodes.filter((node) => node.type !== 'group').length).toBe(3);
+    const httpIn = flow.nodes.find(({type}) => type === 'http in');
+    expect(httpIn).toBeDefined();
+    expect(httpIn.url).toBeDefined();
+    expect(httpIn.url).toBe('http in url');
+    expect(httpIn.method).toBeDefined();
+    expect(httpIn.method).toBe('GET');
     
-    expect(flow.configs).toBeDefined();    expect(flow.nodes.length).toBeGreaterThanOrEqual(1);
-
-    expect(flow.configs.length).toBe(0);
+    expect(flow.configs).toBeDefined();    
+    expect(flow.nodes.length).toBeGreaterThanOrEqual(1);
   });
   test("http out (response) device should have correct parameters", () => {
     const flow = NodeRedHelper.getNodesFromDevice(bogusHttpOutDevice, getBogusIds);
@@ -284,7 +282,7 @@ describe("NodeRedHelper", () => {
   test("tcp in (server) device should have correct parameters", () => {
     const flow = NodeRedHelper.getNodesFromDevice(bogusTcpInServerDevice, getBogusIds);
     expect(flow.nodes).toBeDefined();
-    expect(flow.nodes.filter((node) => node.type !== 'group').length).toBe(1);
+    expect(flow.nodes.filter((node) => node.type !== 'group').length).toBe(2);
     expect(flow.nodes[0]).toBeDefined();
     expect(flow.nodes[0].type).toBeDefined();
     expect(flow.nodes[0].type).toBe('tcp in');
@@ -294,12 +292,12 @@ describe("NodeRedHelper", () => {
     expect(flow.nodes[0].port).toBe('123');
 
     expect(flow.configs).toBeDefined();
-    expect(flow.configs.length).toBe(0);
+    expect(flow.configs.length).toBe(1);
   });
   test("tcp in (client) device should have correct parameters", () => {
     const flow = NodeRedHelper.getNodesFromDevice(bogusTcpInClientDevice, getBogusIds);
     expect(flow.nodes).toBeDefined();
-    expect(flow.nodes.filter((node) => node.type !== 'group').length).toBe(1);
+    expect(flow.nodes.filter((node) => node.type !== 'group').length).toBe(2);
     expect(flow.nodes[0]).toBeDefined();
     expect(flow.nodes[0].type).toBeDefined();
     expect(flow.nodes[0].type).toBe('tcp in');
@@ -311,7 +309,7 @@ describe("NodeRedHelper", () => {
     expect(flow.nodes[0].port).toBe('123');
 
     expect(flow.configs).toBeDefined();
-    expect(flow.configs.length).toBe(0);
+    expect(flow.configs.length).toBe(1);
   });
   test("tcp out (server) device should have correct parameters", () => {
     const flow = NodeRedHelper.getNodesFromDevice(bogusTcpOutServerDevice, getBogusIds);
@@ -377,7 +375,7 @@ describe("NodeRedHelper", () => {
   test("udp in device should have correct parameters", () => {
     const flow = NodeRedHelper.getNodesFromDevice(bogusUdpInDevice, getBogusIds);
     expect(flow.nodes).toBeDefined();
-    expect(flow.nodes.filter((node) => node.type !== 'group').length).toBe(1);
+    expect(flow.nodes.filter((node) => node.type !== 'group').length).toBe(2);
     expect(flow.nodes[0]).toBeDefined();
     expect(flow.nodes[0].type).toBeDefined();
     expect(flow.nodes[0].type).toBe('udp in');
@@ -387,12 +385,12 @@ describe("NodeRedHelper", () => {
     expect(flow.nodes[0].ipv).toBe('udp4');
 
     expect(flow.configs).toBeDefined();
-    expect(flow.configs.length).toBe(0);
+    expect(flow.configs.length).toBe(1);
   });
   test("mqtt in device should have correct parameters", () => {
     const flow = NodeRedHelper.getNodesFromDevice(bogusMQTTInDevice, getBogusIds);
     expect(flow.nodes).toBeDefined();
-    expect(flow.nodes.filter((node) => node.type !== 'group').length).toBe(1);
+    expect(flow.nodes.filter((node) => node.type !== 'group').length).toBe(2);
     expect(flow.nodes[0]).toBeDefined();
     expect(flow.nodes[0].type).toBeDefined();
     expect(flow.nodes[0].type).toBe('mqtt in');
@@ -405,15 +403,14 @@ describe("NodeRedHelper", () => {
     const flow = NodeRedHelper.getNodesFromDevice(bogusMQTTInDevice, getBogusIds);
     expect(flow.configs).toBeDefined();
     expect(flow.configs.length).toBeGreaterThanOrEqual(1);
-    expect(flow.configs[0]).toBeDefined();
-    expect(flow.configs[0].type).toBeDefined();
-    expect(flow.configs[0].type).toBe('mqtt-broker');
-    expect(flow.configs[0].broker).toBeDefined();
-    expect(flow.configs[0].broker).toBe('brokerin');
-    expect(flow.configs[0].port).toBeDefined();
-    expect(flow.configs[0].port).toBe('123');
-    expect(flow.configs[0].protocolVersion).toBeDefined();
-    expect(flow.configs[0].protocolVersion).toBe('5');
+    const mqttBroker = flow.configs.find(({type}) => type === 'mqtt-broker');
+    expect(mqttBroker).toBeDefined();
+    expect(mqttBroker.broker).toBeDefined();
+    expect(mqttBroker.broker).toBe('brokerin');
+    expect(mqttBroker.port).toBeDefined();
+    expect(mqttBroker.port).toBe('123');
+    expect(mqttBroker.protocolVersion).toBeDefined();
+    expect(mqttBroker.protocolVersion).toBe('5');
   });
   test("mqtt in device and broker should be bound", () => {
     const flow = NodeRedHelper.getNodesFromDevice(bogusMQTTInDevice, getBogusIds);
@@ -442,15 +439,14 @@ describe("NodeRedHelper", () => {
     const flow = NodeRedHelper.getNodesFromDevice(bogusMQTTOutDevice, getBogusIds);
     expect(flow.configs).toBeDefined();
     expect(flow.configs.length).toBe(1);
-    expect(flow.configs[0]).toBeDefined();
-    expect(flow.configs[0].type).toBeDefined();
-    expect(flow.configs[0].type).toBe('mqtt-broker');
-    expect(flow.configs[0].broker).toBeDefined();
-    expect(flow.configs[0].broker).toBe('brokerout');
-    expect(flow.configs[0].port).toBeDefined();
-    expect(flow.configs[0].port).toBe('123');
-    expect(flow.configs[0].protocolVersion).toBeDefined();
-    expect(flow.configs[0].protocolVersion).toBe('5');
+    const mqttBroker = flow.configs.find(({type}) => type === 'mqtt-broker');
+    expect(mqttBroker).toBeDefined();
+    expect(mqttBroker.broker).toBeDefined();
+    expect(mqttBroker.broker).toBe('brokerout');
+    expect(mqttBroker.port).toBeDefined();
+    expect(mqttBroker.port).toBe('123');
+    expect(mqttBroker.protocolVersion).toBeDefined();
+    expect(mqttBroker.protocolVersion).toBe('5');
   });
   test("mqtt out device and broker should be bound", () => {
     const flow = NodeRedHelper.getNodesFromDevice(bogusMQTTOutDevice, getBogusIds);
@@ -466,7 +462,7 @@ describe("NodeRedHelper", () => {
   test("websocket server in device should have correct parameters", () => {
     const flow = NodeRedHelper.getNodesFromDevice(bogusWebsocketInServerDevice, getBogusIds);
     expect(flow.nodes).toBeDefined();
-    expect(flow.nodes.filter((node) => node.type !== 'group').length).toBe(1);
+    expect(flow.nodes.filter((node) => node.type !== 'group').length).toBe(2);
     expect(flow.nodes[0]).toBeDefined();
     expect(flow.nodes[0].type).toBeDefined();
     expect(flow.nodes[0].type).toBe('websocket in');
@@ -475,17 +471,16 @@ describe("NodeRedHelper", () => {
   test("websocket server in listener should have correct parameters", () => {
     const flow = NodeRedHelper.getNodesFromDevice(bogusWebsocketInServerDevice, getBogusIds);
     expect(flow.configs).toBeDefined();
-    expect(flow.configs.length).toBe(1);
-    expect(flow.configs[0]).toBeDefined();
-    expect(flow.configs[0].type).toBeDefined();
-    expect(flow.configs[0].type).toBe('websocket-listener');
-    expect(flow.configs[0].path).toBeDefined();
-    expect(flow.configs[0].path).toBe('inserverpath');
+    expect(flow.configs.length).toBe(2);
+    const websocketListener = flow.configs.find(({type}) => type === 'websocket-listener');
+    expect(websocketListener).toBeDefined();
+    expect(websocketListener.path).toBeDefined();
+    expect(websocketListener.path).toBe('inserverpath');
   });
   test("websocket server in device and listener should be bound", () => {
     const flow = NodeRedHelper.getNodesFromDevice(bogusWebsocketInServerDevice, getBogusIds);
     expect(flow.nodes).toBeDefined();
-    expect(flow.nodes.filter((node) => node.type !== 'group').length).toBe(1);
+    expect(flow.nodes.filter((node) => node.type !== 'group').length).toBe(2);
     expect(flow.nodes[0]).toBeDefined();
     expect(flow.configs).toBeDefined();
     expect(flow.configs.length).toBeGreaterThanOrEqual(1);
@@ -496,7 +491,7 @@ describe("NodeRedHelper", () => {
   test("websocket client in device should have correct parameters", () => {
     const flow = NodeRedHelper.getNodesFromDevice(bogusWebsocketInClientDevice, getBogusIds);
     expect(flow.nodes).toBeDefined();
-    expect(flow.nodes.filter((node) => node.type !== 'group').length).toBe(1);
+    expect(flow.nodes.filter((node) => node.type !== 'group').length).toBe(2);
     expect(flow.nodes[0]).toBeDefined();
     expect(flow.nodes[0].type).toBeDefined();
     expect(flow.nodes[0].type).toBe('websocket in');
@@ -505,17 +500,16 @@ describe("NodeRedHelper", () => {
   test("websocket client in client should have correct parameters", () => {
     const flow = NodeRedHelper.getNodesFromDevice(bogusWebsocketInClientDevice, getBogusIds);
     expect(flow.configs).toBeDefined();
-    expect(flow.configs.length).toBe(1);
-    expect(flow.configs[0]).toBeDefined();
-    expect(flow.configs[0].type).toBeDefined();
-    expect(flow.configs[0].type).toBe('websocket-client');
-    expect(flow.configs[0].path).toBeDefined();
-    expect(flow.configs[0].path).toBe('inclienturl');
+    expect(flow.configs.length).toBe(2);
+    const websocketClient = flow.configs.find(({type}) => type === 'websocket-client');
+    expect(websocketClient).toBeDefined();
+    expect(websocketClient.path).toBeDefined();
+    expect(websocketClient.path).toBe('inclienturl');
   });
   test("websocket client in device and client should be bound", () => {
     const flow = NodeRedHelper.getNodesFromDevice(bogusWebsocketInClientDevice, getBogusIds);
     expect(flow.nodes).toBeDefined();
-    expect(flow.nodes.filter((node) => node.type !== 'group').length).toBe(1);
+    expect(flow.nodes.filter((node) => node.type !== 'group').length).toBe(2);
     expect(flow.nodes[0]).toBeDefined();
     expect(flow.configs).toBeDefined();
     expect(flow.configs.length).toBeGreaterThanOrEqual(1);

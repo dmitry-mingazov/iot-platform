@@ -107,24 +107,49 @@ const NodeRedStateContext = (props) => {
     });
   };
 
-  const createNewFlow = (label, comment, devices) => {
-    const emptyFlow = NodeRedHelper.createEmptyFlow();
-    // let flowId = 'TEST';
+  const getDefaultUITabId = async () => {
+    const defaultUiTabId = 'default_ui_tab';
+    let uiTab = flows.find(({id}) => id === defaultUiTabId);
+    if (uiTab) {
+      console.log(uiTab);
+      return defaultUiTabId;
+    }
+    const _flows = await NodeRedService.getFlows(nodeRedUrl);
+    uiTab = NodeRedHelper.createUiTab(defaultUiTabId);
+    console.log('flows',_flows,'tab',uiTab);
+    _flows.push(uiTab);
+    await NodeRedService.postFlows(nodeRedUrl, _flows);
+    updateFlows();
+    return defaultUiTabId;
+    // const firstFlow = flows.find(({type}) => type === 'tab');
+    // const flowId = firstFlow.id;
+    // const flowToUpdate = await NodeRedService.getFlow(nodeRedUrl, flowId);
+    // uiTab = NodeRedHelper.createUiTab(defaultUiTabId);
+    // console.log(flowToUpdate);
+    // flowToUpdate.configs.push(uiTab)
+    // console.log(flowToUpdate);
+    // await NodeRedService.updateFlow(nodeRedUrl, firstFlow.id, flowToUpdate);
+    // updateFlows();
+    // return defaultUiTabId;
+  }
 
-    // const flow = NodeRedHelper.createFlowFromDevices(flowId, devices, comment, getUniqueNodeIds);
-    // console.log(JSON.stringify(flow));
-    // console.log((flow));
-    // return;
+
+  const createNewFlow = async (label, comment, devices) => {
+
+    const uiTabId = await getDefaultUITabId();
+
+    const emptyFlow = NodeRedHelper.createEmptyFlow();
+
     return NodeRedService.createFlow(nodeRedUrl, emptyFlow)
-      .then(({id}) => {
+      .then(async ({id}) => {
         const flowId = id;
-        const flow = NodeRedHelper.createFlowFromDevices(flowId, devices, label, comment, getUniqueNodeIds);
+        const flow = NodeRedHelper.createFlowFromDevices(flowId, devices, label, comment, getUniqueNodeIds, uiTabId);
         return NodeRedService.updateFlow(nodeRedUrl, flowId, flow)
         .then(_ => {
           return flowId;
         });
       })
-      .catch(error => {
+      .catch(_ => {
         console.error('Error in creating the flow');
       });
   }
@@ -164,6 +189,7 @@ const NodeRedStateContext = (props) => {
     flows,
     updateComment,
     updateFlows,
+    nodeRedDashboardURL: nodeRedUrl + '/ui'
   };
 
   return (
