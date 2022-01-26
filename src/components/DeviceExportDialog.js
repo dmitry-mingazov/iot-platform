@@ -102,7 +102,7 @@ function DeviceExportDialog(props) {
             />
           ) : (
             <Button variant="contained" onClick={handleExport}>
-              Export
+              Create
             </Button>
           )}
         </DialogActions>

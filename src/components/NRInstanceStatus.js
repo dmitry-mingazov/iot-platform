@@ -56,6 +56,22 @@ const NRInstanceStatus = () => {
     });
   };
 
+  const displayMessage = () => {
+    let message = 'Node-RED ';
+    switch(nodeRedStatus) {
+      case statuses.FAULTY:
+        message += 'unreachable';
+        break;
+      case statuses.NOT_READY:
+        message += 'loading';
+        break;
+      case statuses.READY:
+        message += 'ready';
+        break;
+    }
+    return message;
+  }
+
   const handlePopoverOpen = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -69,7 +85,7 @@ const NRInstanceStatus = () => {
     : isAuthenticated && (
         <div style={{ marginRight: 24 }}>
           <Chip
-            label="Node-RED instance: "
+            label={displayMessage()}
             onDelete={() => {}}
             deleteIcon={displayIcon()}
             sx={{ backgroundColor: "white", fontWeight: "bold" }}

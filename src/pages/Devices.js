@@ -136,7 +136,7 @@ function Devices() {
             }}
             style={{ marginRight: 12 }}
           >
-            Export to Node-RED
+            Import to Node-RED
           </Button>
           <Button
             variant="contained"
@@ -216,13 +216,19 @@ function Devices() {
   };
 
   const getDevices = () => {
-    return DeviceService.getDevices().then((dvs) => {
-      if (dvs.length === 0) {
+    return DeviceService.getDevices()
+      .then((dvs) => {
+        if (dvs.length === 0) {
+          setNoDevices(true);
+        } else if (noDevices) {
+          setNoDevices(false);
+        }
+        resetSelectedDevices(dvs);
+        setDevices(dvs);
+      })
+      .catch(() => {
         setNoDevices(true);
-      }
-      resetSelectedDevices(dvs);
-      setDevices(dvs);
-    });
+      });
   };
 
   // will run only on first render
@@ -254,8 +260,8 @@ function Devices() {
             src={noDevicesImage}
             alt="No devices available"
             style={{
-              width: "40%",
-              height: "40%",
+              width: `${window.innerWidth}`,
+              height: "60vh",
               opacity: 0.7,
             }}
           />
