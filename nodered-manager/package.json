@@ -4,6 +4,7 @@
   "description": "## Setup Run the following: ``` mkdir users sudo chown -R 1000:1000 users/ ```",
   "main": "index.js",
   "scripts": {
+    "start": "node index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "TLD",
