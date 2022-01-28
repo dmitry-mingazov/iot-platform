@@ -14,7 +14,7 @@ The project consists of a platform that allows the user to interface with the pr
     - [Frontend](#frontend)
 - [Authors](#authors)
 
-**Node-RED* is a flow-based development tool for visual programming developed for wiring together hardware devices, APIs and online services as part of the *Internet of Things*.
+*[*Node-RED*](https://nodered.org) is a flow-based development tool for visual programming developed for wiring together hardware devices, APIs and online services as part of the *Internet of Things*.
 
 ## Project description
 
@@ -30,7 +30,7 @@ All the devices information are stored following the *IoT-lite* ontology standar
 
 #### Authentication
 
-Since [Auth0]() is used for the authentication of the users, an active account with an Auth0 Application and an Auth0 API is needed.
+Since [Auth0](https://auth0.com/) is used for the authentication of the users, an active account with an Auth0 Application and an Auth0 API is needed.
 Please follow the following two guides for their configuration: 
 - https://auth0.com/docs/quickstart/spa/react
 - https://auth0.com/docs/quickstart/backend/nodejs
@@ -47,11 +47,11 @@ Please follow the following two guides for their configuration:
 1. Move inside `backend` folder
 
 1. Create a `.env` file following the `.env.sample` and fill it: 
-    - `AUTH0_ISSUER_URL` & `AUTH0_AUDIENCE`: check [Authentication]()
+    - `AUTH0_ISSUER_URL` & `AUTH0_AUDIENCE`: check [Authentication](#authentication)
     - `TEST_TOKEN`: a valid JWT token to perform e2e tests
     - *`MONGO_URL`: MongoDB url, can be omitted since docker-compose will handle it
 
-1. Download and install [Docker]() and [docker-compose]()
+1. Download and install [Docker](https://docs.docker.com/get-docker/) and [docker-compose](https://docs.docker.com/compose/install/)
 
 1. Start the application:
 
@@ -72,10 +72,10 @@ Please follow the following two guides for their configuration:
 
 1. Create a `.env` file following the `.env.sample` and fill it: 
 
-    - `AUTH0_ISSUER_URL` & `AUTH0_AUDIENCE`: check [Authentication]()
+    - `AUTH0_ISSUER_URL` & `AUTH0_AUDIENCE`: check [Authentication](#authentication)
     - `PATH_TO_PUBLIC_KEY`: path to the previously downloaded public key
 
-1. Download and install [Docker]() and [NodeJS]() (preferably version 14)
+1. Download and install [Docker](https://docs.docker.com/get-docker/) and [NodeJS](https://nodejs.org/en/download/) (preferably version 14)
 
 1. Install the required dependencies:
 
@@ -115,11 +115,11 @@ Please follow the following two guides for their configuration:
 
 1. Create a `.env` file following the `.env.sample` and fill it: 
 
-    - `*AUTH0*`: check [Authentication]()
+    - `*AUTH0*`: check [Authentication](#authentication)
     - `REACT_APP_API_URL`: backend url + /api (e.g. `http://localhost:3000/api`)
     - `REACT_APP_MANAGER_URL`: nodered-manager url + /api/nodered (e.g. `http://localhost:8000/api/nodered`)
 
-1. Download and install [Docker]() and [docker-compose]()
+1. Download and install [Docker](https://docs.docker.com/get-docker/) and [docker-compose](https://docs.docker.com/compose/install/)
 
 2. Start the application:
 
