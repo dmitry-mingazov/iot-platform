@@ -27,7 +27,9 @@ All the devices information are stored following the *IoT-lite* ontology standar
 ## Installation
 
 *Note: more detailed instructions can be found inside each module folder*
+
 #### Authentication
+
 Since [Auth0]() is used for the authentication of the users, an active account with an Auth0 Application and an Auth0 API is needed.
 Please follow the following two guides for their configuration: 
 - https://auth0.com/docs/quickstart/spa/react
@@ -41,60 +43,90 @@ Please follow the following two guides for their configuration:
 
 #### Backend
 
+
 1. Move inside `backend` folder
+
 1. Create a `.env` file following the `.env.sample` and fill it: 
     - `AUTH0_ISSUER_URL` & `AUTH0_AUDIENCE`: check [Authentication]()
     - `TEST_TOKEN`: a valid JWT token to perform e2e tests
     - *`MONGO_URL`: MongoDB url, can be omitted since docker-compose will handle it
+
 1. Download and install [Docker]() and [docker-compose]()
+
 1. Start the application:
+
+    ```bash
+    $ docker-compose up -d
     ```
-    docker-compose up -d
-    ```
+
     **Note that this command will also create and start a MongoDB instance*
+
 
 #### NodeRED Manager
 
 *The NodeRED manager must be run in a Linux environment*
+
 1. Move inside the `nodered-manager` folder
+
 1. Download your Auth0 public key at `ISSUER_URL`/pem 
+
 1. Create a `.env` file following the `.env.sample` and fill it: 
+
     - `AUTH0_ISSUER_URL` & `AUTH0_AUDIENCE`: check [Authentication]()
     - `PATH_TO_PUBLIC_KEY`: path to the previously downloaded public key
+
 1. Download and install [Docker]() and [NodeJS]() (preferably version 14)
+
 1. Install the required dependencies:
+
+    ```bash
+    $ npm install
     ```
-    npm install
-    ```
+
 1. Create the `users` folder:
+
+    ```bash
+    $ mkdir users
     ```
-    mkdir users
+
+1. Allow the `node` user to write inside the created folder: 
+
+    ```bash
+    $ sudo chown 1000:1000 users
     ```
-1. Allow the `node` user to write inside the created folder:
-    ```
-    sudo chown 1000:1000 users
-    ```
+
 1. Add execution permissions to the project scripts:
+
+    ```bash
+    $ chmod +x ./*.sh
     ```
-    chmod +x ./*.sh
-    ```
+
 1. Start the application:
-    ```
-    npm start
+
+    ```bash
+    $ npm start
     ```
     
+
 #### Frontend
 
+
 1. Move inside the `frontend` folder
+
 1. Create a `.env` file following the `.env.sample` and fill it: 
+
     - `*AUTH0*`: check [Authentication]()
     - `REACT_APP_API_URL`: backend url + /api (e.g. `http://localhost:3000/api`)
     - `REACT_APP_MANAGER_URL`: nodered-manager url + /api/nodered (e.g. `http://localhost:8000/api/nodered`)
+
 1. Download and install [Docker]() and [docker-compose]()
+
 2. Start the application:
-    ```
+
+    ```bash
     docker-compose up -d
     ```
+
 
 ## Authors
 - *Dmitry Mingazov*
