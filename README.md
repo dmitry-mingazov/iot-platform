@@ -124,7 +124,7 @@ Please follow the following two guides for their configuration:
 2. Start the application:
 
     ```bash
-    docker-compose up -d
+    $ docker-compose up -d
     ```
 
 
