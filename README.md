@@ -9,6 +9,8 @@
 
 The project consists of a platform that allows the user to interface with the pre-existing *Node-RED** software in a more immediate and simpler way. 
 
+[*Node-RED*](https://nodered.org) is a flow-based development tool for visual programming developed for wiring together hardware devices, APIs and online services as part of the *Internet of Things*.
+
 ## Table of Content
 
 - [Project description](#project-description)
@@ -18,8 +20,6 @@ The project consists of a platform that allows the user to interface with the pr
     - [NodeRED Manager](#nodered-manager)
     - [Frontend](#frontend)
 - [Authors](#authors)
-
-*[*Node-RED*](https://nodered.org) is a flow-based development tool for visual programming developed for wiring together hardware devices, APIs and online services as part of the *Internet of Things*.
 
 ## Project description
 
