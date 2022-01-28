@@ -1,5 +1,10 @@
 # :bulb: IoT Platform
 
+![Github License](https://img.shields.io/github/license/dmitry-mingazov/iot-platform)
+![Contributors](https://img.shields.io/github/contributors/dmitry-mingazov/iot-platform)
+![Github commit activity](https://img.shields.io/github/commit-activity/w/dmitry-mingazov/iot-platform)
+![GitHub language count](https://img.shields.io/github/languages/count/dmitry-mingazov/iot-platform) 
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/a89f00c84ae2487d9781b88f02b6edc5)](https://www.codacy.com/gh/dmitry-mingazov/iot-platform/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=dmitry-mingazov/iot-platform&amp;utm_campaign=Badge_Grade) 
 ## Overview
 
 The project consists of a platform that allows the user to interface with the pre-existing *Node-RED** software in a more immediate and simpler way. 
