@@ -51,6 +51,43 @@ element = await page.$x(`//ul[@id='composition-menu']/li[6]/div/span`);
 element = await page.$x(`(.//*[normalize-space(text()) and normalize-space(.)='Cancel'])[1]/following::button[1]`);
 	await element[0].click();
 }
+
+importDeviceToNR = async (page) => {
+	await page.goto(`http://localhost:4000/`, { waitUntil: 'networkidle2' });
+	await page.waitForSelector(`.MuiCardActionArea-root`);
+	const devices = await page.$$(`.MuiCardActionArea-root`);
+	const num = devices.length;
+
+	await devices[num-1].click();
+element = await page.$x(`//ul[@id='composition-menu']/li[3]/div/span`);
+	await element[0].click();
+element = await page.$x(`//*[@id="label"]`);
+	await element[0].click();
+element = await page.$x(`//*[@id="label"]`);
+	await element[0].type(`gabibbo`);
+element = await page.$x(`//*[@id="comment"]`);
+	await element[0].type(`gabibbonw`);
+element = await page.$x(`(.//*[normalize-space(text()) and normalize-space(.)='Cancel'])[1]/following::button[1]`);
+	await element[0].click();
+element = await page.$x(`//div[@id='root']/div/div[2]/header/div/div/div`);
+	await element[0].click();
+element = await page.$x(`(.//*[normalize-space(text()) and normalize-space(.)='Flows'])[1]/following::*[name()='svg'][1]`);
+	await element[0].click();
+element = await page.$x(`//div[@id='root']/div/div/div/ul/div[2]/div[2]/span`);
+	await element[0].click();
+
+
+	await page.waitForXPath(`//*[@aria-label="edit"]`)
+const flows = await page.$$(`[aria-label="edit"]`);
+	await flows[0].click();
+element = await page.$x(`//*[@id="name"]`);
+	await element[0].click();
+element = await page.$x(`//*[@id="name"]`);
+	await element[0].click({ clickCount: 3 })
+	await element[0].type(`francescototti`);
+element = await page.$x(`(.//*[normalize-space(text()) and normalize-space(.)='Cancel'])[1]/following::button[1]`);
+	await element[0].click();
+}
 };
 
 
