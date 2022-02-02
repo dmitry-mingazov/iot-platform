@@ -1,5 +1,5 @@
 // Script Name: {katalon}
-require('./login-test');
+require('./helpers');
 
 const puppeteer = require('puppeteer');
 
