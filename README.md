@@ -2,7 +2,7 @@
 
 ![Github License](https://img.shields.io/github/license/dmitry-mingazov/iot-platform)
 ![Contributors](https://img.shields.io/github/contributors/dmitry-mingazov/iot-platform)
-![Github commit activity](https://img.shields.io/github/commit-activity/w/dmitry-mingazov/iot-platform)
+![Github commit activity](https://img.shields.io/github/commit-activity/m/dmitry-mingazov/iot-platform)
 ![GitHub language count](https://img.shields.io/github/languages/count/dmitry-mingazov/iot-platform) 
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/a89f00c84ae2487d9781b88f02b6edc5)](https://www.codacy.com/gh/dmitry-mingazov/iot-platform/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=dmitry-mingazov/iot-platform&amp;utm_campaign=Badge_Grade) 
 ## Overview
@@ -30,8 +30,6 @@ Through the platform it is possible to store and manage information related to *
 All the devices information are stored following the *IoT-lite* ontology standard and the user has the possibility to download a turtle file clicking on the *export to TTL* button.
 
 ## Installation
-
-*Note: more detailed instructions can be found inside each module folder*
 
 #### Authentication
 
