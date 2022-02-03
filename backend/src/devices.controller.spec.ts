@@ -89,9 +89,9 @@ describe(DevicesController, () => {
 
   describe('findAll', () => {
     it('should return an array of devices', async () => {
-      jest.spyOn(devicesService, 'findAllById').mockResolvedValueOnce(exDevArray);
+      jest.spyOn(devicesService, 'findAllByUserId').mockResolvedValueOnce(exDevArray);
 
-      expect(await devicesController.findAll('magic-user')).toBe(exDevArray);
+      expect(await devicesController.findAll('magic-user', {})).toBe(exDevArray);
     });
   });
 
