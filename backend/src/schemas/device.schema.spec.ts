@@ -50,14 +50,6 @@ describe('DeviceSchema', () => {
       done();
     });
   });
-  it.skip('should fail on missing description field', (done) => {
-    delete dto.description;
-    const dev = new devModel(dto);
-    dev.validate((err) => {
-      expect(err.errors.description).toBeDefined();
-      done();
-    });
-  });
   it('should fail on missing name field', (done) => {
     delete dto.name;
     const dev = new devModel(dto);
@@ -96,14 +88,6 @@ describe('DeviceSchema', () => {
     const dev = new devModel(dto);
     dev.validate((err) => {
       expect(err.errors.services.kind).toBeDefined();
-      done();
-    });
-  });
-  it.skip('should fail on missing endpoint field', (done) => {
-    delete dto.services[0].endpoint;
-    const dev = new devModel(dto);
-    dev.validate((err) => {
-      expect(err.errors['services.0.endpoint']).toBeDefined();
       done();
     });
   });
