@@ -28,6 +28,7 @@
     "test:all": "react-scripts test --watchAll",
     "test:coverage": "npm test -- --env=jsdom --coverage",
     "test:ci": "cross-env CI=true react-scripts test --env=jsdom",
+    "test:integration": "jest -c acceptance-tests/jest.config.js --runInBand",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
@@ -50,6 +51,9 @@
   },
   "devDependencies": {
     "@testing-library/react": "^11.2.7",
-    "prettier": "^2.4.1"
+    "expect-puppeteer": "^6.1.0",
+    "jest-puppeteer": "^6.1.0",
+    "prettier": "^2.4.1",
+    "puppeteer": "^13.1.3"
   }
 }
