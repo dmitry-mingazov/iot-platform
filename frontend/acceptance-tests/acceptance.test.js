@@ -30,7 +30,8 @@ test("add and remove a device", async (done) => {
 }, 120000);
 
 test("import a device to Node-RED and verify it gets a dashboard entry", async (done) => {
-    let devName = `HM-LA2 ${Date.now()}`;
+    const timestamp = Date.now().toString().substring(10);
+    let devName = `HM-LA2 ${timestamp}`;
     await goToDevicesPage(page);
     await addDevice(page, devName);
     await importDeviceToNR(page);
